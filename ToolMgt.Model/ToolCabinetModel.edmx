@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ToolCabinetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Tool">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ToolName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ToolTypeId" Type="int" Nullable="false" />
+          <Property Name="ToolBarCode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ToolRFIDCode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ToolRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ToolId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="BorrowDate" Type="datetime" Nullable="false" />
+          <Property Name="ReturnDate" Type="datetime" />
+          <Property Name="IsReturn" Type="bit" Nullable="false" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ToolType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LoginName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="RealName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserID" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="Face" Type="nvarchar(max)" />
+          <Property Name="Token" Type="nvarchar(max)" />
+          <Property Name="Nfc" Type="nvarchar(max)" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="UserImg" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityContainer Name="ToolCabinetModelStoreContainer">
+          <EntitySet Name="Tool" EntityType="Self.Tool" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ToolRecord" EntityType="Self.ToolRecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ToolType" EntityType="Self.ToolType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ToolCabinetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ToolCabinetEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Tools" EntityType="ToolCabinetModel.Tool" />
+          <EntitySet Name="ToolRecords" EntityType="ToolCabinetModel.ToolRecord" />
+          <EntitySet Name="ToolTypes" EntityType="ToolCabinetModel.ToolType" />
+          <EntitySet Name="Users" EntityType="ToolCabinetModel.User" />
+          <AssociationSet Name="ToolToolRecord" Association="ToolCabinetModel.ToolToolRecord">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="ToolRecord" EntitySet="ToolRecords" />
+          </AssociationSet>
+          <AssociationSet Name="UserToolRecord" Association="ToolCabinetModel.UserToolRecord">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ToolRecord" EntitySet="ToolRecords" />
+          </AssociationSet>
+          <AssociationSet Name="ToolTypeTool" Association="ToolCabinetModel.ToolTypeTool">
+            <End Role="ToolType" EntitySet="ToolTypes" />
+            <End Role="Tool" EntitySet="Tools" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Tool">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ToolName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ToolTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ToolBarCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ToolRFIDCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ToolRecords" Relationship="ToolCabinetModel.ToolToolRecord" FromRole="Tool" ToRole="ToolRecord" />
+          <NavigationProperty Name="ToolType" Relationship="ToolCabinetModel.ToolTypeTool" FromRole="Tool" ToRole="ToolType" />
+        </EntityType>
+        <EntityType Name="ToolRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ToolId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="BorrowDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReturnDate" Type="DateTime" Precision="3" />
+          <Property Name="IsReturn" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Tool" Relationship="ToolCabinetModel.ToolToolRecord" FromRole="ToolRecord" ToRole="Tool" />
+          <NavigationProperty Name="User" Relationship="ToolCabinetModel.UserToolRecord" FromRole="ToolRecord" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ToolType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Tools" Relationship="ToolCabinetModel.ToolTypeTool" FromRole="ToolType" ToRole="Tool" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LoginName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RealName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="Face" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Nfc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="UserImg" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ToolRecords" Relationship="ToolCabinetModel.UserToolRecord" FromRole="User" ToRole="ToolRecord" />
+        </EntityType>
+        <Association Name="ToolToolRecord">
+          <End Type="ToolCabinetModel.Tool" Role="Tool" Multiplicity="1" />
+          <End Type="ToolCabinetModel.ToolRecord" Role="ToolRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ToolRecord">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserToolRecord">
+          <End Type="ToolCabinetModel.User" Role="User" Multiplicity="1" />
+          <End Type="ToolCabinetModel.ToolRecord" Role="ToolRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ToolRecord">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ToolTypeTool">
+          <End Type="ToolCabinetModel.ToolType" Role="ToolType" Multiplicity="1" />
+          <End Type="ToolCabinetModel.Tool" Role="Tool" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ToolType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Tool">
+              <PropertyRef Name="ToolTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ToolCabinetModelStoreContainer" CdmEntityContainer="ToolCabinetEntities">
+          <EntitySetMapping Name="Tools">
+            <EntityTypeMapping TypeName="ToolCabinetModel.Tool">
+              <MappingFragment StoreEntitySet="Tool">
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="ToolRFIDCode" ColumnName="ToolRFIDCode" />
+                <ScalarProperty Name="ToolBarCode" ColumnName="ToolBarCode" />
+                <ScalarProperty Name="ToolTypeId" ColumnName="ToolTypeId" />
+                <ScalarProperty Name="ToolName" ColumnName="ToolName" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ToolRecords">
+            <EntityTypeMapping TypeName="ToolCabinetModel.ToolRecord">
+              <MappingFragment StoreEntitySet="ToolRecord">
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="IsReturn" ColumnName="IsReturn" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="BorrowDate" ColumnName="BorrowDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ToolId" ColumnName="ToolId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ToolTypes">
+            <EntityTypeMapping TypeName="ToolCabinetModel.ToolType">
+              <MappingFragment StoreEntitySet="ToolType">
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ToolCabinetModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserImg" ColumnName="UserImg" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="Nfc" ColumnName="Nfc" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Face" ColumnName="Face" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="RealName" ColumnName="RealName" />
+                <ScalarProperty Name="LoginName" ColumnName="LoginName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

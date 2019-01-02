@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="ToolMgt.UI.Controls.UserMgtControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ToolMgt.UI.Controls"
+             mc:Ignorable="d" FontSize="20"
+             d:DesignHeight="768" d:DesignWidth="1024">
+    <Grid>
+        <Grid.Resources >
+            <Style TargetType="Label"  >
+                <Setter Property="HorizontalContentAlignment" Value="Left" ></Setter>
+                <Setter Property="VerticalContentAlignment"  Value="Center" ></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions >
+            <RowDefinition Height="80"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="Silver"  BorderThickness="1" Margin="10,10,10,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <Label FontSize="30"  Content="人员信息列表"></Label>
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="1" BorderBrush="Silver" BorderThickness="1,0,1,1" Margin="10,0,10,10">
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" >
+                        <Label   Content="姓名或卡号"></Label>
+                        <TextBox Name="tb_SearchNameOrCard" VerticalContentAlignment="Center" Text="{Binding Path=LoginName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Height="30" Width="100"></TextBox>
+                        <Button Name="btn_Search" Width="120" Margin="10,0" Command="{Binding Path=SearchCmd}">搜 索</Button>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+                        <StackPanel Orientation="Horizontal">
+                            <Button Name="btnSync" Content="数据同步" Command="{Binding Path=UserSyncCmd}" Width="120" ></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <DataGrid CanUserAddRows="False" RowHeaderWidth="0" AutoGenerateColumns="False"  SelectionMode="Single" AlternationCount="2" >
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType="DataGridColumnHeader" >
+                            <Setter Property="HorizontalContentAlignment" Value="Center" ></Setter>
+                            <Setter Property="Height" Value="50"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                            <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Header="用户账号"    Binding="{Binding Path=empID}" Width="70*"  />
+                        <DataGridTextColumn IsReadOnly="True" Header="姓 名"    Binding="{Binding Path=username}"   Width="70*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="用户卡号"    Binding="{Binding Path=cardID}"   Width="90*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="入职时间" Binding="{Binding Path=joinDate, StringFormat='yyyy-MM-dd'}" Width="80*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+        <local:BusyIndicator x:Name="busyCtl" Grid.Row="1" IsBusy="{Binding Path=IsBusy}"></local:BusyIndicator>
+    </Grid>
+</UserControl>
