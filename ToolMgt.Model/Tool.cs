@@ -17,6 +17,11 @@ namespace ToolMgt.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Tool()
         {
+            this.ToolName = "";
+            this.ToolBarCode = "";
+            this.ToolRFIDCode = "";
+            this.Factory = "";
+            this.Note = "";
             this.ToolRecords = new List<ToolRecord>();
         }
     
@@ -43,6 +48,18 @@ namespace ToolMgt.Model
     
     	private System.DateTime _CreateDateTime; //private字段
         public System.DateTime CreateDateTime { get => _CreateDateTime; set => Set(ref _CreateDateTime, value); }
+    
+    	private decimal _RangeMin; //private字段
+        public decimal RangeMin { get => _RangeMin; set => Set(ref _RangeMin, value); }
+    
+    	private decimal _RangeMax; //private字段
+        public decimal RangeMax { get => _RangeMax; set => Set(ref _RangeMax, value); }
+    
+    	private string _Factory; //private字段
+        public string Factory { get => _Factory; set => Set(ref _Factory, value); }
+    
+    	private string _Note; //private字段
+        public string Note { get => _Note; set => Set(ref _Note, value); }
     
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

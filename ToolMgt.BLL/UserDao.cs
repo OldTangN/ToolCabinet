@@ -17,7 +17,7 @@ namespace ToolMgt.BLL
             try
             {
                 DbSrv = new ToolCabinetEntities("ToolCabinetEntitiesSrv");
-                Db = new ToolCabinetEntities("ToolCabinetEntities");
+                Db = DBContextFactory.GetContext();
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace ToolMgt.BLL
             List<User> lstResult;
             try
             {
-                Db = new ToolCabinetEntities("ToolCabinetEntities");
+                Db = DBContextFactory.GetContext();
                 lstResult = Db.Users.Where(expression)?.ToList();
             }
             catch (Exception ex)

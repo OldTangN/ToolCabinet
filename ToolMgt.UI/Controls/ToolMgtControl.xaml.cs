@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
 {
@@ -20,6 +21,7 @@ namespace ToolMgt.UI.Controls
     /// </summary>
     public partial class ToolMgtControl : UserControl
     {
+        private ToolMgtViewModel ViewModel;
         public ToolMgtControl()
         {
             InitializeComponent();
@@ -48,6 +50,23 @@ namespace ToolMgt.UI.Controls
         private void tb_max_KeyUp(object sender, KeyEventArgs e)
         {
 
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel = new ToolMgtViewModel();
+            this.DataContext = ViewModel;
+        }
+
+        private void editButtonClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CurrTool = ViewModel.SelectTool;
+            ViewModel.CurrType = ViewModel.ToolTypes.FirstOrDefault(p => p.id == ViewModel.CurrTool.ToolTypeId);
+        }
+
+        private void delButtonClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteCmd.Execute(null);
         }
     }
 }

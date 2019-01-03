@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
 {
@@ -20,9 +21,26 @@ namespace ToolMgt.UI.Controls
     /// </summary>
     public partial class ToolTypeMgtControl : UserControl
     {
+        ToolTypeMgtViewModel ViewModel;
         public ToolTypeMgtControl()
         {
             InitializeComponent();
+        }
+
+        private void editButtonClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CurrType = ViewModel.SelectType;
+        }
+
+        private void delButtonClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteCmd.Execute(null);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel = new ToolTypeMgtViewModel();
+            this.DataContext = ViewModel;
         }
     }
 }

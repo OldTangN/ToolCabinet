@@ -51,6 +51,7 @@
     <Compile Include="LogInDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolDao.cs" />
+    <Compile Include="ToolTypeDao.cs" />
     <Compile Include="UserDao.cs" />
   </ItemGroup>
   <ItemGroup>

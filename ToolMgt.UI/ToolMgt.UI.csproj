@@ -101,6 +101,7 @@
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SelectToolViewModel.cs" />
     <Compile Include="ViewModel\ToolMgtViewModel.cs" />
+    <Compile Include="ViewModel\ToolTypeMgtViewModel.cs" />
     <Compile Include="ViewModel\UserMgtViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\LogInWindow.xaml.cs">

@@ -15,7 +15,7 @@ namespace ToolMgt.BLL
             User u;
             try
             {
-                ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
+                ToolCabinetEntities Db = DBContextFactory.GetContext();
                 u = Db.Users.FirstOrDefault(p => p.LoginName == model.NameOrCard || p.UserID == model.NameOrCard);
                 if (u == null)
                 {

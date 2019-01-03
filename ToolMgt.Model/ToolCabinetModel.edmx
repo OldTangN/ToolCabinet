@@ -14,9 +14,13 @@
           <Property Name="ToolTypeId" Type="int" Nullable="false" />
           <Property Name="ToolBarCode" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ToolRFIDCode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="RangeMin" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="RangeMax" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="Position" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Factory" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="ToolRecord">
           <Key>
@@ -37,12 +41,13 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TypeName" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="LoginName" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RealName" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="UserID" Type="varchar" MaxLength="36" Nullable="false" />
@@ -89,15 +94,19 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ToolName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ToolName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" DefaultValue="" />
           <Property Name="ToolTypeId" Type="Int32" Nullable="false" />
-          <Property Name="ToolBarCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ToolRFIDCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ToolBarCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" DefaultValue="" />
+          <Property Name="ToolRFIDCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" DefaultValue="" />
           <Property Name="Position" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="ToolRecords" Relationship="ToolCabinetModel.ToolToolRecord" FromRole="Tool" ToRole="ToolRecord" />
           <NavigationProperty Name="ToolType" Relationship="ToolCabinetModel.ToolTypeTool" FromRole="Tool" ToRole="ToolType" />
+          <Property Name="RangeMin" Type="Decimal" Nullable="false" Precision="9" Scale="2" />
+          <Property Name="RangeMax" Type="Decimal" Nullable="false" Precision="9" Scale="2" />
+          <Property Name="Factory" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" DefaultValue="" />
+          <Property Name="Note" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" DefaultValue="" />
         </EntityType>
         <EntityType Name="ToolRecord">
           <Key>
@@ -118,9 +127,10 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" DefaultValue="" />
           <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Tools" Relationship="ToolCabinetModel.ToolTypeTool" FromRole="ToolType" ToRole="Tool" />
+          <Property Name="Note" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" DefaultValue="" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -186,6 +196,10 @@
           <EntitySetMapping Name="Tools">
             <EntityTypeMapping TypeName="ToolCabinetModel.Tool">
               <MappingFragment StoreEntitySet="Tool">
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Factory" ColumnName="Factory" />
+                <ScalarProperty Name="RangeMax" ColumnName="RangeMax" />
+                <ScalarProperty Name="RangeMin" ColumnName="RangeMin" />
                 <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Position" ColumnName="Position" />
@@ -213,6 +227,7 @@
           <EntitySetMapping Name="ToolTypes">
             <EntityTypeMapping TypeName="ToolCabinetModel.ToolType">
               <MappingFragment StoreEntitySet="ToolType">
+                <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
                 <ScalarProperty Name="TypeName" ColumnName="TypeName" />
                 <ScalarProperty Name="id" ColumnName="id" />

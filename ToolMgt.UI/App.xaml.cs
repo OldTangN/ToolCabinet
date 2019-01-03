@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
+using ToolMgt.UI.Controls;
 namespace ToolMgt.UI
 {
     /// <summary>
@@ -13,5 +13,15 @@ namespace ToolMgt.UI
     /// </summary>
     public partial class App : Application
     {
+        App()
+        {
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            MessageAlert.Alert(e.Exception.Message);
+        }
     }
 }

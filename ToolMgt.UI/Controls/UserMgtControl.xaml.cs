@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
 {
@@ -34,5 +35,13 @@ namespace ToolMgt.UI.Controls
         {
 
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel = new UserMgtViewModel();
+            this.DataContext = ViewModel;
+        }
+
+        UserMgtViewModel ViewModel;
     }
 }

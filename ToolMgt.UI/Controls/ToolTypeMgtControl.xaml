@@ -5,8 +5,86 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToolMgt.UI.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="768" d:DesignWidth="1024" Loaded="UserControl_Loaded">
     <Grid>
-            
+        <Grid.Resources >
+            <Style x:Key="dgheader" TargetType="DataGridColumnHeader" >
+                <Setter Property="HorizontalContentAlignment" Value="Center"   ></Setter>
+            </Style>
+            <Style x:Key="dgCell" TargetType="TextBlock">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="TextBox" >
+                <Setter Property="Height" Value="30"></Setter>
+                <Setter Property="VerticalContentAlignment"  Value="Center" ></Setter>
+            </Style>
+            <Style TargetType="Label" >
+                <Setter Property="Height" Value="30"></Setter>
+                <Setter Property="HorizontalContentAlignment" Value="Left" ></Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center" ></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions >
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="640"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" BorderBrush="Silver" BorderThickness="1" Margin="20,10,10,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                <Label Content=" 信息编辑" FontSize="20" Height="40"></Label>
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Silver" BorderThickness="1" Margin="10,10,20,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                <Label Content="类型信息列表" FontSize="20" Height="40"></Label>
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="1" BorderBrush="Silver" BorderThickness="1,0,1,1" Margin="20,0,10,20">
+            <Grid Margin="0,10">
+                <TextBox Text="{Binding Path=CurrType.TypeName}" HorizontalAlignment="Left" Margin="97,98,0,0" Name="tbox_name" VerticalAlignment="Top" Width="120" />
+                <TextBox Text="{Binding Path=CurrType.Note}" HorizontalAlignment="Left" Margin="97,180,0,0" Name="tbox_note" VerticalAlignment="Top" Width="120" />
+                <Label Content="名 称" Height="28" HorizontalAlignment="Left" Margin="20,98,0,0" Name="label2" VerticalAlignment="Top" />
+
+                <Button Content="保 存" Command="{Binding Path=CommitCmd}" Height="30"  HorizontalAlignment="Left" Margin="28,357,0,0" VerticalAlignment="Top" Width="82" />
+
+                <Button Content="取 消" Command="{Binding Path=CancelCmd}" HorizontalAlignment="Left" Margin="143,357,0,0" VerticalAlignment="Top" Width="82" Height="30" />
+                <Label Content="说 明" Height="28" HorizontalAlignment="Left" Margin="20,180,0,0" x:Name="label2_Copy" VerticalAlignment="Top" />
+
+                <Label Content="注：*为必填信息 " HorizontalAlignment="Left" Height="25" Margin="72,564,0,0" VerticalAlignment="Top"/>
+                <Label Content="*" HorizontalAlignment="Left" Margin="222,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.949,0.775"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="Silver" BorderThickness="1,0,1,1" Margin="10,0,20,20">
+            <DataGrid Grid.Row="0" CanUserAddRows="False" RowHeaderWidth="0" AutoGenerateColumns="False"  Margin="0"
+                      ItemsSource="{Binding Path=ToolTypes}" SelectedItem="{Binding Path=SelectType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                      IsSynchronizedWithCurrentItem="True" GridLinesVisibility="All">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding TypeName}" IsReadOnly="True"  Header="名 称" Width="150*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                    <DataGridTextColumn Binding="{Binding Note}" IsReadOnly="True" Header="说 明"  HeaderStyle="{StaticResource dgheader}" Width="150*" />
+                    <DataGridTemplateColumn  IsReadOnly="True" Header="操 作" HeaderStyle="{StaticResource dgheader}"   Width="260"  >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Click="editButtonClick"  Content="编  辑" Background="#f0e68c"></Button>
+                                    <Button Grid.Column="1" Click="delButtonClick" Content="删  除" Background="#f0e68c"></Button>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        <Label Content="*" HorizontalAlignment="Left" Margin="244,110,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.949,0.775"/>
     </Grid>
 </UserControl>

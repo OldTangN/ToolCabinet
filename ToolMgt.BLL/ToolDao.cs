@@ -12,7 +12,7 @@ namespace ToolMgt.BLL
     {
         public List<Tool> GetTools(int userId)
         {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
             List<Tool> tools = Db.Tools?.OrderBy(p => p.Position).ToList();
             if (tools != null && tools.Count > 0)
             {
@@ -35,26 +35,31 @@ namespace ToolMgt.BLL
 
         public List<Tool> GetTools()
         {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
-            return Db.Tools.Include("ToolTypes")?.ToList();
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
+            return Db.Tools.Include("ToolType")?.ToList();
         }
 
+        public bool DeleteTool(int toolId)
+        {
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
+            Tool tool = Db.Tools.FirstOrDefault(p => p.id == toolId);
+            if (tool != null)
+            {
+                Db.Tools.Remove(tool);
+                Db.SaveChanges();
+            }
+            return true;
+        }
         public ToolRecord GetToolRecord(int uid)
         {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
-            ToolRecord record = Db.ToolRecords.Include("Users").FirstOrDefault(p => p.UserId == uid);
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
+            ToolRecord record = Db.ToolRecords.Include("User").FirstOrDefault(p => p.UserId == uid);
             return record;
-        }
-
-        public List<ToolType> GetToolTypes()
-        {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
-            return Db.ToolTypes?.ToList();
         }
 
         public bool AddTool(Tool tool)
         {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.Tools.Add(tool);
             Db.SaveChanges();
             return true;
@@ -62,7 +67,7 @@ namespace ToolMgt.BLL
 
         public bool UpdateTool(Tool tool)
         {
-            ToolCabinetEntities Db = new ToolCabinetEntities("ToolCabinetEntities");
+            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.Entry(tool);
             Db.SaveChanges();
             return true;

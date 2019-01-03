@@ -17,6 +17,8 @@ namespace ToolMgt.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ToolType()
         {
+            this.TypeName = "";
+            this.Note = "";
             this.Tools = new List<Tool>();
         }
     
@@ -28,6 +30,9 @@ namespace ToolMgt.Model
     
     	private System.DateTime _CreateDateTime; //private字段
         public System.DateTime CreateDateTime { get => _CreateDateTime; set => Set(ref _CreateDateTime, value); }
+    
+    	private string _Note; //private字段
+        public string Note { get => _Note; set => Set(ref _Note, value); }
     
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
