@@ -17,7 +17,7 @@
           <Property Name="RangeMin" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="RangeMax" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="Position" Type="int" Nullable="false" />
-          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="Factory" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
           <Property Name="Note" Type="nvarchar" MaxLength="200" Nullable="false" />
@@ -99,7 +99,7 @@
           <Property Name="ToolBarCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" DefaultValue="" />
           <Property Name="ToolRFIDCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" DefaultValue="" />
           <Property Name="Position" Type="Int32" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" DefaultValue="false" />
           <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="ToolRecords" Relationship="ToolCabinetModel.ToolToolRecord" FromRole="Tool" ToRole="ToolRecord" />
           <NavigationProperty Name="ToolType" Relationship="ToolCabinetModel.ToolTypeTool" FromRole="Tool" ToRole="ToolType" />

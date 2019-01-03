@@ -20,6 +20,7 @@ namespace ToolMgt.Model
             this.ToolName = "";
             this.ToolBarCode = "";
             this.ToolRFIDCode = "";
+            this.Status = false;
             this.Factory = "";
             this.Note = "";
             this.ToolRecords = new List<ToolRecord>();
@@ -43,8 +44,8 @@ namespace ToolMgt.Model
     	private int _Position; //private字段
         public int Position { get => _Position; set => Set(ref _Position, value); }
     
-    	private int _Status; //private字段
-        public int Status { get => _Status; set => Set(ref _Status, value); }
+    	private bool _Status; //private字段
+        public bool Status { get => _Status; set => Set(ref _Status, value); }
     
     	private System.DateTime _CreateDateTime; //private字段
         public System.DateTime CreateDateTime { get => _CreateDateTime; set => Set(ref _CreateDateTime, value); }

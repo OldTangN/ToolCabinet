@@ -23,7 +23,7 @@ namespace ToolMgt.UI
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : MetroWindow, IDisposable
     {
         private MainViewModel viewModel;
         public MainWindow()
@@ -39,6 +39,10 @@ namespace ToolMgt.UI
 
         private void ChangeView(UserControl control)
         {
+            foreach (UserControl item in gridContainer.Children)
+            {
+                item.Dispatcher.InvokeShutdown();
+            }
             gridContainer.Children.Clear();
             gridContainer.Children.Add(control);
         }
@@ -69,12 +73,18 @@ namespace ToolMgt.UI
 
         private void btnBorrow_Click(object sender, RoutedEventArgs e)
         {
-
+            SelectToolControl control = new SelectToolControl();
+            ChangeView(control);
         }
 
         private void btnReturn_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

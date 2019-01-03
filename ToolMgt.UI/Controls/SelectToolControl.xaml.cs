@@ -20,7 +20,7 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// SelectToolControl.xaml 的交互逻辑
     /// </summary>
-    public partial class SelectToolControl : UserControl
+    public partial class SelectToolControl : UserControl, IDisposable
     {
         public SelectToolControl()
         {
@@ -33,6 +33,11 @@ namespace ToolMgt.UI.Controls
         {
             ViewModel = new SelectToolViewModel();
             this.DataContext = ViewModel;
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

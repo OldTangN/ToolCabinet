@@ -18,6 +18,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <local:ToolInfo x:Name="tool_1" Text1="工位1" Text2="{Binding Path=Tools[0].Text2}" Selected="{Binding Tools[0].IsSelected}" Grid.Row="0" Grid.Column="0"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_2" Text1="工位2" Grid.Row="0" Grid.Column="1"></local:ToolInfo>
@@ -37,5 +38,6 @@
         <local:ToolInfo x:Name="tool_14" Text1="工位14" Grid.Row="2" Grid.Column="3"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_15" Text1="工位15" Grid.Row="3" Grid.Column="2"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_16" Text1="工位16" Grid.Row="3" Grid.Column="3"></local:ToolInfo>
+        <Button Command="{Binding Path=CommitCmd}" Grid.Row="3" Grid.Column="4" Width="60" Height="60" Content="确 定"></Button>
     </Grid>
 </UserControl>

@@ -19,7 +19,7 @@ namespace ToolMgt.UI.View
     /// <summary>
     /// LogInWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class LogInWindow : MetroWindow
+    public partial class LogInWindow : MetroWindow, IDisposable
     {
         private LogInViewModel viewModel;
         public LogInWindow()
@@ -73,6 +73,10 @@ namespace ToolMgt.UI.View
         {
             txtPwd.Focus();
             txtPwd.SelectAll();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

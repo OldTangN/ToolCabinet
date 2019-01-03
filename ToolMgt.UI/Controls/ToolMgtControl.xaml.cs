@@ -19,7 +19,7 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// ToolMgtControl.xaml 的交互逻辑
     /// </summary>
-    public partial class ToolMgtControl : UserControl
+    public partial class ToolMgtControl : UserControl, IDisposable
     {
         private ToolMgtViewModel ViewModel;
         public ToolMgtControl()
@@ -67,6 +67,10 @@ namespace ToolMgt.UI.Controls
         private void delButtonClick(object sender, RoutedEventArgs e)
         {
             ViewModel.DeleteCmd.Execute(null);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

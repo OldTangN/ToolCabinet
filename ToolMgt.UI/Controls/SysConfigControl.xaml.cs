@@ -18,11 +18,15 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// SysConfigControl.xaml 的交互逻辑
     /// </summary>
-    public partial class SysConfigControl : UserControl
+    public partial class SysConfigControl : UserControl, IDisposable
     {
         public SysConfigControl()
         {
             InitializeComponent();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
