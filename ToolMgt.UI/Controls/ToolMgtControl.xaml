@@ -47,48 +47,39 @@
         </Border>
         <Border Grid.Row="1" BorderBrush="Silver"  BorderThickness="1,0,1,1" Margin="10,0,10,20">
             <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label  Width="100" Content="扳手种类"/>
-                    <ComboBox Name="cb_species" Width="120"/>
+                    <ComboBox Name="cb_species" Width="120" SelectedItem="{Binding Path=CurrType}" ItemsSource="{Binding Path=ToolTypes}"/>
                     <Label  Content="*"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Label Width="100" Content="扳手编号"/>
-                    <TextBox Name="tb_wrenchcode" Text="" Width="120" TextWrapping="Wrap"/>
-                    <Label Content="*"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="扳手条码"></Label>
                     <TextBox Name="tb_wrenchbarcode" Width="120" TextWrapping="Wrap" KeyDown="tb_wrenchbarcode_KeyDown" />
                     <Label Content="*"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="扳手RFID"></Label>
                     <TextBox Name="tb_wrenchrfid" Width="120" TextWrapping="Wrap" KeyDown="tb_wrenchbarcode_KeyDown" />
                     <Label Content="*"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="量程下限"></Label>
                     <TextBox Name="tb_min" Width="120" TextWrapping="Wrap" KeyUp="tb_min_KeyUp"/>
                     <Label Content="*"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="量程上限"></Label>
                     <TextBox Name="tb_max" Width="120" TextWrapping="Wrap" KeyUp="tb_max_KeyUp" />
                     <Label Content="*"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="生产厂家"></Label>
                     <TextBox Name="tb_factory"  Width="120" TextWrapping="Wrap" />
                     <Label Content="*"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Label Width="100" Content="入库时间"></Label>
-                    <DatePicker Name="dp_time"  Width="120" SelectedDateFormat="Short" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Label Width="100" Content="扳手备注"></Label>
                     <TextBox Name="tb_com" TextWrapping="Wrap" Width="120"/>
                 </StackPanel>
@@ -96,8 +87,8 @@
                     <Label Name="lb_unit" Visibility="Hidden" Width="100"  Content="计量单位"/>
                     <TextBox Name="tb_unite" Visibility="Hidden"  Text="N.m" Width="120"  TextWrapping="Wrap"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 10 0 0" HorizontalAlignment="Center">
-                    <Button Name="bt_sub"  Width="100" Content="提 交" Command="{Binding Path=CommitCmd}" />
+                <StackPanel Orientation="Horizontal" Margin="0 20 0 0" HorizontalAlignment="Center">
+                    <Button Name="bt_sub" Height=" 30" Width="100" Content="保 存" Command="{Binding Path=CommitCmd}" />
                     <Button Name="bt_back" Height=" 30" Width="100" Content="取 消" Command="{Binding Path=CancelCmd}" />
                 </StackPanel>
                 <StackPanel>
@@ -108,30 +99,32 @@
 
         <Border Grid.Row=" 2" BorderBrush="Silver" BorderThickness="1,0,1,1" Grid.Column="1" Margin="5,0,20,20">
             <Grid Margin="4">
-                <Grid.RowDefinitions >
+                <!--<Grid.RowDefinitions >
                     <RowDefinition Height="35"></RowDefinition>
                     <RowDefinition ></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
-                </Grid.RowDefinitions>
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                </Grid.RowDefinitions>-->
+                <!--<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                     <Label  Content="扳手条码"></Label>
                     <TextBox Name="tb_Search" VerticalContentAlignment="Center"  Width="150" KeyDown="tb_Search_KeyDown"></TextBox>
                     <Button Name="btn_Search" Width="80"  Margin="10,0" Click="btn_Search_Click">搜 索</Button>
-                </StackPanel>
+                </StackPanel>-->
 
-                <DataGrid  Grid.Row="1" CanUserAddRows="False" SelectionMode="Single"  AutoGenerateColumns="False" Margin="0" Name="dataGrid1"  RowHeaderWidth="0"   Grid.ColumnSpan="2" AlternationCount="2" AlternatingRowBackground="#f0fff0">
+                <DataGrid  Grid.Row="1" CanUserAddRows="False" SelectionMode="Single"  
+                           ItemsSource="{Binding Path=Tools}" SelectedItem="{Binding Path=CurrTool,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True"
+                           AutoGenerateColumns="False" Margin="0" Name="dataGrid1"  RowHeaderWidth="0"   Grid.ColumnSpan="2" AlternationCount="2" AlternatingRowBackground="#f0fff0">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Header="选择" Binding="{Binding Checked,NotifyOnSourceUpdated=True}"></DataGridCheckBoxColumn>
+                        <!--<DataGridCheckBoxColumn Header="选择" Binding="{Binding Checked,NotifyOnSourceUpdated=True}"></DataGridCheckBoxColumn>-->
                         <DataGridTextColumn  IsReadOnly="True" Header="序 号"   Binding="{Binding id}"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}"  Width="50*"  />
-                        <DataGridTextColumn  IsReadOnly="True" Header="扳手编号"    Binding="{Binding wrenchCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="扳手条码"    Binding="{Binding wrenchBarCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="RFID"    Binding="{Binding RFID}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="量程下限(N.m)"   Binding="{Binding rangeMin}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="量程上限(N.m)"    Binding="{Binding rangeMax}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn IsReadOnly="True" Header="备 注" Binding="{Binding comment}" Width=" 80*" HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn  IsReadOnly="True" Header="扳手条码"    Binding="{Binding ToolBarCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn  IsReadOnly="True" Header="RFID"    Binding="{Binding ToolRFIDCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn  IsReadOnly="True" Header="量程下限(N.m)"   Binding="{Binding RangeMin}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn  IsReadOnly="True" Header="量程上限(N.m)"    Binding="{Binding RangeMax}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn IsReadOnly="True" Header="生产厂家" Binding="{Binding Factory}" Width=" 80*" HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn IsReadOnly="True" Header="备 注" Binding="{Binding Note}" Width=" 80*" HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <StackPanel Grid.Row="2"  Orientation="Horizontal"  Margin="0,2">
+                <!--<StackPanel Grid.Row="2"  Orientation="Horizontal"  Margin="0,2">
                     <StackPanel Orientation="Horizontal">
                         <Label FontSize="9" VerticalContentAlignment="Center">每页显示</Label>
                         <ComboBox Width="100"  FontSize="9"  VerticalContentAlignment="Center"  Name="cb_pagesize" 
@@ -153,7 +146,7 @@
                         <Label Name="lb_totalpage" Content="{Binding Path=TotalPage}"></Label>
                         <Label  FontSize="9" VerticalContentAlignment="Center">页</Label>
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
             </Grid>
         </Border>
         <local:BusyIndicator x:Name="busyCtl" Grid.Row="1" Grid.Column="1"></local:BusyIndicator>

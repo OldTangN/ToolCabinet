@@ -13,5 +13,10 @@ namespace ToolMgt.UI.Common
         /// 当前用户
         /// </summary>
         public static User CurrUser;
+
+        /// <summary>
+        /// 当前选择扳手
+        /// </summary>
+        public static Tool CurrTool;
     }
 }

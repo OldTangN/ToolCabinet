@@ -78,8 +78,14 @@
     <Compile Include="Common\SysConfiguration.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\Message.cs" />
+    <Compile Include="Controls\SelectToolControl.xaml.cs">
+      <DependentUpon>SelectToolControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SysConfigControl.xaml.cs">
       <DependentUpon>SysConfigControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ToolInfo.xaml.cs">
+      <DependentUpon>ToolInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ToolMgtControl.xaml.cs">
       <DependentUpon>ToolMgtControl.xaml</DependentUpon>
@@ -93,12 +99,22 @@
     <Compile Include="ViewModel\LogInViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\SelectToolViewModel.cs" />
+    <Compile Include="ViewModel\ToolMgtViewModel.cs" />
     <Compile Include="ViewModel\UserMgtViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\SelectToolControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SysConfigControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToolInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

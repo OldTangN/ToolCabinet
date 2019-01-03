@@ -72,6 +72,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ToolCabinetModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="ToolExtend.cs" />
     <Compile Include="ToolRecord.cs">
       <DependentUpon>ToolCabinetModel.tt</DependentUpon>
     </Compile>

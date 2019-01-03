@@ -50,6 +50,7 @@
     <Compile Include="ICCard\UsbICCard.cs" />
     <Compile Include="LogInDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolDao.cs" />
     <Compile Include="UserDao.cs" />
   </ItemGroup>
   <ItemGroup>
