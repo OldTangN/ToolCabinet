@@ -37,7 +37,9 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-                <DataGrid CanUserAddRows="False" RowHeaderWidth="0" AutoGenerateColumns="False"  SelectionMode="Single" AlternationCount="2" >
+                <DataGrid CanUserAddRows="False" RowHeaderWidth="0"
+                          ItemsSource="{Binding Path=Users}"
+                          AutoGenerateColumns="False"  SelectionMode="Single" AlternationCount="2" >
                     <DataGrid.ColumnHeaderStyle >
                         <Style TargetType="DataGridColumnHeader" >
                             <Setter Property="HorizontalContentAlignment" Value="Center" ></Setter>
@@ -45,21 +47,21 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                     <DataGrid.CellStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Center"/>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGrid.CellStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn IsReadOnly="True" Header="用户账号"    Binding="{Binding Path=empID}" Width="70*"  />
-                        <DataGridTextColumn IsReadOnly="True" Header="姓 名"    Binding="{Binding Path=username}"   Width="70*" />
-                        <DataGridTextColumn IsReadOnly="True" Header="用户卡号"    Binding="{Binding Path=cardID}"   Width="90*" />
-                        <DataGridTextColumn IsReadOnly="True" Header="入职时间" Binding="{Binding Path=joinDate, StringFormat='yyyy-MM-dd'}" Width="80*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="用户账号"    Binding="{Binding Path=LoginName}" Width="70*"  />
+                        <DataGridTextColumn IsReadOnly="True" Header="姓 名"    Binding="{Binding Path=RealName}"   Width="70*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="用户卡号"    Binding="{Binding Path=UserID}"   Width="90*" />
+                        <!--<DataGridTextColumn IsReadOnly="True" Header="入职时间" Binding="{Binding Path=joinDate, StringFormat='yyyy-MM-dd'}" Width="80*" />-->
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
         </Border>
-        <local:BusyIndicator x:Name="busyCtl" Grid.Row="1" IsBusy="{Binding Path=IsBusy}"></local:BusyIndicator>
+        <local:BusyIndicator x:Name="busyCtl" Grid.Row="1" IsBusy="{Binding Path=IsBusy,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></local:BusyIndicator>
     </Grid>
 </UserControl>

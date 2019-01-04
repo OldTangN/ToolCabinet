@@ -39,9 +39,9 @@ namespace ToolMgt.UI
 
         private void ChangeView(UserControl control)
         {
-            foreach (UserControl item in gridContainer.Children)
+            foreach (IDisposable item in gridContainer.Children)
             {
-                item.Dispatcher.InvokeShutdown();
+                item?.Dispose();
             }
             gridContainer.Children.Clear();
             gridContainer.Children.Add(control);
@@ -84,7 +84,6 @@ namespace ToolMgt.UI
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

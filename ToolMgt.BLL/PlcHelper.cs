@@ -63,7 +63,11 @@ namespace ToolMgt.BLL
 
         private bool IsBusy = false;
 
-        public void StartMonitor(bool[] normalStatus)
+        /// <summary>
+        /// 当前状态
+        /// </summary>
+        /// <param name="currStatus"></param>
+        public void StartMonitor(bool[] currStatus)
         {
             while (true)
             {
@@ -84,31 +88,31 @@ namespace ToolMgt.BLL
 
         }
 
-        public void OpenRed()
+        public void OpenRed(int pos)
         {
 
         }
-        public void CloseRed()
+        public void CloseRed(int pos)
         {
 
         }
-        public void OpenYellow()
+        public void OpenYellow(int pos)
         {
 
         }
-        public void CloseYellow()
+        public void CloseYellow(int pos)
         {
 
         }
-        public void OpenGreen()
+        public void OpenGreen(int pos)
         {
 
         }
-        public void CloseGreen()
+        public void CloseGreen(int pos)
         {
 
         }
-        public void OpenAlarm()
+        public void OpenAlarm(int pos)
         {
 
         }

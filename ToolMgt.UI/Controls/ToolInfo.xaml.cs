@@ -53,7 +53,7 @@ namespace ToolMgt.UI.Controls
             Text1 = newval?.ToString();
         }
 
-        public static readonly DependencyProperty Text2Property = DependencyProperty.Register("Text2", typeof(string), typeof(ToolInfo), new PropertyMetadata("", new PropertyChangedCallback(Test1PropertyChangeCallback)));
+        public static readonly DependencyProperty Text2Property = DependencyProperty.Register("Text2", typeof(string), typeof(ToolInfo), new PropertyMetadata("", new PropertyChangedCallback(Test2PropertyChangeCallback)));
         private static void Test2PropertyChangeCallback(object sender, DependencyPropertyChangedEventArgs e)
         {
             ToolInfo uc = sender as ToolInfo;
@@ -83,26 +83,29 @@ namespace ToolMgt.UI.Controls
                 {
                     selected = value;
                     //RaisePropertyChanged("Selected");
+                    this.SetValue(SelectedProperty, value);
                 }
                 if (selected)
                 {
-                    this.Background = new SolidColorBrush(Colors.Yellow);
+                    border.Background = new SolidColorBrush(Colors.Yellow);
                 }
                 else
                 {
-                    this.Background = new SolidColorBrush(Colors.White);
+                    border.Background = new SolidColorBrush(Colors.Transparent);
                 }
             }
         }
 
         public string Text1
         {
-            get => text1; set
+            get => text1;
+            set
             {
                 if (!string.Equals(text1, value))
                 {
                     text1 = value;
                     tb1.Text = text1;
+                    this.SetValue(Text1Property, value);
                 }
             }
         }
@@ -111,12 +114,14 @@ namespace ToolMgt.UI.Controls
 
         public string Text2
         {
-            get => text2; set
+            get => text2;
+            set
             {
                 if (!string.Equals(text2, value))
                 {
                     text2 = value;
                     tb2.Text = text2;
+                    this.SetValue(Text2Property, value);
                 }
             }
         }

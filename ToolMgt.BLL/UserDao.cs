@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ToolMgt.Common;
 using ToolMgt.Model;
-using System.Linq.Expressions;
 
 namespace ToolMgt.BLL
 {
@@ -29,11 +29,33 @@ namespace ToolMgt.BLL
                 //用户数量不会很多，直接采用删除旧数据后全部重新导入的方法
                 Db.Users.RemoveRange(Db.Users);
                 Db.SaveChanges();
-                Db.Users.AddRange(DbSrv.Users);
+
+                foreach (User srvu in DbSrv.Users)
+                {
+                    User u = new User()
+                    {
+                        Id = srvu.Id,
+                        CompanyID = srvu.CompanyID,
+                        CreateDateTime = srvu.CreateDateTime,
+                        Face = srvu.Face,
+                        IsDeleted = srvu.IsDeleted,
+                        LoginName = srvu.LoginName,
+                        Nfc = srvu.Nfc,
+                        Password = srvu.Password,
+                        RealName = srvu.RealName,
+                        Status = srvu.Status,
+                        Token = srvu.Token,
+                        UserID = srvu.UserID,
+                        UserImg = srvu.UserImg
+                    };
+                    Db.Users.Add(u);
+                }
+               
                 Db.SaveChanges();
             }
             catch (Exception ex)
             {
+               
                 LogUtil.WriteLog(ex);
                 return false;
             }
@@ -41,7 +63,7 @@ namespace ToolMgt.BLL
         }
 
 
-        public List<User> GetUsers(Expression<Func<User,bool>> expression)
+        public List<User> GetUsers(Expression<Func<User, bool>> expression)
         {
             ToolCabinetEntities Db;
             List<User> lstResult;

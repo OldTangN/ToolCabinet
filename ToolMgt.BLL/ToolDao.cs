@@ -14,20 +14,29 @@ namespace ToolMgt.BLL
         {
             ToolCabinetEntities Db = DBContextFactory.GetContext();
             List<Tool> tools = Db.Tools?.OrderBy(p => p.Position).ToList();
+            bool notborrowed = true;//当前用户未借出工具
             if (tools != null && tools.Count > 0)
             {
                 foreach (var tool in tools)//获取借用信息
                 {
+                    tool.CanSelected = tool.Status;
                     ToolRecord record = tool.ToolRecords.FirstOrDefault(p => !p.IsReturn);
                     if (record != null)
                     {
                         tool.Text2 = record.User.RealName;
-                        tool.IsBorrowed = true;
                         if (userId == record.UserId)
                         {
+                            notborrowed = false;
                             tool.IsSelected = true;
                         }
                     }
+                }
+            }
+            if (!notborrowed)
+            {
+                foreach (var tool in tools)//当前用户已借出工具，不允许再次选择工具
+                {
+                    tool.CanSelected = false;
                 }
             }
             return tools;

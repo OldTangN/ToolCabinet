@@ -11,15 +11,24 @@ namespace ToolMgt.Common
     {
        public static string GetMD5(string myString)
        {
-           MD5 md5 = new MD5CryptoServiceProvider();
-           byte[] fromData = System.Text.Encoding.Unicode.GetBytes(myString);
-           byte[] targetData = md5.ComputeHash(fromData);
-           string byte2String = null;
-           for (int i = 0; i < targetData.Length; i++)
-           {
-               byte2String += targetData[i].ToString("x").PadLeft(2, '0');
-           }
-           return byte2String;
-       } 
+            MD5 md5Hasher = MD5.Create();
+
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(myString));
+
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
+        } 
     }
 }

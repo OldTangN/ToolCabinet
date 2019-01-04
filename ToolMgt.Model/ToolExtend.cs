@@ -8,12 +8,6 @@ namespace ToolMgt.Model
 {
     public partial class Tool
     {
-        
-        /// <summary>
-        /// 是否被借用
-        /// </summary>
-        public bool IsBorrowed { get => isBorrowed; set => Set(ref isBorrowed, value); }
-
         /// <summary>
         /// 显示文本
         /// </summary>
@@ -21,13 +15,18 @@ namespace ToolMgt.Model
 
         /// <summary>
         /// 被选中
+        /// <para>当前用户已借出工具，在还工具时默认选中。</para>
+        /// <para>当前用户借工具时选择工具。</para>
         /// </summary>
         public bool IsSelected { get => isSelected; set => Set(ref isSelected, value); }
 
-        private bool isBorrowed = false;
+        /// <summary>
+        /// 能否被选择
+        /// </summary>
+        public bool CanSelected { get => canSelected; set => Set(ref canSelected, value); }
 
         private string text2 = "";
-
+        private bool canSelected = true;
         private bool isSelected = false;
     }
 }
