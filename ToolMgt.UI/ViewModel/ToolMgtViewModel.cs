@@ -17,8 +17,8 @@ namespace ToolMgt.UI.ViewModel
 {
     public class ToolMgtViewModel : ViewModelBase
     {
-        ToolDao dao = new ToolDao();
-        ToolTypeDao typedao = new ToolTypeDao();
+        private ToolDao dao = new ToolDao();
+        private ToolTypeDao typedao = new ToolTypeDao();
         public ToolMgtViewModel()
         {
             ShowTools();
@@ -63,7 +63,7 @@ namespace ToolMgt.UI.ViewModel
 
         private void OnCancel(object obj)
         {
-            CurrTool = new Tool();
+            CurrTool = new Tool() { Status = true };
         }
 
         public RelayCommand CommitCmd
@@ -116,11 +116,11 @@ namespace ToolMgt.UI.ViewModel
             ShowTools();
         }
 
-        void ShowTools()
+        private void ShowTools()
         {
             Tools = dao.GetTools();
             ToolTypes = typedao.GetToolTypes();
-            CurrTool = new Tool();
+            CurrTool = new Tool() { Status = true };
         }
 
         private RelayCommand deleteCmd;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,8 @@ namespace ToolMgt.UI.ViewModel
 
         }
 
-        private ObservableCollection<User> _users;
-        public ObservableCollection<User> UsersCollection { get => _users; set => Set(ref _users, value); }
+        private List<User> _users;
+        public List<User> Users { get => _users; set => Set(ref _users, value); }
 
         #region 搜索
         public ICommand SearchCmd
@@ -43,7 +44,7 @@ namespace ToolMgt.UI.ViewModel
             UserDao dao = new UserDao();
             List<User> lstRlt = dao.GetUsers(p => p.LoginName.Contains(LoginName)
                              && p.RealName.Contains(RealName) && p.UserID.Contains(CardId));
-            UsersCollection = new ObservableCollection<User>(lstRlt);
+            Users = lstRlt;
             IsBusy = false;
         }
         #endregion
@@ -62,9 +63,21 @@ namespace ToolMgt.UI.ViewModel
                 return userSyncCmd;
             }
         }
+
+        private BackgroundWorker UserSyncWorker;
+
         private void UserSync(object obj)
         {
             IsBusy = true;
+
+            UserSyncWorker = new BackgroundWorker();
+            UserSyncWorker.RunWorkerCompleted += UserSyncWorker_RunWorkerCompleted;
+            UserSyncWorker.DoWork += UserSyncWorker_DoWork;
+            UserSyncWorker.RunWorkerAsync();
+        }
+
+        private void UserSyncWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
             UserDao dao = new UserDao();
             bool rlt = false;
             try
@@ -74,17 +87,19 @@ namespace ToolMgt.UI.ViewModel
             catch (Exception ex)
             {
                 LogUtil.WriteLog(ex);
-                MessageAlert.Alert(ex.Message);
+                throw new Exception("同步失败！" + ex.Message);
             }
+        }
+
+        private void UserSyncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             IsBusy = false;
-            if (rlt)
+            if (e.Error != null)
             {
-                MessageAlert.Alert("同步成功！");
+                MessageAlert.Error(e.Error.Message);
+                return;
             }
-            else
-            {
-                MessageAlert.Alert("同步失败！");
-            }
+            MessageAlert.Alert("同步成功！");
         }
         #endregion
 

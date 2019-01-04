@@ -121,6 +121,7 @@ namespace ToolMgt.UI.ViewModel
             }
             else
             {
+                GlobalData.CurrUser = u;
                 OnLogIn?.Invoke();
             }
         }

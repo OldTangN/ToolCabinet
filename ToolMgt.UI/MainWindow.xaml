@@ -67,6 +67,5 @@
         <Grid Name="gridContainer" Grid.Row="0">
 
         </Grid>
-        <local:BusyIndicator  x:Name="busyCtl"></local:BusyIndicator>
     </Grid>
 </controls:MetroWindow>
