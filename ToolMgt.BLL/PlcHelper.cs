@@ -119,7 +119,7 @@ namespace ToolMgt.BLL
 
         private byte[] GetProtocol(string plcADR,string funcCode,string adr,string cmd)
         {
-
+            return null;
         }
     }
 }
