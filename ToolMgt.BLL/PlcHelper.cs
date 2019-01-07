@@ -6,16 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 namespace ToolMgt.BLL
 {
-    public class DataEventArgs : EventArgs
-    {
-        private byte[] _data;
-        public DataEventArgs(byte[] data)
-        {
-            this.Data = data;
-        }
-
-        public byte[] Data { get => _data; set => _data = value; }
-    }
+ 
     /// <summary>
     /// 传感器监控
     /// </summary>
