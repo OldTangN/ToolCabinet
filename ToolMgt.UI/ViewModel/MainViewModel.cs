@@ -7,11 +7,14 @@ using System.Windows.Input;
 using ToolMgt.BLL;
 using ToolMgt.Common;
 using ToolMgt.Model;
+using ToolMgt.UI.Common;
 
 namespace ToolMgt.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+
+        public User CurrUser { get => GlobalData.CurrUser; }
 
         private ICommand _testCmd;
         public ICommand TestCmd
