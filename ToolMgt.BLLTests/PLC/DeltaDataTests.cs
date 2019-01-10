@@ -29,7 +29,7 @@ namespace ToolMgt.BLL.Tests
         public void SendTest()
         {
             PLCHelper pLCHelper = new PLCHelper();
-            pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 10);
+            pLCHelper.GetStart(PLCHelper.PlcAdd.Y20, 8);
 
         }
         [TestMethod()]

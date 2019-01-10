@@ -20,11 +20,12 @@ namespace ToolMgt.BLL
             X20 = 0x0410, X21 = 0x0411, X22 = 0x0412, X23 = 0x0413, X24 = 0x0414, X25 = 0x0415, X26 = 0x0416, X27 = 0x0417,
             X30 = 0x0418, X31 = 0x0419, X32 = 0x041A, X33 = 0x041B, X34 = 0x041C, X35 = 0x041D, X36 = 0x041E, X37 = 0x041F,
             X40 = 0x0420, X41 = 0x0421, X42 = 0x0422, X43 = 0x0423, X44 = 0x0424, X45 = 0x0425, X46 = 0x0426, X47 = 0x0427,
+            T20 = 0x0614,
         }
 
         public PLCHelper()
         {
-            ComParmater comParmater = new ComParmater("COM1", 9600, Parity.Even, 8, StopBits.One);
+            ComParmater comParmater = new ComParmater("COM12", 9600, Parity.Even, 7, StopBits.One);
             deltaPLC = new DeltaPLC(comParmater);
             deltaPLC.Open();
             deltaPLC.ReciveHandler += DeltaPLC_ReciveHandler;
@@ -34,6 +35,8 @@ namespace ToolMgt.BLL
         private void DeltaPLC_ReciveHandler(object sender, DataEventArgs e)
         {
             byte[] reciveData = e.data;
+            string str = System.Text.Encoding.ASCII.GetString(reciveData);
+
         }
         /// <summary>
         /// 获取各个工具位置的状态 参考协议4.5.3
@@ -53,6 +56,7 @@ namespace ToolMgt.BLL
 
             DeltaData deltaData = new DeltaData(0x03, cmd.ToArray());
             byte[] data = deltaData.ToSendData();
+
             deltaPLC.SendData(data);
         }
 
@@ -85,7 +89,7 @@ namespace ToolMgt.BLL
             byte[] newbyte = lbyte.ToArray();
             Array.Reverse(newbyte);//高低位反转
             cmd.AddRange(newbyte);
- 
+
             DeltaData deltaData = new DeltaData(0x0F, cmd.ToArray());
             byte[] data = deltaData.ToSendData();
             deltaPLC.SendData(data);
