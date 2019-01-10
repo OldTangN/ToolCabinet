@@ -48,7 +48,9 @@
             <TextBlock Text="当前用户：" FontSize="20"></TextBlock>
             <TextBlock Text="{Binding Path=CurrUser.RealName}" FontSize="20"></TextBlock>
         </StackPanel>
-        
+        <StackPanel Name="spPLCStatus" Grid.Row="1" Margin="0 0 20 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Path=PLCStatus}" FontSize="20" Foreground="Red"></TextBlock>
+        </StackPanel>
         <!--<Menu Grid.Row="1" FontSize="20" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">
             <MenuItem Header="系 统" IsEnabled="True">
                 <MenuItem Header="系统设置" IsEnabled="True"></MenuItem>

@@ -23,5 +23,7 @@ namespace ToolMgt.UI.Common
         /// IC读卡器波特率，默认-1
         /// </summary>
         public static int ICReaderBaudRate => ConfigurationUtil.GetConfiguration(int.Parse, () => -1);
+
+        public static string PLCCom => ConfigurationUtil.GetConfiguration(Convert.ToString, () => "COM12");
     }
 }

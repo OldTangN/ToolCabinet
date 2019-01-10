@@ -31,20 +31,27 @@ namespace ToolMgt.BLL
             T20 = 0x0614,
         }
 
-        public PLCHelper()
+        public PLCHelper(string com)
         {
-            ComParmater comParmater = new ComParmater("COM12", 9600, Parity.Even, 7, StopBits.One);
+            ComParmater comParmater = new ComParmater(com, 9600, Parity.Even, 7, StopBits.One);
             deltaPLC = new DeltaPLC(comParmater);
-            deltaPLC.Open();
-            deltaPLC.ReciveHandler += DeltaPLC_ReciveHandler;
-
-            Thread thread = new Thread(() =>
+            Connected = deltaPLC.Open();
+            if (Connected)
             {
-                DoSourceData();
-            });
-            thread.IsBackground = true;
-            thread.Start();
+                deltaPLC.ReciveHandler += DeltaPLC_ReciveHandler;
 
+                Thread thread = new Thread(() =>
+                {
+                    DoSourceData();
+                });
+                thread.IsBackground = true;
+                thread.Start();
+            }
+        }
+
+        public bool Connected
+        {
+            get; set;
         }
 
         private void DoSourceData()
@@ -196,7 +203,7 @@ namespace ToolMgt.BLL
             cmd.AddRange(padd);
 
             byte[] vbyte = (BitConverter.GetBytes(value));
-            Array.Reverse(vbyte);//高低位反转
+            //Array.Reverse(vbyte);//高低位反转
             cmd.AddRange(vbyte);
 
             DeltaData deltaData = new DeltaData(0x05, cmd.ToArray());

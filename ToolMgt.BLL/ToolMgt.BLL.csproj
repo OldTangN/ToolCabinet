@@ -55,7 +55,7 @@
     <Compile Include="ICCard\ComICCard.cs" />
     <Compile Include="ICCard\ICardHelper.cs" />
     <Compile Include="ICCard\UsbICCard.cs" />
-    <Compile Include="LightControl.cs" />
+    <Compile Include="PLCControl.cs" />
     <Compile Include="LogInDao.cs" />
     <Compile Include="PLC\DeltaPLC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -15,19 +15,22 @@ namespace ToolMgt.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private PLCHelper PLC;
+        private PLCControl plcControl;
         private Thread PLCThread;
 
         private ToolDao toolDao;
         private ToolRecordDao recordDao;
-        public MainViewModel(PLCHelper plc)
+        public MainViewModel(PLCControl plc)
         {
             toolDao = new ToolDao();
             recordDao = new ToolRecordDao();
-            PLC = plc;
-            //PLC.OnReceive += PLCReceive;
-            //PLC.DoorClosed += DoorClosed;
-            //PLC.ToolStatusChanged += ToolStatusChanged;
+            plcControl = plc;
+            if (!plcControl.Connected)
+            {
+                PLCStatus = "PLC连接失败！";
+            }
+            plcControl.DoorClosed += RaiseDoorClosed;
+            plcControl.ToolStatusChanged += RaiseToolStatusChanged;
             Init();
         }
 
@@ -39,6 +42,7 @@ namespace ToolMgt.UI.ViewModel
         public User CurrUser => GlobalData.CurrUser;
 
         public List<Tool> Tools { get; set; }
+
 
         private void Init()
         {
@@ -54,7 +58,14 @@ namespace ToolMgt.UI.ViewModel
                 else
                 {
                     //根据工具设置开关指示灯
-                    //PLC.SetGreen(tool.Status ? LightStatus.Open : LightStatus.Close, tool.Position);
+                    if (tool.Status)
+                    {
+                        plcControl.OpenLight(tool.Position);
+                    }
+                    else
+                    {
+                        plcControl.CloseLight(tool.Position);
+                    }
                 }
                 if (tool.CanSelected)//可选择的工具添加事件
                 {
@@ -71,10 +82,16 @@ namespace ToolMgt.UI.ViewModel
             for (int i = 0; i < Tools.Count; i++)
             {
                 status[i] = Tools[i].Status;
+                //status[i] = false;//TODO:测试代码
             }
+
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
-                //PLC.StartMonitor(p as bool[]);
+                while (true)
+                {
+                    plcControl.GetStatus(p as bool[]);
+                    Thread.Sleep(1000);
+                }
             }));
             PLCThread.Start(status);
         }
@@ -109,22 +126,26 @@ namespace ToolMgt.UI.ViewModel
             }
         }
 
-        private void ToolStatusChanged(int pos, bool status)
+        private void RaiseToolStatusChanged(int pos, bool status)
         {
+            if (GlobalData.CurrTool == null)
+            {
+                return;
+            }
             //错拿、错放报警
             if (pos != GlobalData.CurrTool.Position)
             {
                 GlobalData.SelectToolCorrect = false;
-                //PLC.SetAlarm(true);
+                plcControl.OpenAlarm();
             }
             else
             {
                 GlobalData.SelectToolCorrect = true;
-                //PLC.SetAlarm(false);
+                plcControl.CloseAlarm();
             }
         }
 
-        private void DoorClosed()
+        private void RaiseDoorClosed()
         {
             if (GlobalData.CurrTool == null)
             {
@@ -167,9 +188,7 @@ namespace ToolMgt.UI.ViewModel
             OnDoorClose?.Invoke();
         }
 
-        private void PLCReceive(object sender, DataEventArgs e)
-        {
-
-        }
+        private string pLCStatus;
+        public string PLCStatus { get => pLCStatus; set => Set(ref pLCStatus, value); }
     }
 }

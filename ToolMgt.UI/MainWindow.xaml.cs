@@ -1,6 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +12,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using ToolMgt.BLL;
+using ToolMgt.UI.Common;
 using ToolMgt.UI.Controls;
 using ToolMgt.UI.View;
 using ToolMgt.UI.ViewModel;
-
 namespace ToolMgt.UI
 {
     /// <summary>
@@ -27,7 +27,7 @@ namespace ToolMgt.UI
     public partial class MainWindow : MetroWindow, IDisposable
     {
         private MainViewModel viewModel;
-        private PLCHelper PLC;
+        private PLCControl PLC;
 
         public MainWindow()
         {
@@ -36,7 +36,7 @@ namespace ToolMgt.UI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            PLC = new PLCHelper();
+            PLC = new PLCControl(SysConfiguration.PLCCom);
             viewModel = new MainViewModel(PLC);
             viewModel.OnDoorClose += DoorClose;
             this.DataContext = viewModel;

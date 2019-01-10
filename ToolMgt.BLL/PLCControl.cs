@@ -18,12 +18,14 @@ namespace ToolMgt.BLL
         public bool[] Lock { get; set; }
         public bool[] Tool { get; set; }
     }
-    public class LightControl
+    public class PLCControl
     {
-        private PLCHelper PLC;
-        public LightControl(string com)
+        private PLCHelper plcHelper;
+        public bool Connected { get; set; }
+        public PLCControl(string com)
         {
-            PLC = new PLCHelper();
+            plcHelper = new PLCHelper(com);
+            Connected = plcHelper.Connected;
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace ToolMgt.BLL
         {
             int val = BitConverter.ToInt32(lightValue, 0);
             PLCHelper.PlcAdd startAddr = GetToolAddr(1, false);
-            PLC.SetStart(startAddr, 16, val);
+            plcHelper.SetStart(startAddr, 16, val);
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace ToolMgt.BLL
         public void OpenLight(int no)
         {
             PLCHelper.PlcAdd addr = GetToolAddr(no, false);
-            PLC.SetStart(addr, 1, 0x01);
+            plcHelper.SetStart(addr, 1, 0x01);
         }
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace ToolMgt.BLL
         public void CloseLight(int no)
         {
             PLCHelper.PlcAdd addr = GetToolAddr(no, false);
-            PLC.SetStart(addr, 1, 0x00);
+            plcHelper.SetStart(addr, 1, 0x00);
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace ToolMgt.BLL
         public void OpenDoor(int no)
         {
             PLCHelper.PlcAdd addr = GetLockAddr(no, false);
-            PLC.SetStart(addr, 1, 0x01);
+            plcHelper.SetStart(addr, 1, 0x01);
         }
 
         /// <summary>
@@ -72,8 +74,8 @@ namespace ToolMgt.BLL
         /// </summary>
         public void OpenAlarm()
         {
-            PLC.ItemStart(AddrLightR, 0x01);
-            PLC.ItemStart(AddrBuzzer, 0x01);
+            plcHelper.ItemStart(AddrLightR, 0xFF);
+            plcHelper.ItemStart(AddrBuzzer, 0xFF);
         }
 
         /// <summary>
@@ -81,20 +83,30 @@ namespace ToolMgt.BLL
         /// </summary>
         public void CloseAlarm()
         {
-            PLC.ItemStart(AddrLightR, 0x00);
-            PLC.ItemStart(AddrBuzzer, 0x00);
+            plcHelper.ItemStart(AddrLightR, 0x0000);
+            plcHelper.ItemStart(AddrBuzzer, 0x0000);
         }
 
-        public Status GetStatus()
+        public Status GetStatus(bool[] oriToolStatus)
         {
-            PLC.GetStart(PLCHelper.PlcAdd.X0, 40);
+            plcHelper.GetStart(PLCHelper.PlcAdd.X0, 40);
             Thread.Sleep(500);
-            DeltaData data = PLC.GetRecive();
+            DeltaData data = plcHelper.GetRecive();
+            if (data == null)
+            {
+                Thread.Sleep(500);
+                data = plcHelper.GetRecive();
+                return null;
+            }
 
+            if (data.CMD != 0x02)
+            {
+                return null;
+            }
             Status status = new Status();
 
             byte bytLock = data.DATA[1];//锁状态
-            char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8,'0').Reverse().ToArray();
+            char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8, '0').Reverse().ToArray();
             status.Lock[0] = arrLock[0] == '1';
             status.Lock[1] = arrLock[1] == '1';
 
@@ -111,10 +123,19 @@ namespace ToolMgt.BLL
             {
                 status.Tool[i] = toolsStatus[i] == '1';
             }
-
+            for (int i = 0; i < status.Tool.Length && i < toolsStatus.Count; i++)
+            {
+                if (status.Tool[i] != oriToolStatus[i])
+                {
+                    ToolStatusChanged?.Invoke(i + 1, status.Tool[i]);//状态改变回调
+                }
+            }
             //byte bytTools_3 = data.DATA[5];//备用扩展
             //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
-
+            if (status.Lock[0] && status.Lock[1])
+            {
+                DoorClosed?.Invoke();//关门改变回调
+            }
             return status;
         }
 
@@ -168,5 +189,15 @@ namespace ToolMgt.BLL
         /// 蜂鸣器
         /// </summary>
         private PLCHelper.PlcAdd AddrBuzzer = PLCHelper.PlcAdd.Y5;
+
+        /// <summary>
+        /// 柜门全部关闭 回调
+        /// </summary>
+        public Action DoorClosed;
+
+        /// <summary>
+        /// 工具状态改变 回调 &lt;位置1-16,状态&gt;
+        /// </summary>
+        public Action<int, bool> ToolStatusChanged;
     }
 }

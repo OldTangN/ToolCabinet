@@ -57,7 +57,14 @@ namespace ToolMgt.BLL.Tests
         [TestMethod()]
         public void LightControlTest()
         {
-            LightControl ctl = new LightControl("");
+            PLCControl ctl = new PLCControl("");
+            ctl.OpenAlarm();
+
+            ctl.CloseAlarm();
+
+            ctl.OpenLight(2);
+            ctl.CloseLight(2);
+
             ctl.GetStatus();
 
             ctl.OperateLight(new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
