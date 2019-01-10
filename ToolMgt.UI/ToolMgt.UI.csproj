@@ -90,6 +90,9 @@
     <Compile Include="Controls\ToolMgtControl.xaml.cs">
       <DependentUpon>ToolMgtControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ToolRecordControl.xaml.cs">
+      <DependentUpon>ToolRecordControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ToolTypeMgtControl.xaml.cs">
       <DependentUpon>ToolTypeMgtControl.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,7 @@
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SelectToolViewModel.cs" />
     <Compile Include="ViewModel\ToolMgtViewModel.cs" />
+    <Compile Include="ViewModel\ToolRecordViewModel.cs" />
     <Compile Include="ViewModel\ToolTypeMgtViewModel.cs" />
     <Compile Include="ViewModel\UserMgtViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -120,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ToolMgtControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToolRecordControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

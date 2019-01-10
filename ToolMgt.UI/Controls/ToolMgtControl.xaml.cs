@@ -27,16 +27,6 @@ namespace ToolMgt.UI.Controls
             InitializeComponent();
         }
 
-        private void tb_Search_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void btn_Search_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void tb_wrenchbarcode_KeyDown(object sender, KeyEventArgs e)
         {
 

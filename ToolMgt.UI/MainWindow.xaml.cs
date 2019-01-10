@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.BLL;
 using ToolMgt.UI.Controls;
 using ToolMgt.UI.View;
 using ToolMgt.UI.ViewModel;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace ToolMgt.UI
 {
@@ -26,6 +27,8 @@ namespace ToolMgt.UI
     public partial class MainWindow : MetroWindow, IDisposable
     {
         private MainViewModel viewModel;
+        private PLCHelper PLC;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,8 +36,15 @@ namespace ToolMgt.UI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            viewModel = new MainViewModel();
-            this.DataContext = viewModel; 
+            PLC = new PLCHelper();
+            viewModel = new MainViewModel(PLC);
+            viewModel.OnDoorClose += DoorClose;
+            this.DataContext = viewModel;
+        }
+
+        private void DoorClose(bool status)
+        {
+
         }
 
         private void ChangeView(UserControl control)
@@ -73,17 +83,31 @@ namespace ToolMgt.UI
 
         private void btnBorrow_Click(object sender, RoutedEventArgs e)
         {
-            SelectToolControl control = new SelectToolControl();
+            viewModel.OnDoorClose -= DoorClose;
+            SelectToolControl control = new SelectToolControl(viewModel.Tools);
             ChangeView(control);
-        }
-
-        private void btnReturn_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         public void Dispose()
         {
+            this.viewModel.Dispose();
+        }
+
+        private void MetroWindow_Closed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            LogInWindow win = new LogInWindow();
+            win.Show();
+        }
+
+        private void btnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            ToolRecordControl control = new ToolRecordControl();
+            ChangeView(control);
         }
     }
 }

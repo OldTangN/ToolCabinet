@@ -86,7 +86,7 @@ namespace ToolMgt.UI.ViewModel
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(ex);
+                LogUtil.WriteLog("同步失败！",ex);
                 throw new Exception("同步失败！" + ex.Message);
             }
         }

@@ -4,33 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToolMgt.UI.Controls"
-             mc:Ignorable="d" Background="White" Height="60" Width="60"
+             mc:Ignorable="d" Background="White" MinWidth="60" MinHeight="60"
              d:DesignHeight="60" d:DesignWidth="60" FontSize="16">   
-    <Border Name="border" BorderBrush="LightBlue" BorderThickness="2" Background="Transparent">
-        <Grid MouseDown="Grid_MouseDown" Background="Transparent">
-            <!--<Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <Trigger Value="False" Property="IsEnabled">
-                            <Setter Property="Background" Value="LightGray"></Setter>
-                        </Trigger>
-                        <Trigger Value="True" Property="IsEnabled">
-                            <Setter Property="Background" Value="Transparent"></Setter>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
+    <Border Name="border" BorderBrush="LightBlue" BorderThickness="2">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <Trigger Value="False" Property="IsEnabled">
+                        <Setter Property="Background" Value="LightGray"></Setter>
+                    </Trigger>
+                    <Trigger Value="True" Property="IsEnabled">
+                        <Setter Property="Background" Value="Transparent"></Setter>
+                    </Trigger>
+                    <!--<Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightYellow"></Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>-->
+                        </Trigger>-->
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Grid MouseDown="Grid_MouseDown" Background="Transparent">            
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Name="tb1" Grid.Row="0" Text="工位1" HorizontalAlignment="Center">
-               
+            <TextBlock Name="tb1" Grid.Row="0" Text="工位01" HorizontalAlignment="Center" VerticalAlignment="Center">
             </TextBlock>
-            <TextBlock Name="tb2" Grid.Row="1" Text="空闲" HorizontalAlignment="Center"></TextBlock>
+            <TextBlock Name="tb2" Grid.Row="1" Text="空闲" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
         </Grid>
     </Border>
 </UserControl>

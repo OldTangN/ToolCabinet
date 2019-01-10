@@ -22,7 +22,9 @@ namespace ToolMgt.UI.ViewModel
         public LogInViewModel()
         {
             CurrLogIn = new LogInModel();
-
+            GlobalData.CurrTool = null;
+            GlobalData.CurrUser = null;
+            GlobalData.SelectToolCorrect = false;
             string readerType = SysConfiguration.ICReaderType;
             if (string.IsNullOrEmpty(readerType))
             {

@@ -112,15 +112,34 @@ namespace ToolMgt.UI.ViewModel
 
         private void OnDelete(object obj)
         {
-            dao.DeleteTool(SelectTool.id);
+            try
+            {
+                if (SelectTool == null)
+                {
+                    return;
+                }
+                dao.DeleteTool(SelectTool.id);
+            }
+            catch (Exception ex)
+            {
+                MessageAlert.Error(ex.Message);
+                return;
+            }
             ShowTools();
         }
 
         private void ShowTools()
         {
-            Tools = dao.GetTools();
-            ToolTypes = typedao.GetToolTypes();
-            CurrTool = new Tool() { Status = true };
+            try
+            {
+                Tools = dao.GetTools();
+                ToolTypes = typedao.GetToolTypes();
+                CurrTool = new Tool() { Status = true };
+            }
+            catch (Exception ex)
+            {
+                MessageAlert.Error(ex.Message);
+            }
         }
 
         private RelayCommand deleteCmd;

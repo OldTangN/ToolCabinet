@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="ToolMgt.UI.Controls.ToolRecordControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ToolMgt.UI.Controls"
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
+             d:DesignHeight="768" d:DesignWidth="1024">
+    <Grid>
+        <Grid.Resources >
+            <Style x:Key="dgheader" TargetType="DataGridColumnHeader" >
+                <Setter Property="HorizontalContentAlignment" Value="Center"   ></Setter>
+            </Style>
+            <Style x:Key="dgCell" TargetType="TextBlock">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="TextBox" >
+                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                <Setter Property="Height" Value="25"></Setter>
+            </Style>
+            <Style TargetType="ComboBox" >
+                <Setter Property="VerticalContentAlignment" Value="Center" ></Setter>
+                <Setter Property="Height" Value="25"></Setter>
+            </Style>
+
+            <Style TargetType="Label" >
+                <Setter Property="Height" Value="25"></Setter>
+                <Setter Property="HorizontalContentAlignment" Value="Right"></Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center"  ></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions >
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="640"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Silver"  BorderThickness="1" Margin="5,10,20,0">
+            <Label Content="工具领用、归还记录" FontSize="20" HorizontalContentAlignment="Center" Height="40"></Label>
+        </Border>
+        
+        <Border Grid.Row=" 2" BorderBrush="Silver" BorderThickness="1,0,1,1" Grid.Column="1" Margin="5,0,20,20">
+            <Grid Margin="4">
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="35"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 0 0 0">
+                    <ComboBox DisplayMemberPath="." SelectedItem="{Binding Path=SelectStatus}" ItemsSource="{Binding Path=Status}" HorizontalContentAlignment="Center" Width="80">
+                    </ComboBox>
+                    
+                    <Label Content="条码" Margin="20 0 0 0"></Label>
+                    <TextBox Text="{Binding Path=Barcode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>
+
+                    <Label Content="账号/卡号" Margin="20 0 0 0"></Label>
+                    <TextBox Text="{Binding Path=NameOrCard,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>
+                    <Label Content="领用时间" Margin="20 0 0 0"></Label>
+                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowStart,Mode=TwoWay,StringFormat='yyyy-MM-dd'}" DisplayDate="2015-07-03"></DatePicker>
+                    <Label Content="~" Margin="0 0 0 0"></Label>
+                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowEnd,Mode=TwoWay,StringFormat='yyyy-MM-dd'}" DisplayDate="2015-07-03"></DatePicker>
+                    <Button Name="btn_Search" Width="80" Margin="20,0" Command="{Binding SearchCmd}">搜 索</Button>
+                </StackPanel>
+
+                <DataGrid  Grid.Row="1" CanUserAddRows="False" SelectionMode="Single"  
+                           ItemsSource="{Binding Path=Records}"
+                           AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="扳手条码" Binding="{Binding Tool.ToolBarCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="生产厂家"    Binding="{Binding Tool.ToolType.TypeName}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="量程下限(N.m)" Binding="{Binding Tool.RangeMin}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="量程上限(N.m)"  Binding="{Binding Tool.RangeMax}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="领用人"  Binding="{Binding User.RealName}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="领用时间" Binding="{Binding BorrowDate,StringFormat='yyyy-MM-dd'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="归还时间" Binding="{Binding ReturnDate,StringFormat='yyyy-MM-dd'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!--<StackPanel Grid.Row="2"  Orientation="Horizontal"  Margin="0,2">
+                    <StackPanel Orientation="Horizontal">
+                        <Label FontSize="9" VerticalContentAlignment="Center">每页显示</Label>
+                        <ComboBox Width="100"  FontSize="9"  VerticalContentAlignment="Center" Name="cb_pagesize" 
+                                 IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding Path=PageSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBoxItem >20</ComboBoxItem>
+                            <ComboBoxItem >30</ComboBoxItem>
+                            <ComboBoxItem >50</ComboBoxItem>
+                        </ComboBox>
+                        <Label FontSize="9" VerticalContentAlignment="Center">条</Label>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="10,0">
+                        <Button Name="bt_firstpage" FontSize="9" VerticalContentAlignment="Center" Height="20" Width="50" Margin="10,0" Command="{Binding Path=GoFirstCmd}">首页</Button>
+                        <Button Name="bt_propage" FontSize="9" VerticalContentAlignment="Center" Height="20" Width="50" Margin="10,0" Command="{Binding Path=GoPreCmd}">上页</Button>
+                        <Button Name="bt_nextpage" FontSize="9" VerticalContentAlignment="Center" Height="20" Width="50" Margin="10,0" Command="{Binding Path=GoNextCmd}">下页</Button>
+                        <Button Name="bt_lastpage" FontSize="9" VerticalContentAlignment="Center" Height="20" Width="50" Margin="10,0" Command="{Binding Path=GoLastCmd}">末页</Button>
+                        <TextBox Name="tb_pageno" Width="50" Height="25" Margin="10,0" Text="{Binding Path=CurPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <Button Name="bt_targetpage" FontSize="9" VerticalContentAlignment="Center" Width="30" Height="20" Command="{Binding Path=GoTargetCmd}">Go</Button>
+                        <Label FontSize="9" VerticalContentAlignment="Center">共</Label>
+                        <Label Name="lb_totalpage" Content="{Binding Path=TotalPage}"></Label>
+                        <Label  FontSize="9" VerticalContentAlignment="Center">页</Label>
+                    </StackPanel>
+                </StackPanel>-->
+            </Grid>
+        </Border>
+        <local:BusyIndicator x:Name="busyCtl" Grid.Row="1" Grid.Column="1"></local:BusyIndicator>
+    </Grid>
+</UserControl>

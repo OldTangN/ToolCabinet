@@ -9,15 +9,18 @@ namespace ToolMgt.BLL
 {
     public class ToolTypeDao
     {
+        private ToolCabinetEntities Db;
+        public ToolTypeDao()
+        {
+            Db = new ToolCabinetEntities("ToolCabinetEntities");
+        }
         public List<ToolType> GetToolTypes()
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             return Db.ToolTypes?.ToList();
         }
 
         public bool AddType(ToolType toolType)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.ToolTypes.Add(toolType);
             Db.SaveChanges();
             return true;
@@ -25,14 +28,12 @@ namespace ToolMgt.BLL
 
         public bool UpdateType(ToolType toolType)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.SaveChanges();
             return true;
         }
 
         public bool DeleteType(int toolTypeId)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             ToolType toolType = Db.ToolTypes.FirstOrDefault(p => p.id == toolTypeId);
             if (toolType != null)
             {

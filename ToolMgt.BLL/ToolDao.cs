@@ -10,9 +10,14 @@ namespace ToolMgt.BLL
 {
     public class ToolDao
     {
+        private ToolCabinetEntities Db;
+        public ToolDao()
+        {
+            Db = new ToolCabinetEntities("ToolCabinetEntities");
+        }
+
         public List<Tool> GetTools(int userId)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             List<Tool> tools = Db.Tools?.OrderBy(p => p.Position).ToList();
             bool notborrowed = true;//当前用户未借出工具
             if (tools != null && tools.Count > 0)
@@ -23,15 +28,28 @@ namespace ToolMgt.BLL
                     ToolRecord record = tool.ToolRecords.FirstOrDefault(p => !p.IsReturn);
                     if (record != null)
                     {
-                        tool.Text2 = record.User.RealName;
+                        tool.Text2 = "已领用：" + record.User.RealName;
                         if (userId == record.UserId)
                         {
                             notborrowed = false;
                             tool.IsSelected = true;
                         }
                     }
+                    else
+                    {
+                        if (tool.Position == 8 || tool.Position == 16)
+                        {
+                            tool.CanSelected = false;
+                            tool.Text2 = "备用";
+                        }
+                        else
+                        {
+                            tool.Text2 = "空闲";
+                        }
+                    }
                 }
             }
+
             if (!notborrowed)
             {
                 foreach (var tool in tools)//当前用户已借出工具，不允许再次选择工具
@@ -39,18 +57,18 @@ namespace ToolMgt.BLL
                     tool.CanSelected = false;
                 }
             }
+
             return tools;
         }
 
         public List<Tool> GetTools()
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
+
             return Db.Tools.Include("ToolType")?.ToList();
         }
 
         public bool DeleteTool(int toolId)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Tool tool = Db.Tools.FirstOrDefault(p => p.id == toolId);
             if (tool != null)
             {
@@ -59,16 +77,15 @@ namespace ToolMgt.BLL
             }
             return true;
         }
+
         public ToolRecord GetToolRecord(int uid)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             ToolRecord record = Db.ToolRecords.Include("User").FirstOrDefault(p => p.UserId == uid);
             return record;
         }
 
         public bool AddTool(Tool tool)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.Tools.Add(tool);
             Db.SaveChanges();
             return true;
@@ -76,7 +93,6 @@ namespace ToolMgt.BLL
 
         public bool UpdateTool(Tool tool)
         {
-            ToolCabinetEntities Db = DBContextFactory.GetContext();
             Db.Entry(tool);
             Db.SaveChanges();
             return true;

@@ -6,7 +6,8 @@
          xmlns:local="clr-namespace:ToolMgt.UI.Controls"
         xmlns:controls ="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        Title="工具柜管理系统" d:DesignHeight="768" Width="1366" Loaded="Window_Loaded">
+        Title="工具柜管理系统" d:DesignHeight="768" Width="1366" Loaded="Window_Loaded"
+        Closing="MetroWindow_Closing" Closed="MetroWindow_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -29,6 +30,9 @@
             </Button>
             <Button Name="btnToolType" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
                 <TextBlock Width="40" Text="工具类型" TextWrapping="Wrap"></TextBlock>
+            </Button>
+            <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
+                <TextBlock Width="40" Text="记录查询" TextWrapping="Wrap"></TextBlock>
             </Button>
             <Button Name="btnSysConfig" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
                 <TextBlock Width="40" Text="系统设置" TextWrapping="Wrap"></TextBlock>
