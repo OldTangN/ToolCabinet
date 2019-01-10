@@ -25,5 +25,18 @@ namespace ToolMgt.BLL.Tests
 
             string dd = Convert.ToString(cc, 2);
         }
+        [TestMethod()]
+        public void SendTest()
+        {
+            PLCHelper pLCHelper = new PLCHelper();
+            pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 10);
+
+        }
+        [TestMethod()]
+        public void SetTest()
+        {
+            PLCHelper pLCHelper = new PLCHelper();
+            pLCHelper.SetStart(PLCHelper.PlcAdd.Y20, 10, 0xcd1001);
+        }
     }
 }
