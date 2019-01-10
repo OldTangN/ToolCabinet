@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ToolMgt.BLL
 {
-    public class DeltaPLC 
+    public class DeltaPLC
     {
         private SerialPortService portService { set; get; }
 
@@ -40,7 +41,7 @@ namespace ToolMgt.BLL
 
     }
 
- 
+
     public class DeltaData
     {
         /// <summary>
@@ -78,22 +79,40 @@ namespace ToolMgt.BLL
         /// </summary>
         public byte[] END { set; get; } = { 0x0D, 0x0A };
 
-        public DeltaData( byte _CMD, byte[] _Data)
-        { 
+        public DeltaData(byte _CMD, byte[] _Data)
+        {
             CMD = _CMD;
             DATA = _Data;
         }
 
         public byte[] ToSendData()
         {
+            //发送ASCII码数据
             List<byte> SendData = new List<byte>();
+            //校验数据
+            List<byte> chkData = new List<byte>();
             //   SendData.Add(STX);
-            SendData.Add(ADR);
-            SendData.Add(CMD);
-
-            SendData.AddRange(DATA);
-            CHK = GetLRC(SendData);
-            SendData.Add(CHK);
+            string adr= Convert.ToString(ADR,16).PadLeft(2, '0').ToUpper();
+            SendData.AddRange(Encoding.ASCII.GetBytes(adr));
+            // SendData.Add(ADR);
+            chkData.Add(ADR);
+            string cmd = Convert.ToString(CMD,16).PadLeft(2, '0').ToUpper();
+            SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
+            chkData.Add(ADR);
+            //SendData.Add(CMD);
+            string sData = "";
+            for (int i = 0; i < DATA.Length; i++)
+            {
+                sData += Convert.ToString(DATA[i],16).PadLeft(2, '0').ToUpper();
+            }
+            SendData.AddRange(Encoding.ASCII.GetBytes(sData));
+            //  SendData.AddRange(DATA);
+            chkData.AddRange(DATA);
+            CHK = GetLRC(chkData);
+            string chk = Convert.ToString(CHK,16).PadLeft(2, '0').ToUpper();
+            SendData.AddRange(Encoding.ASCII.GetBytes(chk));
+            //CHK = GetLRC(SendData);
+            //SendData.Add(CHK);
 
             SendData.Insert(0, STX);
             SendData.AddRange(END);
