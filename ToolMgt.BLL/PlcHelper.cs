@@ -20,6 +20,7 @@ namespace ToolMgt.BLL
             X20 = 0x0410, X21 = 0x0411, X22 = 0x0412, X23 = 0x0413, X24 = 0x0414, X25 = 0x0415, X26 = 0x0416, X27 = 0x0417,
             X30 = 0x0418, X31 = 0x0419, X32 = 0x041A, X33 = 0x041B, X34 = 0x041C, X35 = 0x041D, X36 = 0x041E, X37 = 0x041F,
             X40 = 0x0420, X41 = 0x0421, X42 = 0x0422, X43 = 0x0423, X44 = 0x0424, X45 = 0x0425, X46 = 0x0426, X47 = 0x0427,
+            T0 = 0X0600,
             T20 = 0x0614,
         }
 
@@ -54,7 +55,7 @@ namespace ToolMgt.BLL
             Array.Reverse(ct);//高低位反转
             cmd.AddRange(ct);
 
-            DeltaData deltaData = new DeltaData(0x03, cmd.ToArray());
+            DeltaData deltaData = new DeltaData(0x02, cmd.ToArray());
             byte[] data = deltaData.ToSendData();
 
             deltaPLC.SendData(data);
