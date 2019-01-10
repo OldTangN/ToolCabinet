@@ -91,28 +91,29 @@ namespace ToolMgt.BLL
             List<byte> SendData = new List<byte>();
             //校验数据
             List<byte> chkData = new List<byte>();
-            //   SendData.Add(STX);
+
             string adr= Convert.ToString(ADR,16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(adr));
-            // SendData.Add(ADR);
-            chkData.Add(CMD);
+    
+
+            chkData.Add(ADR);
             string cmd = Convert.ToString(CMD,16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
-            chkData.Add(ADR);
-            //SendData.Add(CMD);
+            chkData.Add(CMD);
+     
+
             string sData = "";
             for (int i = 0; i < DATA.Length; i++)
             {
                 sData += Convert.ToString(DATA[i],16).PadLeft(2, '0').ToUpper();
             }
             SendData.AddRange(Encoding.ASCII.GetBytes(sData));
-            //  SendData.AddRange(DATA);
+        
+
             chkData.AddRange(DATA);
             CHK = GetLRC(chkData);
             string chk = Convert.ToString(CHK,16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(chk));
-            //CHK = GetLRC(SendData);
-            //SendData.Add(CHK);
 
             SendData.Insert(0, STX);
             SendData.AddRange(END);
