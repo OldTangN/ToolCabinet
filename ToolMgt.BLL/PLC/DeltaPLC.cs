@@ -52,7 +52,7 @@ namespace ToolMgt.BLL
         /// <summary>
         /// 地址 固定值
         /// </summary>
-        private byte ADR { set; get; } = 0x01;
+        public byte ADR { set; get; } = 0x01;
         /// <summary>
         /// 命令
         /// 01, 读节点状态(不可读输入点状态) 读取 T0-TFF 0600~06FF 
@@ -79,6 +79,9 @@ namespace ToolMgt.BLL
         /// </summary>
         public byte[] END { set; get; } = { 0x0D, 0x0A };
 
+        public DeltaData()
+        {
+        }
         public DeltaData(byte _CMD, byte[] _Data)
         {
             CMD = _CMD;
@@ -92,27 +95,27 @@ namespace ToolMgt.BLL
             //校验数据
             List<byte> chkData = new List<byte>();
 
-            string adr= Convert.ToString(ADR,16).PadLeft(2, '0').ToUpper();
+            string adr = Convert.ToString(ADR, 16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(adr));
-    
+
 
             chkData.Add(ADR);
-            string cmd = Convert.ToString(CMD,16).PadLeft(2, '0').ToUpper();
+            string cmd = Convert.ToString(CMD, 16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
             chkData.Add(CMD);
-     
+
 
             string sData = "";
             for (int i = 0; i < DATA.Length; i++)
             {
-                sData += Convert.ToString(DATA[i],16).PadLeft(2, '0').ToUpper();
+                sData += Convert.ToString(DATA[i], 16).PadLeft(2, '0').ToUpper();
             }
             SendData.AddRange(Encoding.ASCII.GetBytes(sData));
-        
+
 
             chkData.AddRange(DATA);
             CHK = GetLRC(chkData);
-            string chk = Convert.ToString(CHK,16).PadLeft(2, '0').ToUpper();
+            string chk = Convert.ToString(CHK, 16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(chk));
 
             SendData.Insert(0, STX);

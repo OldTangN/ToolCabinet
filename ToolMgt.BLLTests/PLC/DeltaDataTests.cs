@@ -31,6 +31,9 @@ namespace ToolMgt.BLL.Tests
         {
             PLCHelper pLCHelper = new PLCHelper();
             pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 40);//X10~X17没有，但是有数据返回
+
+            DeltaData deltaData = pLCHelper.GetRecive();
+
             pLCHelper.GetStart(PLCHelper.PlcAdd.Y0, 40);//Y10~Y17没有，但是有数据返回
             //:0183027A\r\n 接收 02无效的装置地址 07校验位错误
         }
