@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Text;
+using System.Threading;
 
 namespace ToolMgt.BLL.Tests
 {
@@ -19,9 +19,9 @@ namespace ToolMgt.BLL.Tests
         {
             short aa = 0x1cd;
 
-            byte[] bb =   BitConverter.GetBytes(aa);
+            byte[] bb = BitConverter.GetBytes(aa);
 
-            short cc = BitConverter.ToInt16(bb,0);
+            short cc = BitConverter.ToInt16(bb, 0);
 
             string dd = Convert.ToString(cc, 2);
         }
@@ -34,6 +34,12 @@ namespace ToolMgt.BLL.Tests
             //:0103020000FA\r\n 接收
             pLCHelper.GetStart(PLCHelper.PlcAdd.X1, 1);
             pLCHelper.GetStart(PLCHelper.PlcAdd.Y1, 1);
+
+            Thread.Sleep(1000);
+
+            DeltaData deltaData = pLCHelper.GetRecive();
+
+
             //:0183027A\r\n 接收 02无效的装置地址 07校验位错误
         }
         [TestMethod()]

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Text;
+using System.Threading;
+
 namespace ToolMgt.BLL
 {
 
@@ -9,6 +12,10 @@ namespace ToolMgt.BLL
     /// </summary>
     public class PLCHelper
     {
+        private Queue<byte> queue = new Queue<byte>();
+
+        public Queue<DeltaData> queueData = new Queue<DeltaData>();
+
         private DeltaPLC deltaPLC { set; get; }
         public enum PlcAdd : ushort
         {
@@ -31,13 +38,82 @@ namespace ToolMgt.BLL
             deltaPLC.Open();
             deltaPLC.ReciveHandler += DeltaPLC_ReciveHandler;
 
+            Thread thread = new Thread(() =>
+            {
+                DoSourceData();
+            });
+            thread.IsBackground = true;
+            thread.Start();
+
+        }
+
+        private void DoSourceData()
+        {
+            List<byte> ibyte = new List<byte>();
+            while (queue.Count > 0)
+            {
+                if (ibyte.Count == 0)
+                {
+                    byte _3a = queue.Dequeue();//报文开始数据
+                    if (_3a == 0x3A)
+                    {
+                        ibyte.Add(_3a);
+                    }
+                }
+                else
+                {
+                    ibyte.Add(queue.Dequeue());
+                    if (ibyte.Contains(0x0d) && ibyte.Contains(0x0a))
+                    {
+                        queueData.Enqueue(ByteToDeltaData(ibyte));
+                        ibyte = new List<byte>();
+                    }
+                }
+
+            }
+        }
+
+        private DeltaData ByteToDeltaData(List<byte> ibyte)
+        {
+            //:0183027A\r\n
+            DeltaData pdata = new DeltaData();
+
+            List<byte> cmmByte = new List<byte>();
+            for (int i = 1; i < ibyte.Count - 2; i += 2)//从第1位开始（不要0x3a）取数据到倒数第三位（不要0x0d,0x0a）
+            {
+                byte[] byteAscii = new byte[] { ibyte[i], ibyte[i + 1] };
+                string s = Encoding.ASCII.GetString(byteAscii).ToUpper();
+                byte b = Convert.ToByte(s, 16);
+                cmmByte.Add(b);
+            }
+
+            pdata.ADR = cmmByte[0];
+            pdata.CMD = cmmByte[1];
+
+            List<byte> dbyte = new List<byte>();
+            for (int i = 2; i < cmmByte.Count - 1; i++)
+            {
+                dbyte.Add(cmmByte[i]);
+            }
+
+            pdata.DATA = dbyte.ToArray();
+
+            return pdata;
+
         }
 
         private void DeltaPLC_ReciveHandler(object sender, DataEventArgs e)
         {
             byte[] reciveData = e.data;
-            string str = System.Text.Encoding.ASCII.GetString(reciveData);
-
+            for (int i = 0; i < reciveData.Length; i++)
+            {
+                queue.Enqueue(reciveData[i]);
+            }
+            //  string str = System.Text.Encoding.ASCII.GetString(reciveData);
+        }
+        public DeltaData GetRecive()
+        {
+            return queueData.Dequeue();
         }
         /// <summary>
         /// 获取各个工具位置的状态 参考协议4.5.3
@@ -107,9 +183,9 @@ namespace ToolMgt.BLL
             List<byte> cmd = new List<byte>();
             byte[] padd = (BitConverter.GetBytes((short)plcAdd));
             Array.Reverse(padd);//高低位反转
-            cmd.AddRange(padd); 
+            cmd.AddRange(padd);
 
-            byte[] vbyte = (BitConverter.GetBytes(value));   
+            byte[] vbyte = (BitConverter.GetBytes(value));
             Array.Reverse(vbyte);//高低位反转
             cmd.AddRange(vbyte);
 
