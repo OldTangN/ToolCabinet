@@ -54,10 +54,12 @@ namespace ToolMgt.BLL.Tests
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0xFF);
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0xFF);
         }
-
+        [TestMethod()]
         public void LightControlTest()
         {
             LightControl ctl = new LightControl("");
+            ctl.GetStatus();
+
             ctl.OperateLight(new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
 
             for (int i = 1; i <= 16; i++)

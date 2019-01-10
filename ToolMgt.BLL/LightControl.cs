@@ -2,10 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ToolMgt.BLL
 {
+    public class Status
+    {
+        public Status()
+        {
+            Lock = new bool[2];
+            Tool = new bool[16];
+        }
+
+        public bool[] Lock { get; set; }
+        public bool[] Tool { get; set; }
+    }
     public class LightControl
     {
         private PLCHelper PLC;
@@ -51,8 +63,59 @@ namespace ToolMgt.BLL
         /// <param name="no">1-2</param>
         public void OpenDoor(int no)
         {
-            PLCHelper.PlcAdd addr= GetLockAddr(no, false);
+            PLCHelper.PlcAdd addr = GetLockAddr(no, false);
             PLC.SetStart(addr, 1, 0x01);
+        }
+
+        /// <summary>
+        /// 红灯报警+蜂鸣
+        /// </summary>
+        public void OpenAlarm()
+        {
+            PLC.ItemStart(AddrLightR, 0x01);
+            PLC.ItemStart(AddrBuzzer, 0x01);
+        }
+
+        /// <summary>
+        /// 关闭报警
+        /// </summary>
+        public void CloseAlarm()
+        {
+            PLC.ItemStart(AddrLightR, 0x00);
+            PLC.ItemStart(AddrBuzzer, 0x00);
+        }
+
+        public Status GetStatus()
+        {
+            PLC.GetStart(PLCHelper.PlcAdd.X0, 40);
+            Thread.Sleep(500);
+            DeltaData data = PLC.GetRecive();
+
+            Status status = new Status();
+
+            byte bytLock = data.DATA[1];//锁状态
+            char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8,'0').Reverse().ToArray();
+            status.Lock[0] = arrLock[0] == '1';
+            status.Lock[1] = arrLock[1] == '1';
+
+            byte bytTools_1 = data.DATA[3];//第一组扩展，扳手1-8
+            char[] arrTools_1 = Convert.ToString(bytTools_1, 2).PadLeft(8, '0').Reverse().ToArray();
+
+            byte bytTools_2 = data.DATA[4];//第二组扩展，扳手9-16
+            char[] arrTools_2 = Convert.ToString(bytTools_2, 2).PadLeft(8, '0').Reverse().ToArray();
+
+            List<char> toolsStatus = new List<char>();
+            toolsStatus.AddRange(arrTools_1);
+            toolsStatus.AddRange(arrTools_2);
+            for (int i = 0; i < status.Tool.Length; i++)
+            {
+                status.Tool[i] = toolsStatus[i] == '1';
+            }
+
+            //byte bytTools_3 = data.DATA[5];//备用扩展
+            //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
+
+            return status;
         }
 
         /// <summary>
