@@ -44,7 +44,7 @@ namespace ToolMgt.UI
 
         private void DoorClose()
         {
-
+            this.Close();
         }
 
         private void ChangeView(UserControl control)

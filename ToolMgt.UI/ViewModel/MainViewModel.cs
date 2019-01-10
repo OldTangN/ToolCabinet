@@ -25,9 +25,9 @@ namespace ToolMgt.UI.ViewModel
             toolDao = new ToolDao();
             recordDao = new ToolRecordDao();
             PLC = plc;
-            PLC.OnReceive += PLCReceive;
-            PLC.DoorClosed += DoorClosed;
-            PLC.ToolStatusChanged += ToolStatusChanged;
+            //PLC.OnReceive += PLCReceive;
+            //PLC.DoorClosed += DoorClosed;
+            //PLC.ToolStatusChanged += ToolStatusChanged;
             Init();
         }
 
@@ -48,13 +48,13 @@ namespace ToolMgt.UI.ViewModel
                 tool.PropertyChanged -= Tool_PropertyChanged;
                 if (tool.IsSelected)//默认选择用户当前已借用工具
                 {
-                    PLC.SetGreen(LightStatus.Flash, tool.Position);//默认闪烁
+                    //PLC.SetGreen(LightStatus.Flash, tool.Position);//默认闪烁
                     GlobalData.CurrTool = tool;
                 }
                 else
                 {
                     //根据工具设置开关指示灯
-                    PLC.SetGreen(tool.Status ? LightStatus.Open : LightStatus.Close, tool.Position);
+                    //PLC.SetGreen(tool.Status ? LightStatus.Open : LightStatus.Close, tool.Position);
                 }
                 if (tool.CanSelected)//可选择的工具添加事件
                 {
@@ -72,7 +72,10 @@ namespace ToolMgt.UI.ViewModel
             {
                 status[i] = Tools[i].Status;
             }
-            PLCThread = new Thread(new ParameterizedThreadStart((p) => { PLC.StartMonitor(p as bool[]); }));
+            PLCThread = new Thread(new ParameterizedThreadStart((p) =>
+            {
+                //PLC.StartMonitor(p as bool[]);
+            }));
             PLCThread.Start(status);
         }
 
@@ -85,7 +88,7 @@ namespace ToolMgt.UI.ViewModel
                 {
                     GlobalData.CurrTool = tool;
                     //设置当前选择
-                    PLC.SetGreen(LightStatus.Flash, GlobalData.CurrTool.Position);
+                    //PLC.SetGreen(LightStatus.Flash, GlobalData.CurrTool.Position);
                     //把其他工具选中状态改成false
                     foreach (var other in Tools)
                     {
@@ -94,11 +97,11 @@ namespace ToolMgt.UI.ViewModel
                             other.IsSelected = false;
                             if (other.Status)
                             {
-                                PLC.SetGreen(LightStatus.Open, other.Position);
+                                //PLC.SetGreen(LightStatus.Open, other.Position);
                             }
                             else
                             {
-                                PLC.SetGreen(LightStatus.Open, other.Position);
+                                //PLC.SetGreen(LightStatus.Open, other.Position);
                             }
                         }
                     }
@@ -112,12 +115,12 @@ namespace ToolMgt.UI.ViewModel
             if (pos != GlobalData.CurrTool.Position)
             {
                 GlobalData.SelectToolCorrect = false;
-                PLC.SetAlarm(true);
+                //PLC.SetAlarm(true);
             }
             else
             {
                 GlobalData.SelectToolCorrect = true;
-                PLC.SetAlarm(false);
+                //PLC.SetAlarm(false);
             }
         }
 

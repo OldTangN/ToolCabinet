@@ -35,6 +35,7 @@ namespace ToolMgt.UI.ViewModel
             int readerBaud = SysConfiguration.ICReaderBaudRate;
             if (readerBaud == -1 || readerPort == -1)
             {
+                ICReaderStatus = "读卡器配置错误！";
                 MessageAlert.Error("读卡器配置错误！");
                 return;
             }
@@ -48,11 +49,20 @@ namespace ToolMgt.UI.ViewModel
             {
                 card = new ComICCard(readerPort, readerBaud);
             }
-            card.HandDataBack += Card_HandDataBack;
-            ThreadICReader = new Thread(new ParameterizedThreadStart(ICReadThread));
-            ThreadICReader.Start(card);
+            if (card.IsOpen())
+            {
+                card.HandDataBack += Card_HandDataBack;
+                ThreadICReader = new Thread(new ParameterizedThreadStart(ICReadThread));
+                ThreadICReader.Start(card);
+            }
+            else
+            {
+                ICReaderStatus = "读卡器连接失败！";
+            }
         }
 
+        private string iCReaderStatus = "";
+        public string ICReaderStatus { get => iCReaderStatus; set => Set(ref iCReaderStatus, value); }
         /// <summary>
         /// 登录后处理
         /// </summary>
@@ -87,6 +97,8 @@ namespace ToolMgt.UI.ViewModel
         /// 登录命令
         /// </summary>
         public ICommand LogInCmd => _logInCmd ?? (_logInCmd = new RelayCommand(LogIn, CanLogIn));
+
+
 
         private void LogIn(object obj)
         {

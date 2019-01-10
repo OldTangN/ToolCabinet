@@ -112,7 +112,7 @@ namespace ToolMgt.BLL.ICCard
 
         public bool IsOpen()
         {
-            return Icdev > 0;
+            return IsConnected;
         }
 
         public void Close()
