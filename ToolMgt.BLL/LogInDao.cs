@@ -10,12 +10,16 @@ namespace ToolMgt.BLL
 {
     public class LogInDao
     {
+        private ToolCabinetEntities Db;
+        public LogInDao()
+        {
+            Db = new ToolCabinetEntities("ToolCabinetEntities");
+        }
         public User LogIn(LogInModel model)
         {
             User u;
             try
             {
-                ToolCabinetEntities Db = DBContextFactory.GetContext();
                 u = Db.Users.FirstOrDefault(p => p.LoginName == model.NameOrCard || p.UserID == model.NameOrCard);
                 if (u == null)
                 {

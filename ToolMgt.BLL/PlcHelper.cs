@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ToolMgt.Common;
+
 namespace ToolMgt.BLL
 {
     public class DataEventArgs : EventArgs
@@ -16,16 +18,67 @@ namespace ToolMgt.BLL
 
         public byte[] Data { get => _data; set => _data = value; }
     }
+
+    public enum LightStatus
+    {
+        /// <summary>
+        /// 关灯
+        /// </summary>
+        Close = 0,
+
+        /// <summary>
+        /// 开灯
+        /// </summary>
+        Open = 1,
+
+        /// <summary>
+        /// 闪灯
+        /// </summary>
+        Flash = 2
+    }
+
     /// <summary>
     /// 传感器监控
     /// </summary>
     public class PLCHelper
     {
+        /// <summary>
+        /// 16个指示灯地址
+        /// </summary>
         private string[] Addr_Light = new string[]
         {
             "0500","0501","0502","0503","0504","0505","0506","0507",
             "0508","0509","050A","050B","050C","050D","050E","050F"
         };
+        /// <summary>
+        /// 2把锁地址
+        /// </summary>
+        private string[] Addr_Lock = new string[] { "0510", "0511" };
+
+        /// <summary>
+        /// 绿、红、黄 报警灯地址
+        /// </summary>
+        private string[] Addr_AlarmLight = new string[] { "0512", "0513", "0514" };
+
+        /// <summary>
+        /// 打开、关闭 报警蜂鸣器地址
+        /// </summary>
+        private string[] Addr_AlarmBuzzer = new string[] { "0518", "0519" };
+
+        /// <summary>
+        /// 16个工具传感器地址
+        /// </summary>
+        private string[] Addr_ToolSensor = new string[]
+        {
+            "0400","0401","0402","0403","0404","0405","0406","0407",
+            "0408","0409","040A","040B","040C","040D","040E","040F"
+        };
+
+        /// <summary>
+        /// 2把锁传感器地址
+        /// </summary>
+        private string[] Addr_LockSensor = new string[] { "0410", "0411" };
+
         private string LgtOpen = "01";
         private string LgtClose = "02";
         private string LgtFlash = "03";
@@ -52,76 +105,79 @@ namespace ToolMgt.BLL
         /// 柜门状态
         /// <para>true=开门；false=关门。</para>
         /// </summary>
-        public Action<bool> DoorStatusChanged;
+        public Action DoorClosed;
 
         /// <summary>
         /// 16个传感器状态 true=有工具，false=无工具
         /// </summary>
         public bool[] Status = new bool[16];
 
-        public bool Pause { get; set; }
+        /// <summary>
+        /// 暂停监控
+        /// </summary>
+        private bool Pause = false;
 
-        private bool IsBusy = false;
+        /// <summary>
+        /// 停止监控
+        /// </summary>
+        private bool Stop = false;
 
         /// <summary>
         /// 当前状态
         /// </summary>
-        /// <param name="currStatus"></param>
-        public void StartMonitor(bool[] currStatus)
+        /// <param name="currToolStatus"></param>
+        public void StartMonitor(bool[] currToolStatus)
         {
             while (true)
             {
-                if (Pause)
+                if (Stop)
+                {
+                    break;
+                }
+                if (Pause && !Stop)
                 {
                     Thread.Sleep(100);
                     continue;
                 }
-                //TODO:监控工具状态、柜门状态
-                //1、发送读取工具状态、柜门状态指令
-                //2、接收指令并得到16个工具结果、柜门结果
-                //3、处理结果，调用相应的回调函数
+                try
+                {
+                    //TODO:监控工具状态、柜门状态
+                    //1、发送读取工具状态、柜门状态指令
+                    //2、接收指令并得到16个工具结果、柜门结果
+                    //3、处理结果，调用相应的回调函数
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.WriteLog("StartMonitor Error", ex);
+                }
             }
         }
 
-        public void Stop()
+        public void StopMonitor()
         {
-
+            Stop = true;
         }
 
-        public void OpenRed(int pos)
+        public void PauseMonitor()
         {
-
-        }
-        public void CloseRed(int pos)
-        {
-
-        }
-        public void OpenYellow(int pos)
-        {
-
-        }
-        public void CloseYellow(int pos)
-        {
-
-        }
-        public void OpenGreen(int pos)
-        {
-
-        }
-        public void CloseGreen(int pos)
-        {
-
-        }
-        public void OpenAlarm(int pos)
-        {
-
-        }
-        public void CloseAlarm()
-        {
-
+            Pause = true;
         }
 
-        private byte[] GetProtocol(string plcADR,string funcCode,string adr,string cmd)
+        public void SetRed(LightStatus status, int pos)
+        {
+            //TODO 发送红灯命令
+        }
+        public void SetGreen(LightStatus status, int pos)
+        {
+            //TODO 发送绿灯命令
+        }
+
+        public void SetAlarm(bool open)
+        {
+            //TODO 发送蜂鸣命令
+        }
+
+        private byte[] GetProtocol(string plcADR, string funcCode, string adr, string cmd)
         {
             return null;
         }

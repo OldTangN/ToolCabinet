@@ -9,7 +9,7 @@ using ToolMgt.Model;
 
 namespace ToolMgt.UI.ViewModel
 {
-    public class ViewModelBase : ObservableObject
+    public class ViewModelBase : ObservableObject, IDisposable
     {
         public ViewModelBase()
         {
@@ -22,5 +22,10 @@ namespace ToolMgt.UI.ViewModel
         /// 忙碌状态
         /// </summary>
         public bool IsBusy { get => _isBusy; set => Set(ref _isBusy, value); }
+
+        public virtual void Dispose()
+        {
+
+        }
     }
 }

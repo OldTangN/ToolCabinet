@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToolMgt.UI.Controls"
-             mc:Ignorable="d" FontSize="20" Loaded="UserControl_Loaded"
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
              d:DesignHeight="768" d:DesignWidth="1024">
     <Grid>
         <Grid.Resources >
@@ -27,7 +27,7 @@
             <StackPanel Orientation="Vertical">
                 <Grid>
                     <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" >
-                        <Label   Content="姓名或卡号"></Label>
+                        <Label   Content="账号/卡号"></Label>
                         <TextBox Name="tb_SearchNameOrCard" VerticalContentAlignment="Center" Text="{Binding Path=LoginName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Height="30" Width="100"></TextBox>
                         <Button Name="btn_Search" Width="120" Margin="10,0" Command="{Binding Path=SearchCmd}">搜 索</Button>
                     </StackPanel>
@@ -43,7 +43,7 @@
                     <DataGrid.ColumnHeaderStyle >
                         <Style TargetType="DataGridColumnHeader" >
                             <Setter Property="HorizontalContentAlignment" Value="Center" ></Setter>
-                            <Setter Property="Height" Value="50"/>
+                            <Setter Property="Height" Value="30"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                     <DataGrid.CellStyle>

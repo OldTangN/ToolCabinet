@@ -120,12 +120,12 @@
                            AutoGenerateColumns="False" Margin="0"  RowHeaderWidth="0"   Grid.ColumnSpan="2" GridLinesVisibility="All">
                     <DataGrid.Columns>
                         <!--<DataGridCheckBoxColumn Header="选择" Binding="{Binding Checked,NotifyOnSourceUpdated=True}"></DataGridCheckBoxColumn>-->
-                        <DataGridTextColumn  IsReadOnly="True" Header="序 号" Binding="{Binding id}"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}"  Width="50*"  />
+                        <DataGridTextColumn  IsReadOnly="True" Header="工位号"    Binding="{Binding Position}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                         <DataGridTextColumn  IsReadOnly="True" Header="扳手条码" Binding="{Binding ToolBarCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="RFID"    Binding="{Binding ToolRFIDCode}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn  IsReadOnly="True" Header="生产厂家"    Binding="{Binding ToolType.TypeName}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                         <DataGridTextColumn  IsReadOnly="True" Header="量程下限(N.m)" Binding="{Binding RangeMin}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                         <DataGridTextColumn  IsReadOnly="True" Header="量程上限(N.m)"  Binding="{Binding RangeMax}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn  IsReadOnly="True" Header="工位号"    Binding="{Binding Position}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                       
                         <!--<DataGridTextColumn IsReadOnly="True" Header="生产厂家" Binding="{Binding Factory}" Width=" 80*" HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />-->
                         <!--<DataGridTextColumn IsReadOnly="True" Header="备 注" Binding="{Binding Note}" Width=" 80*" HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />-->
                         <DataGridTemplateColumn  IsReadOnly="True" Header="操 作" Width="260" HeaderStyle="{StaticResource dgheader}"  >

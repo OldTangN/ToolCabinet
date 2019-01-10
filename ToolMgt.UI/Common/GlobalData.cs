@@ -12,11 +12,16 @@ namespace ToolMgt.UI.Common
         /// <summary>
         /// 当前用户
         /// </summary>
-        public static User CurrUser;
+        public static User CurrUser = null;
 
         /// <summary>
         /// 当前选择扳手
         /// </summary>
-        public static Tool CurrTool;
+        public static Tool CurrTool = null;
+
+        /// <summary>
+        /// 被选工具是否取出/放入
+        /// </summary>
+        public static bool SelectToolCorrect = false;
     }
 }

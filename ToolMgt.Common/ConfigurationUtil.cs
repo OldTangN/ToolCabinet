@@ -27,7 +27,7 @@ namespace ToolMgt.Common
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(ex);
+                LogUtil.WriteLog("GetConfiguration Error！", ex);
                 return default(T);
             }
         }

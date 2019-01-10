@@ -16,6 +16,8 @@ namespace ToolMgt.UI
         App()
         {
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            ToolMgt.UI.View.LogInWindow win = new View.LogInWindow();
+            win.Show();
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

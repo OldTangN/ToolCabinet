@@ -9,10 +9,10 @@ namespace ToolMgt.Common
 
     public class LogUtil
     {
-        public static void WriteLog(Exception ex)
+        public static void WriteLog(string errMsg,Exception ex)
         {
             log4net.ILog log = log4net.LogManager.GetLogger("");
-            log.Error("Error", ex);
+            log.Error(errMsg, ex);
         }
 
         public static void WriteLog(string msg)

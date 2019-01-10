@@ -11,17 +11,21 @@ namespace ToolMgt.BLL
 {
     public class UserDao
     {
+        private ToolCabinetEntities Db;
+        ToolCabinetEntities DbSrv;
+        public UserDao()
+        {
+            Db = new ToolCabinetEntities("ToolCabinetEntities");
+        }
         public bool DataSync()
         {
-            ToolCabinetEntities DbSrv, Db;
             try
             {
                 DbSrv = new ToolCabinetEntities("ToolCabinetEntitiesSrv");
-                Db = DBContextFactory.GetContext();
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(ex);
+                LogUtil.WriteLog("连接数据库失败！", ex);
                 return false;
             }
             try
@@ -50,13 +54,13 @@ namespace ToolMgt.BLL
                     };
                     Db.Users.Add(u);
                 }
-               
+
                 Db.SaveChanges();
             }
             catch (Exception ex)
             {
-               
-                LogUtil.WriteLog(ex);
+
+                LogUtil.WriteLog("DataSync失败！", ex);
                 return false;
             }
             return true;
@@ -65,16 +69,14 @@ namespace ToolMgt.BLL
 
         public List<User> GetUsers(Expression<Func<User, bool>> expression)
         {
-            ToolCabinetEntities Db;
             List<User> lstResult;
             try
             {
-                Db = DBContextFactory.GetContext();
                 lstResult = Db.Users.Where(expression)?.ToList();
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(ex);
+                LogUtil.WriteLog("查询用户失败！", ex);
                 return null;
             }
             return lstResult;
