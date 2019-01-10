@@ -55,7 +55,7 @@ namespace ToolMgt.BLL
             Array.Reverse(ct);//高低位反转
             cmd.AddRange(ct);
 
-            DeltaData deltaData = new DeltaData(0x03, cmd.ToArray());
+            DeltaData deltaData = new DeltaData(0x02, cmd.ToArray());
             byte[] data = deltaData.ToSendData();
 
             deltaPLC.SendData(data);
