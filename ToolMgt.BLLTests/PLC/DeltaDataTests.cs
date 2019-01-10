@@ -29,8 +29,11 @@ namespace ToolMgt.BLL.Tests
         public void SendTest()
         {
             PLCHelper pLCHelper = new PLCHelper();
-            pLCHelper.GetStart(PLCHelper.PlcAdd.Y20, 8);
-
+            pLCHelper.GetStart(PLCHelper.PlcAdd.T0 ,1);
+            //:010306000001F5\r\n  发送
+            //:0103020000FA\r\n 接收
+            pLCHelper.GetStart(PLCHelper.PlcAdd.Y0, 1);
+            //:0183027A\r\n 接收 02无效的装置地址 07校验位错误
         }
         [TestMethod()]
         public void SetTest()
