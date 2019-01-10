@@ -39,7 +39,10 @@ namespace ToolMgt.BLL.Tests
         public void SetTest()
         {
             PLCHelper pLCHelper = new PLCHelper();
-            pLCHelper.SetStart(PLCHelper.PlcAdd.Y20, 10, 0xcd1001);
+            pLCHelper.SetStart(PLCHelper.PlcAdd.Y0, 8, 0xFF);
+            pLCHelper.SetStart(PLCHelper.PlcAdd.Y20, 8, 0xFF);
+            pLCHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0xFF);
+            pLCHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0xFF);
         }
     }
 }
