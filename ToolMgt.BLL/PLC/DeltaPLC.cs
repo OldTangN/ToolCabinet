@@ -95,7 +95,7 @@ namespace ToolMgt.BLL
             string adr= Convert.ToString(ADR,16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(adr));
             // SendData.Add(ADR);
-            chkData.Add(ADR);
+            chkData.Add(CMD);
             string cmd = Convert.ToString(CMD,16).PadLeft(2, '0').ToUpper();
             SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
             chkData.Add(ADR);
