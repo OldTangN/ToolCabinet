@@ -95,5 +95,29 @@ namespace ToolMgt.BLL
             deltaPLC.SendData(data);
         }
 
+
+        /// <summary>
+        /// 设置单点状态 参考协议4.5.4
+        /// </summary>
+        /// <param name="plcAdd"></param>
+        /// <param name="value"></param>
+        public void ItemStart(PlcAdd plcAdd, short value)
+        {
+            List<byte> cmd = new List<byte>();
+            byte[] padd = (BitConverter.GetBytes((short)plcAdd));
+            Array.Reverse(padd);//高低位反转
+            cmd.AddRange(padd); 
+
+            byte[] vbyte = (BitConverter.GetBytes(value));   
+            Array.Reverse(vbyte);//高低位反转
+            cmd.AddRange(vbyte);
+
+            DeltaData deltaData = new DeltaData(0x05, cmd.ToArray());
+            byte[] data = deltaData.ToSendData();
+            deltaPLC.SendData(data);
+        }
+
+
+
     }
 }
