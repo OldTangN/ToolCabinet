@@ -42,7 +42,7 @@ namespace ToolMgt.UI
             this.DataContext = viewModel;
         }
 
-        private void DoorClose(bool status)
+        private void DoorClose()
         {
 
         }
