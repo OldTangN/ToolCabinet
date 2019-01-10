@@ -30,11 +30,19 @@ namespace ToolMgt.BLL.Tests
         public void SendTest()
         {
             PLCHelper pLCHelper = new PLCHelper();
-            pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 40);//X10~X17没有，但是有数据返回
+            pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 30);//X10~X17没有，但是有数据返回
+            Thread.Sleep(500);
+            try
+            {
+                DeltaData deltaData = pLCHelper.GetRecive();
 
-            DeltaData deltaData = pLCHelper.GetRecive();
+                //pLCHelper.GetStart(PLCHelper.PlcAdd.Y0, 40);//Y10~Y17没有，但是有数据返回
+            }
+            catch (Exception ex)
+            {
 
-            pLCHelper.GetStart(PLCHelper.PlcAdd.Y0, 40);//Y10~Y17没有，但是有数据返回
+                throw;
+            }
             //:0183027A\r\n 接收 02无效的装置地址 07校验位错误
         }
         [TestMethod()]

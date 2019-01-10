@@ -50,26 +50,32 @@ namespace ToolMgt.BLL
         private void DoSourceData()
         {
             List<byte> ibyte = new List<byte>();
-            while (queue.Count > 0)
+            while (true)
             {
-                if (ibyte.Count == 0)
+                if ((queue.Count > 0))
                 {
-                    byte _3a = queue.Dequeue();//报文开始数据
-                    if (_3a == 0x3A)
+
+                    if (ibyte.Count == 0)
                     {
-                        ibyte.Add(_3a);
+                        byte _3a = queue.Dequeue();//报文开始数据
+                        if (_3a == 0x3A)
+                        {
+                            ibyte.Add(_3a);
+                        }
                     }
+                    else
+                    {
+                        ibyte.Add(queue.Dequeue());
+                        if (ibyte.Contains(0x0d) && ibyte.Contains(0x0a))
+                        {
+                            queueData.Enqueue(ByteToDeltaData(ibyte));
+                            ibyte = new List<byte>();
+                        }
+                    }
+
                 }
                 else
-                {
-                    ibyte.Add(queue.Dequeue());
-                    if (ibyte.Contains(0x0d) && ibyte.Contains(0x0a))
-                    {
-                        queueData.Enqueue(ByteToDeltaData(ibyte));
-                        ibyte = new List<byte>();
-                    }
-                }
-
+                    Thread.Sleep(50);
             }
         }
 
@@ -97,7 +103,7 @@ namespace ToolMgt.BLL
             }
 
             pdata.DATA = dbyte.ToArray();
-
+            pdata.CHK = cmmByte[cmmByte.Count - 1];
             return pdata;
 
         }
@@ -109,11 +115,15 @@ namespace ToolMgt.BLL
             {
                 queue.Enqueue(reciveData[i]);
             }
-            //  string str = System.Text.Encoding.ASCII.GetString(reciveData);
+            string str = System.Text.Encoding.ASCII.GetString(reciveData);
         }
         public DeltaData GetRecive()
         {
-            return queueData.Dequeue();
+            if (queueData.Count > 0)
+            {
+                return queueData.Dequeue();
+            }
+            return null;
         }
         /// <summary>
         /// 获取各个工具位置的状态 参考协议4.5.3

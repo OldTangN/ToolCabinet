@@ -72,7 +72,7 @@ namespace ToolMgt.BLL
         /// <summary>
         /// 校验位
         /// </summary>
-        private byte CHK { set; get; }
+        public  byte CHK { set; get; }
 
         /// <summary>
         /// 终止位 固定值
