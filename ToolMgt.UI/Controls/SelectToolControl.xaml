@@ -18,7 +18,6 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <local:ToolInfo x:Name="tool_01" Margin="10" Text1="工位01" Grid.Row="0" Grid.Column="0" Text2="{Binding Path=Tools[0].Text2}" Selected="{Binding Tools[0].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[0].CanSelected}"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_02" Margin="10" Text1="工位02" Grid.Row="0" Grid.Column="1" Text2="{Binding Path=Tools[1].Text2}" Selected="{Binding Tools[1].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[1].CanSelected}"></local:ToolInfo>
@@ -38,6 +37,5 @@
         <local:ToolInfo x:Name="tool_14" Margin="10" Text1="工位14" Grid.Row="2" Grid.Column="3" Text2="{Binding Path=Tools[13].Text2}" Selected="{Binding Tools[13].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[13].CanSelected}"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_15" Margin="10" Text1="工位15" Grid.Row="3" Grid.Column="2" Text2="{Binding Path=Tools[14].Text2}" Selected="{Binding Tools[14].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[14].CanSelected}"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_16" Margin="10" Text1="工位16" Grid.Row="3" Grid.Column="3" Text2="{Binding Path=Tools[15].Text2}" Selected="{Binding Tools[15].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[15].CanSelected}"></local:ToolInfo>
-        <Button Command="{Binding Path=CommitCmd}" Grid.Row="3" Grid.Column="4" Width="60" Height="60" Content="确 定"></Button>
     </Grid>
 </UserControl>

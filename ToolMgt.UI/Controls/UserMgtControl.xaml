@@ -12,6 +12,11 @@
                 <Setter Property="HorizontalContentAlignment" Value="Left" ></Setter>
                 <Setter Property="VerticalContentAlignment"  Value="Center" ></Setter>
             </Style>
+            <Style x:Key="dgCell" TargetType="TextBlock">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"  ></Setter>
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions >
             <RowDefinition Height="80"></RowDefinition>
@@ -38,25 +43,18 @@
                     </StackPanel>
                 </Grid>
                 <DataGrid CanUserAddRows="False" RowHeaderWidth="0"
-                          ItemsSource="{Binding Path=Users}"
+                          ItemsSource="{Binding Path=Users}" GridLinesVisibility="All"
                           AutoGenerateColumns="False"  SelectionMode="Single" AlternationCount="2" >
                     <DataGrid.ColumnHeaderStyle >
                         <Style TargetType="DataGridColumnHeader" >
                             <Setter Property="HorizontalContentAlignment" Value="Center" ></Setter>
                             <Setter Property="Height" Value="30"/>
                         </Style>
-                    </DataGrid.ColumnHeaderStyle>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                            <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGrid.CellStyle>
+                    </DataGrid.ColumnHeaderStyle>                   
                     <DataGrid.Columns>
-                        <DataGridTextColumn IsReadOnly="True" Header="用户账号"    Binding="{Binding Path=LoginName}" Width="70*"  />
-                        <DataGridTextColumn IsReadOnly="True" Header="姓 名"    Binding="{Binding Path=RealName}"   Width="70*" />
-                        <DataGridTextColumn IsReadOnly="True" Header="用户卡号"    Binding="{Binding Path=UserID}"   Width="90*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="用户账号"  ElementStyle="{StaticResource dgCell}"  Binding="{Binding Path=LoginName}" Width="70*"  />
+                        <DataGridTextColumn IsReadOnly="True" Header="姓 名"  ElementStyle="{StaticResource dgCell}"  Binding="{Binding Path=RealName}"   Width="70*" />
+                        <DataGridTextColumn IsReadOnly="True" Header="用户卡号"  ElementStyle="{StaticResource dgCell}"  Binding="{Binding Path=UserID}"   Width="90*" />
                         <!--<DataGridTextColumn IsReadOnly="True" Header="入职时间" Binding="{Binding Path=joinDate, StringFormat='yyyy-MM-dd'}" Width="80*" />-->
                     </DataGrid.Columns>
                 </DataGrid>

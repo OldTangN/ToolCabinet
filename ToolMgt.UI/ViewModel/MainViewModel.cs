@@ -47,16 +47,28 @@ namespace ToolMgt.UI.ViewModel
 
         public void Init()
         {
-            IsBusy = true;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.ProgressChanged += Worker_ProgressChanged;
+            worker.WorkerReportsProgress = true;
             worker.RunWorkerAsync();
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 0)
+            {
+                IsBusy = true;
+            }
+            else
+            {
+                IsBusy = false;
+            }
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            IsBusy = false;
             if (e.Error != null)
             {
                 MessageAlert.Alert(e.Error.Message);
@@ -65,13 +77,15 @@ namespace ToolMgt.UI.ViewModel
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            worker.ReportProgress(0);
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
             foreach (var tool in Tools)
             {
                 tool.PropertyChanged -= Tool_PropertyChanged;
                 if (tool.IsSelected)//默认选择用户当前已借用工具
                 {
-                    //PLC.SetGreen(LightStatus.Flash, tool.Position);//默认闪烁
+                    plcControl.FlashLight(tool.Position);//默认闪烁
                     GlobalData.CurrTool = tool;
                 }
                 if (tool.CanSelected)//可选择的工具添加事件
@@ -79,12 +93,10 @@ namespace ToolMgt.UI.ViewModel
                     tool.PropertyChanged += Tool_PropertyChanged;
                 }
             }
-
             if (PLCThread != null && PLCThread.IsAlive)
             {
                 try { PLCThread.Abort(); } catch { }
             }
-
             bool[] status = OriToolStatus();
             plcControl.OperateLight(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
@@ -97,6 +109,8 @@ namespace ToolMgt.UI.ViewModel
             }));
             PLCThread.IsBackground = true;
             PLCThread.Start(status);
+
+            worker.ReportProgress(100);
         }
 
         private bool[] OriToolStatus()
@@ -117,24 +131,41 @@ namespace ToolMgt.UI.ViewModel
             if (e.PropertyName == "IsSelected")
             {
                 Tool tool = sender as Tool;
+
                 if (tool.IsSelected)
                 {
                     GlobalData.CurrTool = tool;
-                    //设置当前选择 闪烁
-                    bool[] status = OriToolStatus();
-                    plcControl.FlashLight(GlobalData.CurrTool.Position);
-                    plcControl.OperateLight(status);
                     //把其他工具选中状态改成false
                     foreach (var othertool in Tools)
                     {
                         if (othertool != tool && othertool.IsSelected)
                         {
-                            tool.IsSelected = false;
+                            othertool.IsSelected = false;
                         }
                     }
+                    IsBusy = true;
+                    BackgroundWorker lightWorker = new BackgroundWorker();
+                    lightWorker.RunWorkerCompleted += LightWorker_RunWorkerCompleted;
+                    lightWorker.DoWork += LightWorker_DoWork;
+                    lightWorker.RunWorkerAsync();
                 }
             }
         }
+
+        private void LightWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker lightWorker = sender as BackgroundWorker;
+            //设置当前选择 闪烁
+            bool[] status = OriToolStatus();
+            plcControl.FlashLight(GlobalData.CurrTool.Position);
+            plcControl.OperateLight(status);
+        }
+
+        private void LightWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsBusy = false;
+        }
+
 
         private void RaiseToolStatusChanged(int pos, bool status)
         {
@@ -151,7 +182,7 @@ namespace ToolMgt.UI.ViewModel
             else
             {
                 GlobalData.SelectToolCorrect = true;
-                plcControl.CloseAlarm();                
+                plcControl.CloseAlarm();
             }
             if (status)
             {
@@ -196,13 +227,6 @@ namespace ToolMgt.UI.ViewModel
 
             //异常取、放，则报警
             //TODO:关灯
-            ToolRecord record = new ToolRecord();
-            record.ToolId = GlobalData.CurrTool.id;
-            record.UserId = GlobalData.CurrUser.Id;
-            record.CreateDateTime = DateTime.Now;
-            record.BorrowDate = DateTime.Now;
-            record.IsReturn = false;
-
             OnDoorClose?.Invoke();
         }
 

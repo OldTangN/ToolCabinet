@@ -40,6 +40,6 @@
 
             </Grid>
         </Border>
-        <local:BusyIndicator  x:Name="busyCtl"></local:BusyIndicator>
+        <local:BusyIndicator x:Name="busyCtl" IsBusy="{Binding Path=IsBusy,Mode=TwoWay}"></local:BusyIndicator>
     </Grid>
 </controls:MetroWindow>

@@ -7,13 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1024" Loaded="UserControl_Loaded">
     <Grid>
-        <Grid.Resources >
-            <Style x:Key="dgheader" TargetType="DataGridColumnHeader" >
-                <Setter Property="HorizontalContentAlignment" Value="Center"   ></Setter>
-            </Style>
+        <Grid.Resources >          
             <Style x:Key="dgCell" TargetType="TextBlock">
                 <Setter Property="TextAlignment" Value="Center"/>
-                <Setter  Property="VerticalAlignment" Value="Center"  ></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"  ></Setter>
                 <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
             <Style TargetType="TextBox" >
@@ -65,10 +62,16 @@
             <DataGrid Grid.Row="0" CanUserAddRows="False" RowHeaderWidth="0" AutoGenerateColumns="False"  Margin="0"
                       ItemsSource="{Binding Path=ToolTypes}" SelectedItem="{Binding Path=SelectType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                       IsSynchronizedWithCurrentItem="True" GridLinesVisibility="All">
+                <DataGrid.ColumnHeaderStyle >
+                    <Style TargetType="DataGridColumnHeader" >
+                        <Setter Property="HorizontalContentAlignment" Value="Center" ></Setter>
+                        <Setter Property="Height" Value="30"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding TypeName}" IsReadOnly="True"  Header="名 称" Width="150*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                    <DataGridTextColumn Binding="{Binding Note}" IsReadOnly="True" Header="说 明"  HeaderStyle="{StaticResource dgheader}" Width="150*" />
-                    <DataGridTemplateColumn  IsReadOnly="True" Header="操 作" HeaderStyle="{StaticResource dgheader}"   Width="260"  >
+                    <DataGridTextColumn Binding="{Binding TypeName}" IsReadOnly="True"  Header="名 称" Width="150*"  ElementStyle="{StaticResource dgCell}" />
+                    <DataGridTextColumn Binding="{Binding Note}" IsReadOnly="True" Header="说 明"  Width="150*" />
+                    <DataGridTemplateColumn  IsReadOnly="True" Header="操 作"  Width="260"  >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center">

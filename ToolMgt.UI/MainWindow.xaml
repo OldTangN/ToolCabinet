@@ -78,5 +78,6 @@
         <Grid Name="gridContainer" Grid.Row="0">
 
         </Grid>
+        <local:BusyIndicator  x:Name="busyCtl" IsBusy="{Binding Path=IsBusy,Mode=TwoWay}"></local:BusyIndicator>
     </Grid>
 </controls:MetroWindow>

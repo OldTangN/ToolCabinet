@@ -74,7 +74,6 @@ namespace ToolMgt.UI.ViewModel
         public LogInModel CurrLogIn { get; set; }
 
         #region IC卡登录
-
         private void Card_HandDataBack(object sender, CardEventArgs e)
         {
             CurrLogIn.NameOrCard = e.data;
@@ -87,7 +86,6 @@ namespace ToolMgt.UI.ViewModel
             ICardHelper card = obj as ICardHelper;
             card.Read();
         }
-
         #endregion
 
         #region 登录按钮
@@ -98,29 +96,13 @@ namespace ToolMgt.UI.ViewModel
         /// </summary>
         public ICommand LogInCmd => _logInCmd ?? (_logInCmd = new RelayCommand(LogIn, CanLogIn));
 
-
-
         private void LogIn(object obj)
         {
             IsBusy = true;
             loginWorker = new BackgroundWorker();
             loginWorker.DoWork += LoginWorker_DoWork;
-            loginWorker.WorkerReportsProgress = true;
             loginWorker.RunWorkerCompleted += LoginWorker_RunWorkerCompleted;
-            loginWorker.ProgressChanged += LoginWorker_ProgressChanged;
             loginWorker.RunWorkerAsync(obj);
-        }
-
-        private void LoginWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.ProgressPercentage == 0)
-            {
-                IsBusy = false;
-            }
-            else
-            {
-                IsBusy = true;
-            }
         }
 
         private void LoginWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -144,7 +126,6 @@ namespace ToolMgt.UI.ViewModel
 
         private void LoginWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            loginWorker.ReportProgress(0);
             LogInDao dao = new LogInDao();
             User u = dao.LogIn(CurrLogIn);
             e.Result = u;

@@ -77,12 +77,16 @@ namespace ToolMgt.UI.Controls
 
         public bool Selected
         {
-            get => selected; set
+            get
+            {
+                selected = (bool)this.GetValue(SelectedProperty);
+                return selected;
+            }
+            set
             {
                 if (selected != value)
                 {
                     selected = value;
-                    //RaisePropertyChanged("Selected");
                     this.SetValue(SelectedProperty, value);
                 }
                 if (selected)

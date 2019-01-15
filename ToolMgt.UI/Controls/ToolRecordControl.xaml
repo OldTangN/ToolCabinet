@@ -42,7 +42,7 @@
         <Border Grid.Row=" 2" BorderBrush="Silver" BorderThickness="1,0,1,1" Grid.Column="1" Margin="5,0,20,20">
             <Grid Margin="4">
                 <Grid.RowDefinitions >
-                    <RowDefinition Height="35"></RowDefinition>
+                    <RowDefinition Height="40"></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
@@ -62,7 +62,7 @@
                     <Button Name="btn_Search" Width="80" Margin="20,0" Command="{Binding SearchCmd}">搜 索</Button>
                 </StackPanel>
 
-                <DataGrid  Grid.Row="1" CanUserAddRows="False" SelectionMode="Single"  
+                <DataGrid BorderBrush="LightGray" BorderThickness="1" Grid.Row="1" CanUserAddRows="False" SelectionMode="Single"  
                            ItemsSource="{Binding Path=Records}"
                            AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
                     <DataGrid.Columns>
