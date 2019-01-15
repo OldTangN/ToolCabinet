@@ -23,6 +23,9 @@ namespace ToolMgt.UI.Controls
             }
         }
 
+        /// <summary>
+        /// IsBusyProperty须双向绑定
+        /// </summary>
         public bool IsBusy
         {
             get
