@@ -44,31 +44,18 @@ namespace ToolMgt.UI.ViewModel
 
         public List<Tool> Tools { get; set; }
 
-
         public void Init()
         {
+            IsBusy = true;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.ProgressChanged += Worker_ProgressChanged;
-            worker.WorkerReportsProgress = true;
             worker.RunWorkerAsync();
-        }
-
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.ProgressPercentage == 0)
-            {
-                IsBusy = true;
-            }
-            else
-            {
-                IsBusy = false;
-            }
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            IsBusy = false;
             if (e.Error != null)
             {
                 MessageAlert.Alert(e.Error.Message);
@@ -78,7 +65,6 @@ namespace ToolMgt.UI.ViewModel
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            worker.ReportProgress(0);
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
             foreach (var tool in Tools)
             {
@@ -93,10 +79,12 @@ namespace ToolMgt.UI.ViewModel
                     tool.PropertyChanged += Tool_PropertyChanged;
                 }
             }
+
             if (PLCThread != null && PLCThread.IsAlive)
             {
                 try { PLCThread.Abort(); } catch { }
             }
+
             bool[] status = OriToolStatus();
             plcControl.OperateLight(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
@@ -109,8 +97,6 @@ namespace ToolMgt.UI.ViewModel
             }));
             PLCThread.IsBackground = true;
             PLCThread.Start(status);
-
-            worker.ReportProgress(100);
         }
 
         private bool[] OriToolStatus()
@@ -148,6 +134,13 @@ namespace ToolMgt.UI.ViewModel
                     lightWorker.RunWorkerCompleted += LightWorker_RunWorkerCompleted;
                     lightWorker.DoWork += LightWorker_DoWork;
                     lightWorker.RunWorkerAsync();
+                }
+                else
+                {
+                    if (GlobalData.CurrTool == tool)
+                    {
+                        GlobalData.CurrTool = null;
+                    }
                 }
             }
         }
@@ -232,5 +225,12 @@ namespace ToolMgt.UI.ViewModel
 
         private string pLCStatus;
         public string PLCStatus { get => pLCStatus; set => Set(ref pLCStatus, value); }
+
+        public override void Dispose()
+        {
+            plcControl.DisConnect();
+            try { PLCThread.Abort(); } catch { }
+            base.Dispose();
+        }
     }
 }

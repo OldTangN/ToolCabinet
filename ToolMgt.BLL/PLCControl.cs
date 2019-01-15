@@ -238,5 +238,10 @@ namespace ToolMgt.BLL
         /// 工具状态改变 回调 &lt;位置1-16,状态&gt;
         /// </summary>
         public Action<int, bool> ToolStatusChanged;
+
+        public void DisConnect()
+        {
+            plcHelper.DisConnect();
+        }
     }
 }

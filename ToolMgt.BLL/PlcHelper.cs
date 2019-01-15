@@ -215,5 +215,10 @@ namespace ToolMgt.BLL
             byte[] data = deltaData.ToSendData();
             deltaPLC.SendData(data);
         }
+
+        public void DisConnect()
+        {
+            deltaPLC.Close();
+        }
     }
 }

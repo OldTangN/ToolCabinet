@@ -101,6 +101,7 @@ namespace ToolMgt.UI
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            viewModel.Dispose();
             LogInWindow win = new LogInWindow();
             win.Show();
         }

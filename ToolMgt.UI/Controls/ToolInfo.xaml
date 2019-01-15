@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToolMgt.UI.Controls"
              mc:Ignorable="d" Background="White" MinWidth="60" MinHeight="60"
-             d:DesignHeight="60" d:DesignWidth="60" FontSize="16">   
+             d:DesignHeight="60" d:DesignWidth="60" FontSize="16" Cursor="Hand">   
     <Border Name="border" BorderBrush="LightBlue" BorderThickness="2">
         <Border.Style>
             <Style TargetType="Border">
