@@ -31,7 +31,7 @@ namespace ToolMgt.UI.ViewModel
             {
                 if (commitCmd == null)
                 {
-                    commitCmd = new RelayCommand();
+                    commitCmd = new RelayCommand(OnCommit);
                 }
                 return commitCmd;
             }
@@ -39,6 +39,8 @@ namespace ToolMgt.UI.ViewModel
 
         private void OnCommit(object obj)
         {
+            Tools[0].IsSelected = !Tools[0].IsSelected;
+            return;
             if (GlobalData.CurrTool == null)
             {
                 MessageAlert.Alert("请选择工具！");

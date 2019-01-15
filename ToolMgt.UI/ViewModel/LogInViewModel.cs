@@ -102,6 +102,7 @@ namespace ToolMgt.UI.ViewModel
 
         private void LogIn(object obj)
         {
+            IsBusy = true;
             loginWorker = new BackgroundWorker();
             loginWorker.DoWork += LoginWorker_DoWork;
             loginWorker.WorkerReportsProgress = true;
@@ -124,6 +125,7 @@ namespace ToolMgt.UI.ViewModel
 
         private void LoginWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            IsBusy = false;
             if (e.Error != null)
             {
                 MessageAlert.Error(e.Error.Message);

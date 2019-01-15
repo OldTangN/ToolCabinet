@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,20 +32,38 @@ namespace ToolMgt.UI.ViewModel
             }
             plcControl.DoorClosed += RaiseDoorClosed;
             plcControl.ToolStatusChanged += RaiseToolStatusChanged;
-            Init();
+            //Init();
         }
 
         /// <summary>
         /// 柜门全部关闭后的回调函数
         /// </summary>
-        public Action OnDoorClose;
+        public Action OnDoorClose { get; set; }
 
         public User CurrUser => GlobalData.CurrUser;
 
         public List<Tool> Tools { get; set; }
 
 
-        private void Init()
+        public void Init()
+        {
+            IsBusy = true;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync();
+        }
+
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsBusy = false;
+            if (e.Error != null)
+            {
+                MessageAlert.Alert(e.Error.Message);
+            }
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
             foreach (var tool in Tools)
@@ -54,18 +73,6 @@ namespace ToolMgt.UI.ViewModel
                 {
                     //PLC.SetGreen(LightStatus.Flash, tool.Position);//默认闪烁
                     GlobalData.CurrTool = tool;
-                }
-                else
-                {
-                    //根据工具设置开关指示灯
-                    if (tool.Status)
-                    {
-                        plcControl.OpenLight(tool.Position);
-                    }
-                    else
-                    {
-                        plcControl.CloseLight(tool.Position);
-                    }
                 }
                 if (tool.CanSelected)//可选择的工具添加事件
                 {
@@ -78,22 +85,31 @@ namespace ToolMgt.UI.ViewModel
                 try { PLCThread.Abort(); } catch { }
             }
 
+            bool[] status = OriToolStatus();
+            plcControl.OperateLight(status);
+            PLCThread = new Thread(new ParameterizedThreadStart((p) =>
+            {
+                while (true)
+                {
+                    plcControl.GetStatus(p as bool[]);//new bool[] { false, true }
+                    Thread.Sleep(1000);
+                }
+            }));
+            PLCThread.IsBackground = true;
+            PLCThread.Start(status);
+        }
+
+        private bool[] OriToolStatus()
+        {
             bool[] status = new bool[16];//初始状态
             for (int i = 0; i < Tools.Count; i++)
             {
                 status[i] = Tools[i].Status;
                 //status[i] = false;//TODO:测试代码
             }
-
-            PLCThread = new Thread(new ParameterizedThreadStart((p) =>
-            {
-                while (true)
-                {
-                    plcControl.GetStatus(p as bool[]);
-                    Thread.Sleep(1000);
-                }
-            }));
-            PLCThread.Start(status);
+            //status[0] = true;//TODO:测试代码
+            //设置灯光
+            return status;
         }
 
         private void Tool_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -104,22 +120,16 @@ namespace ToolMgt.UI.ViewModel
                 if (tool.IsSelected)
                 {
                     GlobalData.CurrTool = tool;
-                    //设置当前选择
-                    //PLC.SetGreen(LightStatus.Flash, GlobalData.CurrTool.Position);
+                    //设置当前选择 闪烁
+                    bool[] status = OriToolStatus();
+                    plcControl.FlashLight(GlobalData.CurrTool.Position);
+                    plcControl.OperateLight(status);
                     //把其他工具选中状态改成false
-                    foreach (var other in Tools)
+                    foreach (var othertool in Tools)
                     {
-                        if (other != tool)
+                        if (othertool != tool && othertool.IsSelected)
                         {
-                            other.IsSelected = false;
-                            if (other.Status)
-                            {
-                                //PLC.SetGreen(LightStatus.Open, other.Position);
-                            }
-                            else
-                            {
-                                //PLC.SetGreen(LightStatus.Open, other.Position);
-                            }
+                            tool.IsSelected = false;
                         }
                     }
                 }
@@ -141,7 +151,15 @@ namespace ToolMgt.UI.ViewModel
             else
             {
                 GlobalData.SelectToolCorrect = true;
-                plcControl.CloseAlarm();
+                plcControl.CloseAlarm();                
+            }
+            if (status)
+            {
+                plcControl.OpenLight(pos);
+            }
+            else
+            {
+                plcControl.CloseLight(pos);
             }
         }
 

@@ -32,11 +32,18 @@ namespace ToolMgt.BLL
         /// 开关指示灯 1-16
         /// </summary>
         /// <param name="lightValue">"1"=亮，"0"=灭；16个灯的状态</param>
-        public void OperateLight(byte[] lightValue)
+        public void OperateLight(bool[] status)
         {
+            byte[] lightValue = new byte[16];
+            for (int i = 0; i < status.Length && i < lightValue.Length; i++)
+            {
+                lightValue[i] = (byte)(status[i] ? 1 : 0);
+            }
             int val = BitConverter.ToInt32(lightValue, 0);
             PLCHelper.PlcAdd startAddr = GetToolAddr(1, false);
             plcHelper.SetStart(startAddr, 16, val);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
         }
 
         /// <summary>
@@ -47,6 +54,8 @@ namespace ToolMgt.BLL
         {
             PLCHelper.PlcAdd addr = GetToolAddr(no, false);
             plcHelper.SetStart(addr, 1, 0x01);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
         }
 
         /// <summary>
@@ -57,6 +66,15 @@ namespace ToolMgt.BLL
         {
             PLCHelper.PlcAdd addr = GetToolAddr(no, false);
             plcHelper.SetStart(addr, 1, 0x00);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
+        }
+
+        private bool flashstatus = false;
+        private int flashno = 0;
+        public void FlashLight(int no)
+        {
+            flashno = no;
         }
 
         /// <summary>
@@ -67,6 +85,8 @@ namespace ToolMgt.BLL
         {
             PLCHelper.PlcAdd addr = GetLockAddr(no, false);
             plcHelper.SetStart(addr, 1, 0x01);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
         }
 
         /// <summary>
@@ -75,7 +95,11 @@ namespace ToolMgt.BLL
         public void OpenAlarm()
         {
             plcHelper.ItemStart(AddrLightR, 0xFF);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
             plcHelper.ItemStart(AddrBuzzer, 0xFF);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
         }
 
         /// <summary>
@@ -83,8 +107,13 @@ namespace ToolMgt.BLL
         /// </summary>
         public void CloseAlarm()
         {
-            plcHelper.ItemStart(AddrLightR, 0x0000);
-            plcHelper.ItemStart(AddrBuzzer, 0x0000);
+            plcHelper.ItemStart(AddrLightR, 0x00);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
+
+            plcHelper.ItemStart(AddrBuzzer, 0x00);
+            Thread.Sleep(500);
+            plcHelper.GetRecive();
         }
 
         public Status GetStatus(bool[] oriToolStatus)
@@ -123,19 +152,29 @@ namespace ToolMgt.BLL
             {
                 status.Tool[i] = toolsStatus[i] == '1';
             }
-            for (int i = 0; i < status.Tool.Length && i < toolsStatus.Count; i++)
+            for (int i = 0; i < status.Tool.Length && i < oriToolStatus.Length; i++)
             {
                 if (status.Tool[i] != oriToolStatus[i])
                 {
                     ToolStatusChanged?.Invoke(i + 1, status.Tool[i]);//状态改变回调
                 }
             }
+            if (flashno > 0)
+            {
+                plcHelper.ItemStart(GetToolAddr(flashno, false), (short)(flashstatus ? 0xFF : 0x00));
+                //plcHelper.ItemStart(PLCHelper.PlcAdd.Y27, 0xFF);
+                Thread.Sleep(500);
+                //var data2 = plcHelper.GetRecive();
+                flashstatus = !flashstatus;
+            }
+
             //byte bytTools_3 = data.DATA[5];//备用扩展
             //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
             if (status.Lock[0] && status.Lock[1])
             {
                 DoorClosed?.Invoke();//关门改变回调
             }
+
             return status;
         }
 
@@ -193,7 +232,7 @@ namespace ToolMgt.BLL
         /// <summary>
         /// 柜门全部关闭 回调
         /// </summary>
-        public Action DoorClosed;
+        public Action DoorClosed { get; set; }
 
         /// <summary>
         /// 工具状态改变 回调 &lt;位置1-16,状态&gt;

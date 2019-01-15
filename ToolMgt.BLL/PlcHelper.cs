@@ -124,6 +124,11 @@ namespace ToolMgt.BLL
             }
             string str = System.Text.Encoding.ASCII.GetString(reciveData);
         }
+
+        /// <summary>
+        /// 发送命令完成后，必须调用此方法，否则队列内有垃圾数据
+        /// </summary>
+        /// <returns></returns>
         public DeltaData GetRecive()
         {
             if (queueData.Count > 0)
@@ -132,6 +137,7 @@ namespace ToolMgt.BLL
             }
             return null;
         }
+
         /// <summary>
         /// 获取各个工具位置的状态 参考协议4.5.3
         /// </summary>
@@ -189,7 +195,6 @@ namespace ToolMgt.BLL
             deltaPLC.SendData(data);
         }
 
-
         /// <summary>
         /// 设置单点状态 参考协议4.5.4
         /// </summary>
@@ -210,8 +215,5 @@ namespace ToolMgt.BLL
             byte[] data = deltaData.ToSendData();
             deltaPLC.SendData(data);
         }
-
-
-
     }
 }

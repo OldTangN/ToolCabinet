@@ -29,7 +29,7 @@ namespace ToolMgt.BLL.Tests
         [TestMethod()]
         public void SendTest()
         {
-            PLCHelper pLCHelper = new PLCHelper();
+            PLCHelper pLCHelper = new PLCHelper("com12");
             pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 30);//X10~X17没有，但是有数据返回
             Thread.Sleep(500);
             try
@@ -48,16 +48,31 @@ namespace ToolMgt.BLL.Tests
         [TestMethod()]
         public void SetTest()
         {
-            PLCHelper pLCHelper = new PLCHelper();
+            PLCHelper pLCHelper = new PLCHelper("COM12");
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y0, 8, 0xFF);//10~17没有
+            Thread.Sleep(500);
+            pLCHelper.GetRecive();
+
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y20, 8, 0xFF);
+            Thread.Sleep(500);
+            pLCHelper.GetRecive();
+
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0xFF);
+            Thread.Sleep(500);
+            pLCHelper.GetRecive();
+
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0xFF);
+            Thread.Sleep(500);
+            pLCHelper.GetRecive();
         }
         [TestMethod()]
         public void LightControlTest()
         {
-            PLCControl ctl = new PLCControl("");
+            PLCControl ctl = new PLCControl("COM12");
+
+            ctl.GetStatus(new bool[] { false, false });
+
+
             ctl.OpenAlarm();
 
             ctl.CloseAlarm();
@@ -65,7 +80,7 @@ namespace ToolMgt.BLL.Tests
             ctl.OpenLight(2);
             ctl.CloseLight(2);
 
-            ctl.GetStatus();
+           
 
             ctl.OperateLight(new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
 

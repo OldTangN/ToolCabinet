@@ -40,6 +40,7 @@ namespace ToolMgt.UI
             viewModel = new MainViewModel(PLC);
             viewModel.OnDoorClose += DoorClose;
             this.DataContext = viewModel;
+            viewModel.Init();
         }
 
         private void DoorClose()
