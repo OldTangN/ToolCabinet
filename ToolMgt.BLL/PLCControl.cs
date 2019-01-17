@@ -127,17 +127,28 @@ namespace ToolMgt.BLL
         /// 开门1-2
         /// </summary>
         /// <param name="no">1-2</param>
-        public void OpenDoor(int no)
+        /// <param name="waitTime">开门等待时间 单位：秒(s)</param>
+        public void OpenDoor(int no, int waitTime)
         {
+            PLCHelper.PlcAdd addr = GetLockAddr(no, false);
             lock (lockobj)
             {
                 try
                 {
-                    PLCHelper.PlcAdd addr = GetLockAddr(no, false);
                     plcHelper.SetStart(addr, 1, 0x01);
                     Thread.Sleep(500);
                     plcHelper.GetRecive();
-
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.WriteLog("开门失败！", ex);
+                }
+            }
+            Thread.Sleep(waitTime * 1000);
+            lock (lockobj)
+            {
+                try
+                {
                     plcHelper.SetStart(addr, 1, 0x00);
                     Thread.Sleep(500);
                     plcHelper.GetRecive();

@@ -18,7 +18,7 @@ namespace ToolMgt.UI.ViewModel
     public class LogInViewModel : ViewModelBase
     {
         private Thread ThreadICReader;
-
+        ICardHelper card;
         public LogInViewModel()
         {
             CurrLogIn = new LogInModel();
@@ -40,7 +40,7 @@ namespace ToolMgt.UI.ViewModel
                 return;
             }
 
-            ICardHelper card;
+            
             if (readerType == "USB")
             {
                 card = new UsbICCard(readerPort, readerBaud);
@@ -53,6 +53,7 @@ namespace ToolMgt.UI.ViewModel
             {
                 card.HandDataBack += Card_HandDataBack;
                 ThreadICReader = new Thread(new ParameterizedThreadStart(ICReadThread));
+                ThreadICReader.IsBackground = true;
                 ThreadICReader.Start(card);
             }
             else
@@ -134,6 +135,12 @@ namespace ToolMgt.UI.ViewModel
         private bool CanLogIn(object obj)
         {
             return !string.IsNullOrEmpty(CurrLogIn.NameOrCard);
+        }
+
+        public override void Dispose()
+        {
+            card?.Close();
+            base.Dispose();
         }
         #endregion
     }

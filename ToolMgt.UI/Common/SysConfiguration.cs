@@ -25,5 +25,7 @@ namespace ToolMgt.UI.Common
         public static int ICReaderBaudRate => ConfigurationUtil.GetConfiguration(int.Parse, () => -1);
 
         public static string PLCCom => ConfigurationUtil.GetConfiguration(Convert.ToString, () => "COM12");
+
+        public static int DoorWaitTime => ConfigurationUtil.GetConfiguration(int.Parse, () => 5);
     }
 }

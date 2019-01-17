@@ -70,7 +70,6 @@ namespace ToolMgt.UI.ViewModel
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //TODO 开日光灯
             plcControl.OpenLight();
             BackgroundWorker worker = sender as BackgroundWorker;
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
@@ -129,7 +128,6 @@ namespace ToolMgt.UI.ViewModel
 
                 if (tool.IsSelected)
                 {
-
                     IsBusy = true;
                     BackgroundWorker lightWorker = new BackgroundWorker();
                     lightWorker.RunWorkerCompleted += LightWorker_RunWorkerCompleted;
@@ -148,14 +146,20 @@ namespace ToolMgt.UI.ViewModel
 
         private void OpenDoor(int toolPos)
         {
-            if (toolPos <= 8)//根据选择的工具位置开门
+            Thread thread = new Thread(() =>
             {
-                plcControl.OpenDoor(1);
-            }
-            else
-            {
-                plcControl.OpenDoor(2);
-            }
+                int doorWaitTime = SysConfiguration.DoorWaitTime;
+                if (toolPos <= 8)//根据选择的工具位置开门
+                {
+                    plcControl.OpenDoor(1, doorWaitTime);
+                }
+                else
+                {
+                    plcControl.OpenDoor(2, doorWaitTime);
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         private void LightWorker_DoWork(object sender, DoWorkEventArgs e)

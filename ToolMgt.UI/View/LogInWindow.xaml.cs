@@ -25,6 +25,12 @@ namespace ToolMgt.UI.View
         public LogInWindow()
         {
             InitializeComponent();
+            this.Closing += LogInWindow_Closing;
+        }
+
+        private void LogInWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            viewModel.Dispose();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
