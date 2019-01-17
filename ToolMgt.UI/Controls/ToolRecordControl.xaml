@@ -56,9 +56,9 @@
                     <Label Content="账号/卡号" Margin="20 0 0 0"></Label>
                     <TextBox Text="{Binding Path=NameOrCard,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>
                     <Label Content="领用时间" Margin="20 0 0 0"></Label>
-                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowStart,Mode=TwoWay,StringFormat='yyyy-MM-dd'}" DisplayDate="2015-07-03"></DatePicker>
+                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowStart,Mode=TwoWay,StringFormat='yyyy-MM-dd HH:mm:ss'}" DisplayDate="2015-07-03"></DatePicker>
                     <Label Content="~" Margin="0 0 0 0"></Label>
-                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowEnd,Mode=TwoWay,StringFormat='yyyy-MM-dd'}" DisplayDate="2015-07-03"></DatePicker>
+                    <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowEnd,Mode=TwoWay,StringFormat='yyyy-MM-dd HH:mm:ss'}" DisplayDate="2015-07-03"></DatePicker>
                     <Button Name="btn_Search" Width="80" Margin="20,0" Command="{Binding SearchCmd}">搜 索</Button>
                 </StackPanel>
 
@@ -71,8 +71,8 @@
                         <DataGridTextColumn Header="量程下限(N.m)" Binding="{Binding Tool.RangeMin}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                         <DataGridTextColumn Header="量程上限(N.m)"  Binding="{Binding Tool.RangeMax}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                         <DataGridTextColumn Header="领用人"  Binding="{Binding User.RealName}"  Width="100*"   HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn Header="领用时间" Binding="{Binding BorrowDate,StringFormat='yyyy-MM-dd'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
-                        <DataGridTextColumn Header="归还时间" Binding="{Binding ReturnDate,StringFormat='yyyy-MM-dd'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="领用时间" Binding="{Binding BorrowDate,StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
+                        <DataGridTextColumn Header="归还时间" Binding="{Binding ReturnDate,StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="100*"  HeaderStyle="{StaticResource dgheader}" ElementStyle="{StaticResource dgCell}" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <!--<StackPanel Grid.Row="2"  Orientation="Horizontal"  Margin="0,2">

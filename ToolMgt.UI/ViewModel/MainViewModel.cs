@@ -71,6 +71,7 @@ namespace ToolMgt.UI.ViewModel
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             //TODO 开日光灯
+            plcControl.OpenLight();
             BackgroundWorker worker = sender as BackgroundWorker;
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
             foreach (var tool in Tools)
@@ -100,7 +101,7 @@ namespace ToolMgt.UI.ViewModel
                 while (keep)
                 {
                     plcControl.GetStatus(p as bool[]);//new bool[] { false, true }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
             }));
             PLCThread.IsBackground = true;
