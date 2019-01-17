@@ -77,16 +77,13 @@ namespace ToolMgt.BLL.Tests
 
             ctl.CloseAlarm();
 
-            ctl.OpenLight(2);
-            ctl.CloseLight(2);
+            ctl.OpenToolLamp(2);
+            ctl.CloseToolLamp(2);
 
-           
-
-            ctl.OperateLight(new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
 
             for (int i = 1; i <= 16; i++)
             {
-                ctl.CloseLight(i);
+                ctl.CloseToolLamp(i);
                 Thread.Sleep(2000);
             }
         }

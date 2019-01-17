@@ -20,7 +20,7 @@
                     <ImageBrush ImageSource="/ToolMgt.UI;component/Images/lgb.png" TileMode="Tile"  Viewport="0,0,1,1"/>
                 </Grid.Background>
                 <TextBlock Text="{Binding Path=ICReaderStatus}"  Foreground="Red" Margin="74,15,141,260" FontSize="20"/>
-                <Label Content="工具柜管理系统" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="35" Margin="30,68,148,0" Height="50" Foreground="White"/>
+                <Label Content="智能工具柜管理系统" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="35" Margin="30,68,148,0" Height="50" Foreground="White"/>
                 <Label Content="用户名:" HorizontalAlignment="Left" Margin="74,133,0,0" VerticalAlignment="Top" FontSize="20" Height="41" RenderTransformOrigin="0.366,3.976" />
                 <Label Content="密   码:" HorizontalAlignment="Left" Margin="74,192,0,0" VerticalAlignment="Top" FontSize="20" RenderTransformOrigin="0.458,1.075" />
                 <TextBox  Name="txtName"  GotFocus="txtName_GotFocus" KeyDown="txtName_KeyDown" Text="{Binding Path=CurrLogIn.NameOrCard,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Height="40" VerticalContentAlignment="Center"  HorizontalAlignment="Left" Margin="167,134,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="209" FontSize="20"/>
@@ -37,6 +37,7 @@
                         VerticalAlignment="Top" >
                 </Button>
                 <TextBlock Text="Copyright @2016 青岛德尔轨道交通设备有限公司" Margin="102,386,113,-106" Foreground="#FFFFFF" FontSize="12"></TextBlock>
+                <!--<Button Content="测试PLC" Click="BtnPLCTest_Click" Name="btnPLCTest" HorizontalAlignment="Left" Margin="381,15,0,0" VerticalAlignment="Top" Width="75"/>-->
 
             </Grid>
         </Border>

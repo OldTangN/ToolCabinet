@@ -78,5 +78,11 @@ namespace ToolMgt.UI.View
         public void Dispose()
         {
         }
+
+        private void BtnPLCTest_Click(object sender, RoutedEventArgs e)
+        {
+            PLCTestWindow win = new PLCTestWindow();
+            win.ShowDialog();
+        }
     }
 }

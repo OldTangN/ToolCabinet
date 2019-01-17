@@ -95,7 +95,7 @@ namespace ToolMgt.UI.Controls
                 }
                 else
                 {
-                    border.Background = new SolidColorBrush(Colors.Transparent);
+                    border.Background = new SolidColorBrush(Colors.LightGreen);
                 }
             }
         }

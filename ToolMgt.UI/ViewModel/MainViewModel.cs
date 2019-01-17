@@ -36,6 +36,11 @@ namespace ToolMgt.UI.ViewModel
         }
 
         /// <summary>
+        /// 初始化完成回调
+        /// </summary>
+        public Action OnInitComplete { get; set; }
+
+        /// <summary>
         /// 柜门全部关闭后的回调函数
         /// </summary>
         public Action OnDoorClose { get; set; }
@@ -60,10 +65,12 @@ namespace ToolMgt.UI.ViewModel
             {
                 MessageAlert.Alert(e.Error.Message);
             }
+            OnInitComplete?.Invoke();
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            //TODO 开日光灯
             BackgroundWorker worker = sender as BackgroundWorker;
             Tools = toolDao.GetTools(GlobalData.CurrUser.Id);
             foreach (var tool in Tools)
@@ -71,8 +78,9 @@ namespace ToolMgt.UI.ViewModel
                 tool.PropertyChanged -= Tool_PropertyChanged;
                 if (tool.IsSelected)//默认选择用户当前已借用工具
                 {
-                    plcControl.FlashLight(tool.Position);//默认闪烁
+                    plcControl.FlashToolLamp(tool.Position);//默认闪烁
                     GlobalData.CurrTool = tool;
+                    OpenDoor(tool.Position);
                 }
                 if (tool.CanSelected)//可选择的工具添加事件
                 {
@@ -86,13 +94,13 @@ namespace ToolMgt.UI.ViewModel
             }
 
             bool[] status = OriToolStatus();
-            plcControl.OperateLight(status);
+            plcControl.SetToolLamp(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
                 while (true)
                 {
                     plcControl.GetStatus(p as bool[]);//new bool[] { false, true }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
             }));
             PLCThread.IsBackground = true;
@@ -121,6 +129,7 @@ namespace ToolMgt.UI.ViewModel
                 if (tool.IsSelected)
                 {
                     GlobalData.CurrTool = tool;
+                    OpenDoor(tool.Position);
                     //把其他工具选中状态改成false
                     foreach (var othertool in Tools)
                     {
@@ -145,13 +154,25 @@ namespace ToolMgt.UI.ViewModel
             }
         }
 
+        private void OpenDoor(int toolPos)
+        {
+            if (toolPos <= 8)//根据选择的工具位置开门
+            {
+                plcControl.OpenDoor(1);
+            }
+            else
+            {
+                plcControl.OpenDoor(2);
+            }
+        }
+
         private void LightWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker lightWorker = sender as BackgroundWorker;
             //设置当前选择 闪烁
             bool[] status = OriToolStatus();
-            plcControl.FlashLight(GlobalData.CurrTool.Position);
-            plcControl.OperateLight(status);
+            plcControl.FlashToolLamp(GlobalData.CurrTool.Position);
+            plcControl.SetToolLamp(status);
         }
 
         private void LightWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -159,11 +180,12 @@ namespace ToolMgt.UI.ViewModel
             IsBusy = false;
         }
 
-
         private void RaiseToolStatusChanged(int pos, bool status)
         {
             if (GlobalData.CurrTool == null)
             {
+                GlobalData.SelectToolCorrect = false;
+                plcControl.OpenAlarm();
                 return;
             }
             //错拿、错放报警
@@ -179,26 +201,20 @@ namespace ToolMgt.UI.ViewModel
             }
             if (status)
             {
-                plcControl.OpenLight(pos);
+                plcControl.OpenToolLamp(pos);
             }
             else
             {
-                plcControl.CloseLight(pos);
+                plcControl.CloseToolLamp(pos);
             }
         }
 
         private void RaiseDoorClosed()
         {
-            if (GlobalData.CurrTool == null)
+            if (GlobalData.CurrUser == null || GlobalData.CurrUser.Id == 0 || GlobalData.CurrTool == null)
             {
                 return;
             }
-
-            if (GlobalData.CurrUser == null || GlobalData.CurrUser.Id == 0)
-            {
-                return;
-            }
-
             //正常取、放，则关灯
             if (GlobalData.SelectToolCorrect)
             {
@@ -217,9 +233,12 @@ namespace ToolMgt.UI.ViewModel
                     MessageAlert.Error("更新工具使用记录失败！");
                 }
             }
+            GlobalData.CurrTool = null;
+            //TODO:异常取、放，则报警
 
-            //异常取、放，则报警
-            //TODO:关灯
+            //关灯
+            plcControl.SetToolLamp(null);
+            plcControl.CloseLight();
             OnDoorClose?.Invoke();
         }
 

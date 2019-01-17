@@ -11,10 +11,10 @@
             <Style TargetType="Border">
                 <Style.Triggers>
                     <Trigger Value="False" Property="IsEnabled">
-                        <Setter Property="Background" Value="LightGray"></Setter>
+                        <Setter Property="Background" Value="Red"></Setter>
                     </Trigger>
                     <Trigger Value="True" Property="IsEnabled">
-                        <Setter Property="Background" Value="Transparent"></Setter>
+                        <Setter Property="Background" Value="LightGreen"></Setter>
                     </Trigger>
                     <!--<Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightYellow"></Setter>

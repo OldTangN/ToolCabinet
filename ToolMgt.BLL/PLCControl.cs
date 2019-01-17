@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ToolMgt.Common;
 
 namespace ToolMgt.BLL
 {
@@ -28,78 +29,135 @@ namespace ToolMgt.BLL
             Connected = plcHelper.Connected;
         }
 
+        #region 工具指示灯控制
         /// <summary>
         /// 开关指示灯 1-16
         /// </summary>
         /// <param name="lightValue">"1"=亮，"0"=灭；16个灯的状态</param>
-        public void OperateLight(bool[] status)
+        public void SetToolLamp(bool[] status = null)
         {
-            byte[] lightValue = new byte[16];
-            for (int i = 0; i < status.Length && i < lightValue.Length; i++)
+            string strval = "";
+            if (status == null || status.Length == 0)
             {
-                lightValue[i] = (byte)(status[i] ? 1 : 0);
+                strval = "0".PadLeft(16, '0');
             }
-            int val = BitConverter.ToInt32(lightValue, 0);
-            PLCHelper.PlcAdd startAddr = GetToolAddr(1, false);
-            plcHelper.SetStart(startAddr, 16, val);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+            else
+            {
+                for (int i = 0; i < status.Length; i++)
+                {
+                    strval = (status[0] ? "1" : "0") + strval;
+                }
+            }
+            try
+            {
+                int val = Convert.ToInt32(strval, 2);
+                PLCHelper.PlcAdd startAddr = GetToolAddr(1, false);
+                plcHelper.SetStart(startAddr, 16, val);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("设置工具指示灯失败！", ex);
+            }
         }
 
         /// <summary>
         /// 开指示灯1-16单独控制
         /// </summary>
         /// <param name="no">1-16</param>
-        public void OpenLight(int no)
+        public void OpenToolLamp(int no)
         {
-            PLCHelper.PlcAdd addr = GetToolAddr(no, false);
-            plcHelper.SetStart(addr, 1, 0x01);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+            try
+            {
+                PLCHelper.PlcAdd addr = GetToolAddr(no, false);
+                plcHelper.SetStart(addr, 1, 0x01);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("打开工具指示灯失败！", ex);
+            }
         }
 
         /// <summary>
         /// 关指示灯1-16单独控制
         /// </summary>
         /// <param name="no"></param>
-        public void CloseLight(int no)
+        public void CloseToolLamp(int no)
         {
-            PLCHelper.PlcAdd addr = GetToolAddr(no, false);
-            plcHelper.SetStart(addr, 1, 0x00);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+            try
+            {
+                PLCHelper.PlcAdd addr = GetToolAddr(no, false);
+                plcHelper.SetStart(addr, 1, 0x00);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("关闭工具指示灯失败！", ex);
+            }
         }
 
         private bool flashstatus = false;
         private int flashno = 0;
-        public void FlashLight(int no)
+        public void FlashToolLamp(int no)
         {
             flashno = no;
         }
 
+        #endregion
+
+        #region 开门
         /// <summary>
         /// 开门1-2
         /// </summary>
         /// <param name="no">1-2</param>
         public void OpenDoor(int no)
         {
-            PLCHelper.PlcAdd addr = GetLockAddr(no, false);
-            plcHelper.SetStart(addr, 1, 0x01);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
-        }
+            try
+            {
+                PLCHelper.PlcAdd addr = GetLockAddr(no, false);
+                plcHelper.SetStart(addr, 1, 0x01);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
 
+                plcHelper.SetStart(addr, 1, 0x00);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("开门失败！", ex);
+            }
+        }
+        #endregion
+
+        #region 报警+蜂鸣
         /// <summary>
         /// 红灯报警+蜂鸣
         /// </summary>
         public void OpenAlarm()
         {
-            plcHelper.ItemStart(AddrLightR, 0xFF);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
-            plcHelper.ItemStart(AddrBuzzer, 0xFF);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+            try
+            {
+                plcHelper.ItemStart(AddrLightR1, 0xFF);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+
+                plcHelper.ItemStart(AddrLightR2, 0xFF);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+
+                plcHelper.ItemStart(AddrBuzzer, 0xFF);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("打开报警失败！", ex);
+            }
         }
 
         /// <summary>
@@ -107,75 +165,121 @@ namespace ToolMgt.BLL
         /// </summary>
         public void CloseAlarm()
         {
-            plcHelper.ItemStart(AddrLightR, 0x00);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+            try
+            {
+                plcHelper.ItemStart(AddrLightR1, 0x00);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
 
-            plcHelper.ItemStart(AddrBuzzer, 0x00);
-            Thread.Sleep(500);
-            plcHelper.GetRecive();
+                plcHelper.ItemStart(AddrLightR2, 0x00);
+                Thread.Sleep(500);
+
+                plcHelper.GetRecive();
+                plcHelper.ItemStart(AddrBuzzer, 0x00);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("关闭报警失败！", ex);
+            }
+        }
+        #endregion
+
+        #region 开关日光灯
+        public void OpenLight()
+        {
+            try
+            {
+                plcHelper.ItemStart(AddrLight, 0xFF);
+                Thread.Sleep(500);
+                plcHelper.GetRecive();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("打开日光灯失败！", ex);
+            }
         }
 
-        public Status GetStatus(bool[] oriToolStatus)
+        public void CloseLight()
         {
-            plcHelper.GetStart(PLCHelper.PlcAdd.X0, 40);
-            Thread.Sleep(500);
-            DeltaData data = plcHelper.GetRecive();
-            if (data == null)
+            try
             {
+                plcHelper.ItemStart(AddrLight, 0x00);
                 Thread.Sleep(500);
-                data = plcHelper.GetRecive();
-                return null;
+                plcHelper.GetRecive();
             }
-
-            if (data.CMD != 0x02)
+            catch (Exception ex)
             {
-                return null;
+                LogUtil.WriteLog("关闭日光灯失败！", ex);
             }
-            Status status = new Status();
+        }
+        #endregion
 
-            byte bytLock = data.DATA[1];//锁状态
-            char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8, '0').Reverse().ToArray();
-            status.Lock[0] = arrLock[0] == '1';
-            status.Lock[1] = arrLock[1] == '1';
-
-            byte bytTools_1 = data.DATA[3];//第一组扩展，扳手1-8
-            char[] arrTools_1 = Convert.ToString(bytTools_1, 2).PadLeft(8, '0').Reverse().ToArray();
-
-            byte bytTools_2 = data.DATA[4];//第二组扩展，扳手9-16
-            char[] arrTools_2 = Convert.ToString(bytTools_2, 2).PadLeft(8, '0').Reverse().ToArray();
-
-            List<char> toolsStatus = new List<char>();
-            toolsStatus.AddRange(arrTools_1);
-            toolsStatus.AddRange(arrTools_2);
-            for (int i = 0; i < status.Tool.Length; i++)
+        public void GetStatus(bool[] oriToolStatus)
+        {
+            try
             {
-                status.Tool[i] = toolsStatus[i] == '1';
-            }
-            for (int i = 0; i < status.Tool.Length && i < oriToolStatus.Length; i++)
-            {
-                if (status.Tool[i] != oriToolStatus[i])
+                plcHelper.GetStart(PLCHelper.PlcAdd.X0, 40);
+                Thread.Sleep(500);
+                DeltaData data = plcHelper.GetRecive();
+                if (data == null)
                 {
-                    ToolStatusChanged?.Invoke(i + 1, status.Tool[i]);//状态改变回调
+                    Thread.Sleep(500);
+                    data = plcHelper.GetRecive();
+                    return;
+                }
+
+                if (data.CMD != 0x02)
+                {
+                    return;
+                }
+                Status status = new Status();
+
+                byte bytLock = data.DATA[1];//锁状态
+                char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8, '0').Reverse().ToArray();
+                status.Lock[0] = arrLock[1] == '0';
+                status.Lock[1] = arrLock[3] == '0';
+
+                byte bytTools_1 = data.DATA[3];//第一组扩展，扳手1-8
+                char[] arrTools_1 = Convert.ToString(bytTools_1, 2).PadLeft(8, '0').Reverse().ToArray();
+
+                byte bytTools_2 = data.DATA[4];//第二组扩展，扳手9-16
+                char[] arrTools_2 = Convert.ToString(bytTools_2, 2).PadLeft(8, '0').Reverse().ToArray();
+
+                List<char> toolsStatus = new List<char>();
+                toolsStatus.AddRange(arrTools_1);
+                toolsStatus.AddRange(arrTools_2);
+                for (int i = 0; i < status.Tool.Length; i++)
+                {
+                    status.Tool[i] = toolsStatus[i] == '1';
+                }
+                for (int i = 0; i < status.Tool.Length && i < oriToolStatus.Length; i++)
+                {
+                    if (status.Tool[i] != oriToolStatus[i])
+                    {
+                        ToolStatusChanged?.Invoke(i + 1, status.Tool[i]);//状态改变回调
+                    }
+                }
+                if (flashno > 0)
+                {
+                    plcHelper.ItemStart(GetToolAddr(flashno, false), (short)(flashstatus ? 0xFF : 0x00));
+                    Thread.Sleep(500);
+                    plcHelper.GetRecive();
+                    flashstatus = !flashstatus;
+                }
+
+                //byte bytTools_3 = data.DATA[5];//备用扩展
+                //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
+                if (!status.Lock[0] && !status.Lock[1])
+                {
+                    DoorClosed?.Invoke();//关门改变回调
                 }
             }
-            if (flashno > 0)
+            catch (Exception ex)
             {
-                plcHelper.ItemStart(GetToolAddr(flashno, false), (short)(flashstatus ? 0xFF : 0x00));
-                //plcHelper.ItemStart(PLCHelper.PlcAdd.Y27, 0xFF);
-                Thread.Sleep(500);
-                //var data2 = plcHelper.GetRecive();
-                flashstatus = !flashstatus;
+                LogUtil.WriteLog("获取PLC接入点状态失败！", ex);
             }
-
-            //byte bytTools_3 = data.DATA[5];//备用扩展
-            //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
-            if (status.Lock[0] && status.Lock[1])
-            {
-                DoorClosed?.Invoke();//关门改变回调
-            }
-
-            return status;
         }
 
         /// <summary>
@@ -203,31 +307,58 @@ namespace ToolMgt.BLL
         /// <returns></returns>
         private PLCHelper.PlcAdd GetLockAddr(int no, bool input)
         {
-            int iStart, iAddr;
             if (input)
-                iStart = (int)PLCHelper.PlcAdd.X0;
+            {
+                if (no == 1)
+                {
+                    return PLCHelper.PlcAdd.X1;
+                }
+                else
+                {
+                    return PLCHelper.PlcAdd.X3;
+                }
+            }
             else
-                iStart = (int)PLCHelper.PlcAdd.Y0;
-            iAddr = iStart + (no - 1);
-            return (PLCHelper.PlcAdd)iAddr;
+            {
+                int iStart = (int)PLCHelper.PlcAdd.Y0, iAddr = 0;
+                iAddr = iStart + (no - 1);
+                return (PLCHelper.PlcAdd)iAddr;
+            }
         }
-
-        /// <summary>
-        /// 绿色报警灯
-        /// </summary>
-        private PLCHelper.PlcAdd AddrLightG = PLCHelper.PlcAdd.Y2;
         /// <summary>
         /// 红色报警灯
         /// </summary>
-        private PLCHelper.PlcAdd AddrLightR = PLCHelper.PlcAdd.Y3;
+        private PLCHelper.PlcAdd AddrLightR1 = PLCHelper.PlcAdd.Y40;
         /// <summary>
-        /// 黄色报警灯
+        /// 红色报警灯 地址
         /// </summary>
-        private PLCHelper.PlcAdd AddrLightY = PLCHelper.PlcAdd.Y4;
+        private PLCHelper.PlcAdd AddrLightR2 = PLCHelper.PlcAdd.Y43;
         /// <summary>
-        /// 蜂鸣器
+        /// 绿色报警灯 地址
         /// </summary>
-        private PLCHelper.PlcAdd AddrBuzzer = PLCHelper.PlcAdd.Y5;
+        private PLCHelper.PlcAdd AddrLightG1 = PLCHelper.PlcAdd.Y41;
+        /// <summary>
+        /// 绿色报警灯 地址
+        /// </summary>
+        private PLCHelper.PlcAdd AddrLightG2 = PLCHelper.PlcAdd.Y44;
+
+        /// <summary>
+        /// 蓝色报警灯 地址
+        /// </summary>
+        private PLCHelper.PlcAdd AddrLightB1 = PLCHelper.PlcAdd.Y42;
+        /// <summary>
+        /// 蓝色报警灯 地址
+        /// </summary>
+        private PLCHelper.PlcAdd AddrLightB2 = PLCHelper.PlcAdd.Y45;
+        /// <summary>
+        /// 蜂鸣器地址
+        /// </summary>
+        private PLCHelper.PlcAdd AddrBuzzer = PLCHelper.PlcAdd.Y3;
+
+        /// <summary>
+        /// 日光灯地址
+        /// </summary>
+        private PLCHelper.PlcAdd AddrLight = PLCHelper.PlcAdd.Y2;
 
         /// <summary>
         /// 柜门全部关闭 回调

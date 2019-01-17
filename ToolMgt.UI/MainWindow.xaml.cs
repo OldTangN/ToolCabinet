@@ -36,16 +36,29 @@ namespace ToolMgt.UI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (GlobalData.CurrUser.LoginName == "admin")
+            {
+                btnUserSearch.Visibility = Visibility.Visible;
+                btnToolSearch.Visibility = Visibility.Visible;
+                btnToolType.Visibility = Visibility.Visible;
+            }
             PLC = new PLCControl(SysConfiguration.PLCCom);
             viewModel = new MainViewModel(PLC);
             viewModel.OnDoorClose += DoorClose;
+            viewModel.OnInitComplete += InitComplete;
             this.DataContext = viewModel;
             viewModel.Init();
         }
 
+        private void InitComplete()
+        {
+            SelectToolControl control = new SelectToolControl(viewModel.Tools);
+            ChangeView(control);
+        }
+
         private void DoorClose()
         {
-            this.Close();
+            this.Dispatcher.Invoke(() => { this.Close(); });
         }
 
         private void ChangeView(UserControl control)
@@ -84,7 +97,6 @@ namespace ToolMgt.UI
 
         private void btnBorrow_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.OnDoorClose -= DoorClose;
             SelectToolControl control = new SelectToolControl(viewModel.Tools);
             ChangeView(control);
         }

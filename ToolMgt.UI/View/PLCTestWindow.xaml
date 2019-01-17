@@ -1,0 +1,18 @@
+﻿<Window x:Class="ToolMgt.UI.View.PLCTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToolMgt.UI.View"
+        mc:Ignorable="d"
+        Title="PLCTestWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Button Name="btnSend" Click="BtnSend_Click" Content="发送" HorizontalAlignment="Left" Margin="88,55,0,0" VerticalAlignment="Top" Width="75"/>
+        <ComboBox Name="cmbAddr" DisplayMemberPath="." HorizontalAlignment="Left" Margin="183,57,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="txtValue" HorizontalAlignment="Left" Height="23" Margin="322,57,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="txtCom" HorizontalAlignment="Left" Height="23" Margin="88,16,0,0" TextWrapping="Wrap" Text="COM1" VerticalAlignment="Top" Width="120"/>
+        <Button Name="btnConnect" Click="BtnConnect_Click" Content="连接PLC" HorizontalAlignment="Left" Margin="222,14,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="btnCloseTool" Click="BtnCloseTool_Click" Content="Button" HorizontalAlignment="Left" Margin="88,102,0,0" VerticalAlignment="Top" Width="75"/>
+
+    </Grid>
+</Window>

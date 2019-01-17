@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:local="clr-namespace:ToolMgt.UI.Controls"
         xmlns:controls ="http://metro.mahapps.com/winfx/xaml/controls"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowState="Normal"
-        Title="工具柜管理系统" Height="576" Width="1024" Loaded="Window_Loaded"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize"
+        Title="智能工具柜管理系统" Height="576" Width="1024" Loaded="Window_Loaded"
         Closing="MetroWindow_Closing" Closed="MetroWindow_Closed">
     <Grid>
         <Grid.RowDefinitions>
@@ -22,20 +23,20 @@
         </Grid.Resources>
         <StackPanel Name="spNavigateBar" Grid.Row="1" Orientation="Horizontal"
                    VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Button Name="btnUserSearch" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
+            <Button Name="btnUserSearch" Visibility="Hidden" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
                 <TextBlock Width="35" Text="用户信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolSearch" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
+            <Button Name="btnToolSearch" Visibility="Hidden" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
                 <TextBlock Width="35" Text="工具信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolType" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
+            <Button Name="btnToolType" Visibility="Hidden" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
                 <TextBlock Width="35" Text="工具类型" TextWrapping="Wrap"></TextBlock>
+            </Button>
+            <Button Name="btnSysConfig" Visibility="Hidden" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
+                <TextBlock Width="35" Text="系统设置" TextWrapping="Wrap"></TextBlock>
             </Button>
             <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
                 <TextBlock Width="35" Text="记录查询" TextWrapping="Wrap"></TextBlock>
-            </Button>
-            <Button Name="btnSysConfig" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="系统设置" TextWrapping="Wrap"></TextBlock>
             </Button>
             <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
                 <TextBlock Width="35" Text="领用归还" TextWrapping="Wrap"></TextBlock>
