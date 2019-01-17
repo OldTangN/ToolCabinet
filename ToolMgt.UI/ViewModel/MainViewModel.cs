@@ -97,16 +97,16 @@ namespace ToolMgt.UI.ViewModel
             plcControl.SetToolLamp(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
-                while (true)
+                while (keep)
                 {
                     plcControl.GetStatus(p as bool[]);//new bool[] { false, true }
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
             }));
             PLCThread.IsBackground = true;
             PLCThread.Start(status);
         }
-
+        private bool keep = true;
         private bool[] OriToolStatus()
         {
             bool[] status = new bool[16];//初始状态
@@ -128,21 +128,12 @@ namespace ToolMgt.UI.ViewModel
 
                 if (tool.IsSelected)
                 {
-                    GlobalData.CurrTool = tool;
-                    OpenDoor(tool.Position);
-                    //把其他工具选中状态改成false
-                    foreach (var othertool in Tools)
-                    {
-                        if (othertool != tool && othertool.IsSelected)
-                        {
-                            othertool.IsSelected = false;
-                        }
-                    }
+
                     IsBusy = true;
                     BackgroundWorker lightWorker = new BackgroundWorker();
                     lightWorker.RunWorkerCompleted += LightWorker_RunWorkerCompleted;
                     lightWorker.DoWork += LightWorker_DoWork;
-                    lightWorker.RunWorkerAsync();
+                    lightWorker.RunWorkerAsync(tool);
                 }
                 else
                 {
@@ -169,16 +160,29 @@ namespace ToolMgt.UI.ViewModel
         private void LightWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker lightWorker = sender as BackgroundWorker;
+            Tool tool = e.Argument as Tool;
+            OpenDoor(tool.Position);
             //设置当前选择 闪烁
             bool[] status = OriToolStatus();
-            plcControl.FlashToolLamp(GlobalData.CurrTool.Position);
+            plcControl.FlashToolLamp(tool.Position);
             plcControl.SetToolLamp(status);
+            GlobalData.CurrTool = tool;
+            //把其他工具选中状态改成false
+            foreach (var othertool in Tools)
+            {
+                if (othertool != tool && othertool.IsSelected)
+                {
+                    othertool.IsSelected = false;
+                }
+            }
         }
 
         private void LightWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsBusy = false;
         }
+
+        private int lastAlarmPos = 0;
 
         private void RaiseToolStatusChanged(int pos, bool status)
         {
@@ -188,6 +192,7 @@ namespace ToolMgt.UI.ViewModel
                 plcControl.OpenAlarm();
                 return;
             }
+
             //错拿、错放报警
             if (pos != GlobalData.CurrTool.Position)
             {
@@ -199,7 +204,8 @@ namespace ToolMgt.UI.ViewModel
                 GlobalData.SelectToolCorrect = true;
                 plcControl.CloseAlarm();
             }
-            if (status)
+
+            if (Tools[pos - 1].Status && status)
             {
                 plcControl.OpenToolLamp(pos);
             }
@@ -215,6 +221,7 @@ namespace ToolMgt.UI.ViewModel
             {
                 return;
             }
+            keep = false;
             //正常取、放，则关灯
             if (GlobalData.SelectToolCorrect)
             {
@@ -239,6 +246,7 @@ namespace ToolMgt.UI.ViewModel
             //关灯
             plcControl.SetToolLamp(null);
             plcControl.CloseLight();
+            plcControl.CloseAlarm();
             OnDoorClose?.Invoke();
         }
 

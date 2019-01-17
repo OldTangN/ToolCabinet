@@ -37,7 +37,7 @@
                         VerticalAlignment="Top" >
                 </Button>
                 <TextBlock Text="Copyright @2016 青岛德尔轨道交通设备有限公司" Margin="102,386,113,-106" Foreground="#FFFFFF" FontSize="12"></TextBlock>
-                <!--<Button Content="测试PLC" Click="BtnPLCTest_Click" Name="btnPLCTest" HorizontalAlignment="Left" Margin="381,15,0,0" VerticalAlignment="Top" Width="75"/>-->
+                <Button Content="测试PLC" Click="BtnPLCTest_Click" Name="btnPLCTest" HorizontalAlignment="Left" Margin="381,15,0,0" VerticalAlignment="Top" Width="75"/>
 
             </Grid>
         </Border>
