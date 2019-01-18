@@ -67,10 +67,6 @@ namespace ToolMgt.UI.Controls
 
         //public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.Selected = !this.Selected;
-        }
 
         #region Property
         private bool selected = false;
@@ -131,6 +127,11 @@ namespace ToolMgt.UI.Controls
         }
 
         private string text2;
+
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.Selected = !this.Selected;
+        }
         #endregion
 
         //private void RaisePropertyChanged(string propertyName)

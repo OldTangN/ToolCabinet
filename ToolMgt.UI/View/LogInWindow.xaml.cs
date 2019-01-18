@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.View
@@ -42,9 +42,12 @@ namespace ToolMgt.UI.View
 
         private void LogIn()
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            this.Close();
+            this.Dispatcher.Invoke(() =>
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                this.Close();
+            });
         }
 
         private void txtName_GotFocus(object sender, RoutedEventArgs e)

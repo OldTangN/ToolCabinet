@@ -187,8 +187,6 @@ namespace ToolMgt.UI.ViewModel
             IsBusy = false;
         }
 
-        private int lastAlarmPos = 0;
-
         private void RaiseToolStatusChanged(int pos, bool status)
         {
             if (GlobalData.CurrTool == null)
@@ -203,11 +201,13 @@ namespace ToolMgt.UI.ViewModel
             {
                 GlobalData.SelectToolCorrect = false;
                 plcControl.OpenAlarm();
+                plcControl.CloseGreen();
             }
             else
             {
                 GlobalData.SelectToolCorrect = true;
                 plcControl.CloseAlarm();
+                plcControl.OpenGreen();
             }
 
             if (Tools[pos - 1].Status && status)
@@ -222,11 +222,13 @@ namespace ToolMgt.UI.ViewModel
 
         private void RaiseDoorClosed()
         {
-            if (GlobalData.CurrUser == null || GlobalData.CurrUser.Id == 0 || GlobalData.CurrTool == null)
+            if (GlobalData.CurrUser == null || GlobalData.CurrTool == null)
             {
                 return;
             }
+
             keep = false;
+
             //正常取、放，则关灯
             if (GlobalData.SelectToolCorrect)
             {
@@ -247,11 +249,11 @@ namespace ToolMgt.UI.ViewModel
             }
             GlobalData.CurrTool = null;
             //TODO:异常取、放，则报警
-
             //关灯
-            plcControl.SetToolLamp(null);
-            plcControl.CloseLight();
             plcControl.CloseAlarm();
+            plcControl.CloseGreen();
+            plcControl.CloseLight();
+            plcControl.SetToolLamp(null);
             OnDoorClose?.Invoke();
         }
 

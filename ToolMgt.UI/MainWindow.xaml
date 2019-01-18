@@ -23,23 +23,23 @@
         </Grid.Resources>
         <StackPanel Name="spNavigateBar" Grid.Row="1" Orientation="Horizontal"
                    VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Button Name="btnUserSearch" Visibility="Hidden" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="用户信息" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnUserSearch" Visibility="Hidden" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="用户信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolSearch" Visibility="Hidden" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="工具信息" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnToolSearch" Visibility="Hidden" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="工具信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolType" Visibility="Hidden" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="工具类型" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnToolType" Visibility="Hidden" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="工具类型" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnSysConfig" Visibility="Hidden" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="系统设置" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnSysConfig" Visibility="Hidden" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="系统设置" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="记录查询" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="记录查询" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="16" Width="60" Height="60">
-                <TextBlock Width="35" Text="领用归还" TextWrapping="Wrap"></TextBlock>
+            <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="领用归还" TextWrapping="Wrap"></TextBlock>
             </Button>
             <!--<Button Name="btnReturn" Click="btnReturn_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
                 <TextBlock Width="40" Text="工具归还" TextWrapping="Wrap"></TextBlock>

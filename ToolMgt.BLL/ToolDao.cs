@@ -19,7 +19,8 @@ namespace ToolMgt.BLL
         public List<Tool> GetTools(int userId)
         {
             List<Tool> tools = Db.Tools?.OrderBy(p => p.Position).ToList();
-            bool notborrowed = true;//当前用户未借出工具
+            int currUserTool = -1;//当前用户未借出工具
+            ToolRecord currRecord = Db.ToolRecords.FirstOrDefault(p => !p.IsReturn && p.UserId == userId);
             if (tools != null && tools.Count > 0)
             {
                 foreach (var tool in tools)//获取借用信息
@@ -31,33 +32,29 @@ namespace ToolMgt.BLL
                         tool.Text2 = "已领用：" + record.User.RealName;
                         if (userId == record.UserId)
                         {
-                            notborrowed = false;
-                            tool.IsSelected = true;
+                            currUserTool = tool.id;
+                            tool.IsSelected = true;//默认选中  
+                            tool.CanSelected = true;//只可以选自己的
+                        }
+                        else
+                        {
+                            tool.CanSelected = false;
                         }
                     }
                     else
                     {
-                        if (tool.Position == 8 || tool.Position == 16)
+                        if (currRecord != null)
                         {
                             tool.CanSelected = false;
-                            tool.Text2 = "备用";
                         }
-                        else
-                        {
-                            tool.Text2 = "空闲";
-                        }
+                    }
+                    if (tool.Position == 8 || tool.Position == 16)
+                    {
+                        tool.CanSelected = false;
+                        tool.Text2 = "备用";
                     }
                 }
             }
-
-            if (!notborrowed)
-            {
-                foreach (var tool in tools)//当前用户已借出工具，不允许再次选择工具
-                {
-                    tool.CanSelected = false;
-                }
-            }
-
             return tools;
         }
 

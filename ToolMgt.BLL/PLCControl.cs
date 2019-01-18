@@ -162,32 +162,15 @@ namespace ToolMgt.BLL
         #endregion
 
         #region 报警+蜂鸣
+        private bool IsOpenAlarm = false;
+        private bool AlarmStatus = false;
         /// <summary>
         /// 红灯报警+蜂鸣
         /// </summary>
         public void OpenAlarm()
         {
-            lock (lockobj)
-            {
-                try
-                {
-                    plcHelper.ItemStart(AddrLightR1, 0xFF);
-                    Thread.Sleep(500);
-                    plcHelper.GetRecive();
-
-                    plcHelper.ItemStart(AddrLightR2, 0xFF);
-                    Thread.Sleep(500);
-                    plcHelper.GetRecive();
-
-                    plcHelper.ItemStart(AddrBuzzer, 0xFF);
-                    Thread.Sleep(500);
-                    plcHelper.GetRecive();
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.WriteLog("打开报警失败！", ex);
-                }
-            }
+            IsOpenAlarm = true;
+            AlarmStatus = true;
         }
 
         /// <summary>
@@ -195,28 +178,37 @@ namespace ToolMgt.BLL
         /// </summary>
         public void CloseAlarm()
         {
+            IsOpenAlarm = false;
+            AlarmStatus = false;
+        }
+
+        private void SetAlarm(bool open)
+        {
+            short val = open ? (short)0xFF : (short)0x00;
             lock (lockobj)
             {
+                LogUtil.WriteLog(open.ToString());
                 try
                 {
-                    plcHelper.ItemStart(AddrLightR1, 0x00);
-                    Thread.Sleep(500);
+                    plcHelper.ItemStart(AddrLightR1, val);
+                    Thread.Sleep(200);
                     plcHelper.GetRecive();
 
-                    plcHelper.ItemStart(AddrLightR2, 0x00);
-                    Thread.Sleep(500);
-
+                    plcHelper.ItemStart(AddrLightR2, val);
+                    Thread.Sleep(200);
                     plcHelper.GetRecive();
-                    plcHelper.ItemStart(AddrBuzzer, 0x00);
-                    Thread.Sleep(500);
+
+                    plcHelper.ItemStart(AddrBuzzer, val);
+                    Thread.Sleep(200);
                     plcHelper.GetRecive();
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.WriteLog("关闭报警失败！", ex);
+                    LogUtil.WriteLog("设置报警失败！", ex);
                 }
             }
         }
+
         #endregion
 
         #region 开关日光灯
@@ -309,6 +301,10 @@ namespace ToolMgt.BLL
                         plcHelper.GetRecive();
                         flashstatus = !flashstatus;
                     }
+
+                    SetAlarm(IsOpenAlarm && AlarmStatus);//红灯+蜂鸣控制
+                    AlarmStatus = !AlarmStatus;
+
                     //byte bytTools_3 = data.DATA[5];//备用扩展
                     //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();
                     if (!status.Lock[0] && !status.Lock[1])
@@ -368,6 +364,36 @@ namespace ToolMgt.BLL
                 return (PLCHelper.PlcAdd)iAddr;
             }
         }
+
+        public void OpenGreen()
+        {
+            SetLightBelt(this.AddrLightG1, 0xFF);
+            SetLightBelt(this.AddrLightG2, 0xFF);
+        }
+
+        public void CloseGreen()
+        {
+            SetLightBelt(this.AddrLightG1, 0x00);
+            SetLightBelt(this.AddrLightG2, 0x00);
+        }
+
+        private void SetLightBelt(PLCHelper.PlcAdd addr, short val)
+        {
+            lock (lockobj)
+            {
+                try
+                {
+                    plcHelper.ItemStart(addr, val);
+                    Thread.Sleep(200);
+                    plcHelper.GetRecive();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.WriteLog("设置灯带失败！", ex);
+                }
+            }
+        }
+
         /// <summary>
         /// 红色报警灯
         /// </summary>
