@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:local="clr-namespace:ToolMgt.UI.Controls"
         xmlns:controls ="http://metro.mahapps.com/winfx/xaml/controls"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen" 
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" Topmost="False"
         WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize"
         Title="智能工具柜管理系统" Height="576" Width="1024" Loaded="Window_Loaded"
-        Closing="MetroWindow_Closing" Closed="MetroWindow_Closed">
+        Closing="MetroWindow_Closing" Closed="MetroWindow_Closed" IgnoreTaskbarOnMaximize="True" UseNoneWindowStyle="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -40,6 +40,9 @@
             </Button>
             <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
                 <TextBlock Width="40" Text="领用归还" TextWrapping="Wrap"></TextBlock>
+            </Button>
+            <Button Name="btnExit" Click="BtnExit_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="退出系统" TextWrapping="Wrap"></TextBlock>
             </Button>
             <!--<Button Name="btnReturn" Click="btnReturn_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
                 <TextBlock Width="40" Text="工具归还" TextWrapping="Wrap"></TextBlock>

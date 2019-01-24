@@ -118,6 +118,11 @@ namespace ToolMgt.UI.ViewModel
                 {
                     return;
                 }
+                if (GlobalData.CurrUser.LoginName != "admin")
+                {
+                    MessageAlert.Alert("只有admin账号可以进行此操作！");
+                    return;
+                }
                 dao.DeleteTool(SelectTool.id);
             }
             catch (Exception ex)

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ToolMgt.BLL;
 using ToolMgt.Common;
 using ToolMgt.Model;
+using ToolMgt.UI.Common;
+using ToolMgt.UI.Controls;
 
 namespace ToolMgt.UI.ViewModel
 {
@@ -91,6 +93,15 @@ namespace ToolMgt.UI.ViewModel
 
         private void OnDelete(object obj)
         {
+            if (selectType == null)
+            {
+                return;
+            }
+            if (GlobalData.CurrUser.LoginName != "admin")
+            {
+                MessageAlert.Alert("只有admin账号可以进行此操作！");
+                return;
+            }
             typeDao.DeleteType(selectType.id);
             ShowToolTypes();
         }

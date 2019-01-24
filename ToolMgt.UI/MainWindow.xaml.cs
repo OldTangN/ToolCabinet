@@ -123,5 +123,10 @@ namespace ToolMgt.UI
             ToolRecordControl control = new ToolRecordControl();
             ChangeView(control);
         }
+
+        private void BtnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:ToolMgt.UI.Controls"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d" 
-        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        Title="登录" MinHeight="600" MinWidth="800" WindowState="Maximized" Loaded="MetroWindow_Loaded"
-        x:Name="LogInWin">
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" IgnoreTaskbarOnMaximize="True"
+        Title="登录" UseNoneWindowStyle="True" MinHeight="600" MinWidth="800" WindowState="Maximized" Loaded="MetroWindow_Loaded"
+        x:Name="LogInWin" Topmost="False">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/ToolMgt.UI;component/Images/_login.jpg"  Viewport="0,0,1,1"/>
@@ -37,7 +37,7 @@
                         VerticalAlignment="Top" >
                 </Button>
                 <TextBlock Text="Copyright @2016 青岛德尔轨道交通设备有限公司" Margin="102,386,113,-106" Foreground="#FFFFFF" FontSize="12"></TextBlock>
-                <Button Content="测试PLC" Click="BtnPLCTest_Click" Name="btnPLCTest" HorizontalAlignment="Left" Margin="381,15,0,0" VerticalAlignment="Top" Width="75"/>
+                <!--<Button Content="测试PLC" Click="BtnPLCTest_Click" Name="btnPLCTest" HorizontalAlignment="Left" Margin="381,15,0,0" VerticalAlignment="Top" Width="75"/>-->
 
             </Grid>
         </Border>
