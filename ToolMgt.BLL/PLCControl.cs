@@ -247,6 +247,14 @@ namespace ToolMgt.BLL
         }
         #endregion
 
+        public void CloseAll()
+        {
+            plcHelper.SetStart(PLCHelper.PlcAdd.Y0, 8, 0);
+            plcHelper.SetStart(PLCHelper.PlcAdd.Y20, 8, 0);
+            plcHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0);
+            plcHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0);
+        }
+
         public Status GetStatus(bool[] oriToolStatus)
         {
             lock (lockobj)
@@ -254,11 +262,11 @@ namespace ToolMgt.BLL
                 try
                 {
                     plcHelper.GetStart(PLCHelper.PlcAdd.X0, 40);
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     DeltaData data = plcHelper.GetRecive();
                     if (data == null)
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(300);
                         data = plcHelper.GetRecive();
                         return null;
                     }

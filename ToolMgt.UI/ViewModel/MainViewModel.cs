@@ -52,13 +52,13 @@ namespace ToolMgt.UI.ViewModel
         public void Init()
         {
             IsBusy = true;
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += Worker_DoWork;
-            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.RunWorkerAsync();
+            BackgroundWorker initWorker = new BackgroundWorker();
+            initWorker.DoWork += InitWorker_DoWork;
+            initWorker.RunWorkerCompleted += InitWorker_RunWorkerCompleted;
+            initWorker.RunWorkerAsync();
         }
 
-        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void InitWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsBusy = false;
             if (e.Error != null)
@@ -68,7 +68,7 @@ namespace ToolMgt.UI.ViewModel
             OnInitComplete?.Invoke();
         }
 
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        private void InitWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             plcControl.OpenLight();
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -97,10 +97,15 @@ namespace ToolMgt.UI.ViewModel
             plcControl.SetToolLamp(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
+                bool[] lastStatus = p as bool[];
                 while (keep)
                 {
-                    plcControl.GetStatus(p as bool[]);//new bool[] { false, true }
-                    Thread.Sleep(500);
+                    Status currStatus = plcControl.GetStatus(lastStatus);
+                    if (currStatus != null)
+                    {
+                        lastStatus = currStatus.Tool;
+                    }
+                    Thread.Sleep(200);
                 }
             }));
             PLCThread.IsBackground = true;
@@ -189,34 +194,42 @@ namespace ToolMgt.UI.ViewModel
 
         private void RaiseToolStatusChanged(int pos, bool status)
         {
-            if (GlobalData.CurrTool == null)
-            {
-                GlobalData.SelectToolCorrect = false;
-                plcControl.OpenAlarm();
-                return;
-            }
-
-            //错拿、错放报警
-            if (pos != GlobalData.CurrTool.Position)
-            {
-                GlobalData.SelectToolCorrect = false;
-                plcControl.OpenAlarm();
-                plcControl.CloseGreen();
-            }
-            else
-            {
-                GlobalData.SelectToolCorrect = true;
-                plcControl.CloseAlarm();
-                plcControl.OpenGreen();
-            }
-
-            if (Tools[pos - 1].Status && status)
+            if (status)//Tools[pos - 1].Status && status
             {
                 plcControl.OpenToolLamp(pos);
             }
             else
             {
                 plcControl.CloseToolLamp(pos);
+            }
+
+            if (GlobalData.CurrTool == null)
+            {
+                if (Tools[pos - 1].Status != status)
+                {
+                    plcControl.OpenAlarm();
+                }
+                else
+                {
+                    plcControl.CloseAlarm();
+                }
+                GlobalData.SelectToolCorrect = false;
+            } 
+            else
+            {
+                //错拿、错放报警
+                if (pos != GlobalData.CurrTool.Position)
+                {
+                    GlobalData.SelectToolCorrect = false;
+                    plcControl.OpenAlarm();
+                    plcControl.CloseGreen();
+                }
+                else
+                {
+                    GlobalData.SelectToolCorrect = true;
+                    plcControl.CloseAlarm();
+                    plcControl.OpenGreen();
+                }
             }
         }
 
@@ -249,11 +262,8 @@ namespace ToolMgt.UI.ViewModel
             }
             GlobalData.CurrTool = null;
             //TODO:异常取、放，则报警
-            //关灯
-            plcControl.CloseAlarm();
-            plcControl.CloseGreen();
-            plcControl.CloseLight();
-            plcControl.SetToolLamp(null);
+            //关
+            plcControl.CloseAll();
             OnDoorClose?.Invoke();
         }
 
@@ -262,9 +272,10 @@ namespace ToolMgt.UI.ViewModel
 
         public override void Dispose()
         {
+            plcControl.CloseAll();
             plcControl.DisConnect();
             try { PLCThread.Abort(); } catch { }
             base.Dispose();
-        }
+        }       
     }
 }

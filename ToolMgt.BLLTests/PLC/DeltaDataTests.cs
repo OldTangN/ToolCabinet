@@ -31,7 +31,7 @@ namespace ToolMgt.BLL.Tests
         {
             PLCHelper pLCHelper = new PLCHelper("com12");
             pLCHelper.GetStart(PLCHelper.PlcAdd.X0, 30);//X10~X17没有，但是有数据返回
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             try
             {
                 DeltaData deltaData = pLCHelper.GetRecive();
@@ -50,19 +50,19 @@ namespace ToolMgt.BLL.Tests
         {
             PLCHelper pLCHelper = new PLCHelper("COM12");
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y0, 8, 0xFF);//10~17没有
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             pLCHelper.GetRecive();
 
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y20, 8, 0xFF);
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             pLCHelper.GetRecive();
 
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0xFF);
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             pLCHelper.GetRecive();
 
             pLCHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0xFF);
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             pLCHelper.GetRecive();
         }
         [TestMethod()]
