@@ -15,8 +15,8 @@ namespace ToolMgt.UI
     {
         App()
         {
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-            ToolMgt.UI.View.LogInWindow win = new View.LogInWindow();
+            Application.Current.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            View.LogInWindow win = new View.LogInWindow();
             win.Show();
         }
 

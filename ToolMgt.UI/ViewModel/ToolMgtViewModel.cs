@@ -127,7 +127,8 @@ namespace ToolMgt.UI.ViewModel
             }
             catch (Exception ex)
             {
-                MessageAlert.Error(ex.Message);
+                LogUtil.WriteLog("删除失败！", ex);
+                MessageAlert.Error("删除失败！");
                 return;
             }
             ShowTools();
@@ -143,6 +144,7 @@ namespace ToolMgt.UI.ViewModel
             }
             catch (Exception ex)
             {
+                LogUtil.WriteLog(ex.Message);
                 MessageAlert.Error(ex.Message);
             }
         }

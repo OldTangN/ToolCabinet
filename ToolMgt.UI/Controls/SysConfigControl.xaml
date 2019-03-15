@@ -4,9 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToolMgt.UI.Controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions >
+            <RowDefinition Height="80"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderBrush="Silver"  BorderThickness="1" Margin="10,10,10,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <Label FontSize="30"  Content="系统配置"></Label>
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="1" BorderBrush="Silver" BorderThickness="1,0,1,1" Margin="10,0,10,10">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock VerticalAlignment="Center" Width="100" TextAlignment="Right">读卡器类型：</TextBlock>
+                    <ComboBox Width="100" ItemsSource="{Binding Path=ICTypes}" SelectedItem="{Binding Path=ICReaderType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock VerticalAlignment="Center" Width="100" TextAlignment="Right">读卡器端口号：</TextBlock>
+                    <TextBox Text="{Binding Path=ICReaderPort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock VerticalAlignment="Center" Width="100" TextAlignment="Right">读卡器波特率：</TextBlock>
+                    <TextBox Text="{Binding Path=ICReaderBaudRate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock VerticalAlignment="Center" Width="100" TextAlignment="Right">PLC串口号：</TextBlock>
+                    <TextBox Text="{Binding Path=PLCCom,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock VerticalAlignment="Center" Width="100" TextAlignment="Right">门锁吸合时间：</TextBlock>
+                    <TextBox Text="{Binding Path=DoorWaitTime,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"></TextBox>
+                    <TextBlock VerticalAlignment="Center">秒</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+                    <Button Name="btnSave" Width="80" Margin="10,0" Command="{Binding Path=SaveCmd}">保 存</Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

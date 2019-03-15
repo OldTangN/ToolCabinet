@@ -12,7 +12,7 @@ namespace ToolMgt.BLL
     public class UserDao
     {
         private ToolCabinetEntities Db;
-        ToolCabinetEntities DbSrv;
+        private ToolCabinetEntities DbSrv;
         public UserDao()
         {
             Db = new ToolCabinetEntities("ToolCabinetEntities");
@@ -30,6 +30,11 @@ namespace ToolMgt.BLL
             }
             try
             {
+                if (DbSrv.Users.Count() == 0)
+                {
+                    return true;
+                }
+
                 //用户数量不会很多，直接采用删除旧数据后全部重新导入的方法
                 Db.Users.RemoveRange(Db.Users);
                 Db.SaveChanges();
@@ -59,7 +64,6 @@ namespace ToolMgt.BLL
             }
             catch (Exception ex)
             {
-
                 LogUtil.WriteLog("DataSync失败！", ex);
                 return false;
             }

@@ -31,5 +31,19 @@ namespace ToolMgt.Common
                 return default(T);
             }
         }
+
+        public static void SetConfiguration(string key,string value)
+        {
+            // Get the configuration file. 
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            Console.WriteLine("config.FIlePath: " + config.FilePath + "\n");
+            config.AppSettings.Settings[key].Value = value;
+
+            // Save the configuration file. 
+            config.AppSettings.SectionInformation.ForceSave = true;
+            config.Save(ConfigurationSaveMode.Modified);
+            // Force a reload of the changed section. 
+            ConfigurationManager.RefreshSection("appSettings");
+        }
     }
 }

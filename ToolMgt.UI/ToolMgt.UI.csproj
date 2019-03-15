@@ -107,6 +107,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SelectToolViewModel.cs" />
+    <Compile Include="ViewModel\SysConfigViewModel.cs" />
     <Compile Include="ViewModel\ToolMgtViewModel.cs" />
     <Compile Include="ViewModel\ToolRecordViewModel.cs" />
     <Compile Include="ViewModel\ToolTypeMgtViewModel.cs" />

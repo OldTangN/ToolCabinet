@@ -41,6 +41,7 @@ namespace ToolMgt.UI
                 btnUserSearch.Visibility = Visibility.Visible;
                 btnToolSearch.Visibility = Visibility.Visible;
                 btnToolType.Visibility = Visibility.Visible;
+                btnSysConfig.Visibility = Visibility.Visible;
             }
             PLC = new PLCControl(SysConfiguration.PLCCom);
             viewModel = new MainViewModel(PLC);

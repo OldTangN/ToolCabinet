@@ -27,5 +27,10 @@ namespace ToolMgt.UI.Common
         public static string PLCCom => ConfigurationUtil.GetConfiguration(Convert.ToString, () => "COM12");
 
         public static int DoorWaitTime => ConfigurationUtil.GetConfiguration(int.Parse, () => 5);
+
+        public static void SetConfiguration(string key, object val)
+        {
+            ConfigurationUtil.SetConfiguration(key, val.ToString());
+        }
     }
 }

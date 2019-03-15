@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
 {
@@ -20,9 +21,12 @@ namespace ToolMgt.UI.Controls
     /// </summary>
     public partial class SysConfigControl : UserControl, IDisposable
     {
+        SysConfigViewModel ViewModel;
         public SysConfigControl()
         {
             InitializeComponent();
+            ViewModel = new SysConfigViewModel();
+            this.DataContext = ViewModel;
         }
 
         public void Dispose()
