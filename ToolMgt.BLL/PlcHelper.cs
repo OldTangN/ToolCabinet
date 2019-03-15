@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
+using ToolMgt.Common;
 
 namespace ToolMgt.BLL
 {
@@ -59,30 +60,36 @@ namespace ToolMgt.BLL
             List<byte> ibyte = new List<byte>();
             while (true)
             {
-                if ((queue.Count > 0))
+                try
                 {
-
-                    if (ibyte.Count == 0)
+                    if ((queue.Count > 0))
                     {
-                        byte _3a = queue.Dequeue();//报文开始数据
-                        if (_3a == 0x3A)
+                        if (ibyte.Count == 0)
                         {
-                            ibyte.Add(_3a);
+                            byte _3a = queue.Dequeue();//报文开始数据
+                            if (_3a == 0x3A)
+                            {
+                                ibyte.Add(_3a);
+                            }
                         }
+                        else
+                        {
+                            ibyte.Add(queue.Dequeue());
+                            if (ibyte.Contains(0x0d) && ibyte.Contains(0x0a))
+                            {
+                                queueData.Enqueue(ByteToDeltaData(ibyte));
+                                ibyte = new List<byte>();
+                            }
+                        }
+
                     }
                     else
-                    {
-                        ibyte.Add(queue.Dequeue());
-                        if (ibyte.Contains(0x0d) && ibyte.Contains(0x0a))
-                        {
-                            queueData.Enqueue(ByteToDeltaData(ibyte));
-                            ibyte = new List<byte>();
-                        }
-                    }
-
+                        Thread.Sleep(50);
                 }
-                else
-                    Thread.Sleep(50);
+                catch (Exception ex)
+                {
+                    LogUtil.WriteLog(ex.Message, ex);
+                }
             }
         }
 
@@ -91,38 +98,50 @@ namespace ToolMgt.BLL
             //:0183027A\r\n
             DeltaData pdata = new DeltaData();
 
-            List<byte> cmmByte = new List<byte>();
-            for (int i = 1; i < ibyte.Count - 2; i += 2)//从第1位开始（不要0x3a）取数据到倒数第三位（不要0x0d,0x0a）
+            try
             {
-                byte[] byteAscii = new byte[] { ibyte[i], ibyte[i + 1] };
-                string s = Encoding.ASCII.GetString(byteAscii).ToUpper();
-                byte b = Convert.ToByte(s, 16);
-                cmmByte.Add(b);
+                List<byte> cmmByte = new List<byte>();
+                for (int i = 1; i < ibyte.Count - 2; i += 2)//从第1位开始（不要0x3a）取数据到倒数第三位（不要0x0d,0x0a）
+                {
+                    byte[] byteAscii = new byte[] { ibyte[i], ibyte[i + 1] };
+                    string s = Encoding.ASCII.GetString(byteAscii).ToUpper();
+                    byte b = Convert.ToByte(s, 16);
+                    cmmByte.Add(b);
+                }
+
+                pdata.ADR = cmmByte[0];
+                pdata.CMD = cmmByte[1];
+
+                List<byte> dbyte = new List<byte>();
+                for (int i = 2; i < cmmByte.Count - 1; i++)
+                {
+                    dbyte.Add(cmmByte[i]);
+                }
+
+                pdata.DATA = dbyte.ToArray();
+                pdata.CHK = cmmByte[cmmByte.Count - 1];
             }
-
-            pdata.ADR = cmmByte[0];
-            pdata.CMD = cmmByte[1];
-
-            List<byte> dbyte = new List<byte>();
-            for (int i = 2; i < cmmByte.Count - 1; i++)
+            catch (Exception ex)
             {
-                dbyte.Add(cmmByte[i]);
+                LogUtil.WriteLog(ex.Message, ex);
             }
-
-            pdata.DATA = dbyte.ToArray();
-            pdata.CHK = cmmByte[cmmByte.Count - 1];
             return pdata;
-
         }
 
         private void DeltaPLC_ReciveHandler(object sender, DataEventArgs e)
         {
-            byte[] reciveData = e.data;
-            for (int i = 0; i < reciveData.Length; i++)
+            try
             {
-                queue.Enqueue(reciveData[i]);
+                byte[] reciveData = e.data;
+                for (int i = 0; i < reciveData.Length; i++)
+                {
+                    queue.Enqueue(reciveData[i]);
+                }
             }
-            string str = System.Text.Encoding.ASCII.GetString(reciveData);
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -131,10 +150,16 @@ namespace ToolMgt.BLL
         /// <returns></returns>
         public DeltaData GetRecive()
         {
-            if (queueData.Count > 0)
+            try
             {
-                
-                return queueData.Dequeue();
+                if (queueData.Count > 0)
+                {
+                    return queueData.Dequeue();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
             }
             return null;
         }
@@ -147,18 +172,25 @@ namespace ToolMgt.BLL
         /// <returns></returns>
         public void GetStart(PlcAdd plcAdd, short count)
         {
-            List<byte> cmd = new List<byte>();
-            byte[] padd = (BitConverter.GetBytes((short)plcAdd));
-            Array.Reverse(padd);//高低位反转，padd为低位在前高位在后，需转换为高位在前低位在后
-            cmd.AddRange(padd);
-            byte[] ct = BitConverter.GetBytes(count);
-            Array.Reverse(ct);//高低位反转
-            cmd.AddRange(ct);
+            try
+            {
+                List<byte> cmd = new List<byte>();
+                byte[] padd = (BitConverter.GetBytes((short)plcAdd));
+                Array.Reverse(padd);//高低位反转，padd为低位在前高位在后，需转换为高位在前低位在后
+                cmd.AddRange(padd);
+                byte[] ct = BitConverter.GetBytes(count);
+                Array.Reverse(ct);//高低位反转
+                cmd.AddRange(ct);
 
-            DeltaData deltaData = new DeltaData(0x02, cmd.ToArray());
-            byte[] data = deltaData.ToSendData();
+                DeltaData deltaData = new DeltaData(0x02, cmd.ToArray());
+                byte[] data = deltaData.ToSendData();
 
-            deltaPLC.SendData(data);
+                deltaPLC.SendData(data);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -169,31 +201,38 @@ namespace ToolMgt.BLL
         /// <param name="value"></param>
         public void SetStart(PlcAdd plcAdd, short count, int value)
         {
-            List<byte> cmd = new List<byte>();
-            byte[] padd = (BitConverter.GetBytes((short)plcAdd));
-            Array.Reverse(padd);//高低位反转
-            cmd.AddRange(padd);
-            byte[] ct = BitConverter.GetBytes(count);
-            Array.Reverse(ct);//高低位反转
-            cmd.AddRange(ct);
-            int valueInt = (int)Math.Ceiling(count / 8.0);
-            byte valueByte = (byte)valueInt;
-            cmd.Add(valueByte);//字节数目
-
-            byte[] vbyte = (BitConverter.GetBytes(value));
-
-            List<byte> lbyte = new List<byte>();
-            for (int i = 0; i < valueInt; i++)
+            try
             {
-                lbyte.Add(vbyte[i]);
-            }
-            byte[] newbyte = lbyte.ToArray();
-            Array.Reverse(newbyte);//高低位反转
-            cmd.AddRange(newbyte);
+                List<byte> cmd = new List<byte>();
+                byte[] padd = (BitConverter.GetBytes((short)plcAdd));
+                Array.Reverse(padd);//高低位反转
+                cmd.AddRange(padd);
+                byte[] ct = BitConverter.GetBytes(count);
+                Array.Reverse(ct);//高低位反转
+                cmd.AddRange(ct);
+                int valueInt = (int)Math.Ceiling(count / 8.0);
+                byte valueByte = (byte)valueInt;
+                cmd.Add(valueByte);//字节数目
 
-            DeltaData deltaData = new DeltaData(0x0F, cmd.ToArray());
-            byte[] data = deltaData.ToSendData();
-            deltaPLC.SendData(data);
+                byte[] vbyte = (BitConverter.GetBytes(value));
+
+                List<byte> lbyte = new List<byte>();
+                for (int i = 0; i < valueInt; i++)
+                {
+                    lbyte.Add(vbyte[i]);
+                }
+                byte[] newbyte = lbyte.ToArray();
+                Array.Reverse(newbyte);//高低位反转
+                cmd.AddRange(newbyte);
+
+                DeltaData deltaData = new DeltaData(0x0F, cmd.ToArray());
+                byte[] data = deltaData.ToSendData();
+                deltaPLC.SendData(data);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -203,23 +242,36 @@ namespace ToolMgt.BLL
         /// <param name="value"></param>
         public void ItemStart(PlcAdd plcAdd, short value)
         {
-            List<byte> cmd = new List<byte>();
-            byte[] padd = (BitConverter.GetBytes((short)plcAdd));
-            Array.Reverse(padd);//高低位反转
-            cmd.AddRange(padd);
+            try
+            {
+                List<byte> cmd = new List<byte>();
+                byte[] padd = (BitConverter.GetBytes((short)plcAdd));
+                Array.Reverse(padd);//高低位反转
+                cmd.AddRange(padd);
 
-            byte[] vbyte = (BitConverter.GetBytes(value));
-            //Array.Reverse(vbyte);//高低位反转
-            cmd.AddRange(vbyte);
+                byte[] vbyte = (BitConverter.GetBytes(value));
+                //Array.Reverse(vbyte);//高低位反转
+                cmd.AddRange(vbyte);
 
-            DeltaData deltaData = new DeltaData(0x05, cmd.ToArray());
-            byte[] data = deltaData.ToSendData();
-            deltaPLC.SendData(data);
+                DeltaData deltaData = new DeltaData(0x05, cmd.ToArray());
+                byte[] data = deltaData.ToSendData();
+                deltaPLC.SendData(data);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
         }
 
         public void DisConnect()
         {
-            deltaPLC.Close();
+            try
+            {
+                deltaPLC.Close();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

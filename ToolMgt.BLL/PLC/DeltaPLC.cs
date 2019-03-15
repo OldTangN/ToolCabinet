@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ToolMgt.Common;
 
 namespace ToolMgt.BLL
 {
@@ -15,7 +16,6 @@ namespace ToolMgt.BLL
         {
             portService = new SerialPortService(comParmater);
             portService.ReciveHandler += PortService_ReciveHandler;
-
         }
 
         private void PortService_ReciveHandler(object sender, DataEventArgs e)
@@ -37,8 +37,6 @@ namespace ToolMgt.BLL
         {
             portService.SendData(data);
         }
-
-
     }
 
 
@@ -90,37 +88,45 @@ namespace ToolMgt.BLL
 
         public byte[] ToSendData()
         {
-            //发送ASCII码数据
-            List<byte> SendData = new List<byte>();
-            //校验数据
-            List<byte> chkData = new List<byte>();
-
-            string adr = Convert.ToString(ADR, 16).PadLeft(2, '0').ToUpper();
-            SendData.AddRange(Encoding.ASCII.GetBytes(adr));
-
-
-            chkData.Add(ADR);
-            string cmd = Convert.ToString(CMD, 16).PadLeft(2, '0').ToUpper();
-            SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
-            chkData.Add(CMD);
-
-
-            string sData = "";
-            for (int i = 0; i < DATA.Length; i++)
+            try
             {
-                sData += Convert.ToString(DATA[i], 16).PadLeft(2, '0').ToUpper();
+                //发送ASCII码数据
+                List<byte> SendData = new List<byte>();
+                //校验数据
+                List<byte> chkData = new List<byte>();
+
+                string adr = Convert.ToString(ADR, 16).PadLeft(2, '0').ToUpper();
+                SendData.AddRange(Encoding.ASCII.GetBytes(adr));
+
+
+                chkData.Add(ADR);
+                string cmd = Convert.ToString(CMD, 16).PadLeft(2, '0').ToUpper();
+                SendData.AddRange(Encoding.ASCII.GetBytes(cmd));
+                chkData.Add(CMD);
+
+
+                string sData = "";
+                for (int i = 0; i < DATA.Length; i++)
+                {
+                    sData += Convert.ToString(DATA[i], 16).PadLeft(2, '0').ToUpper();
+                }
+                SendData.AddRange(Encoding.ASCII.GetBytes(sData));
+
+
+                chkData.AddRange(DATA);
+                CHK = GetLRC(chkData);
+                string chk = Convert.ToString(CHK, 16).PadLeft(2, '0').ToUpper();
+                SendData.AddRange(Encoding.ASCII.GetBytes(chk));
+
+                SendData.Insert(0, STX);
+                SendData.AddRange(END);
+                return SendData.ToArray();
             }
-            SendData.AddRange(Encoding.ASCII.GetBytes(sData));
-
-
-            chkData.AddRange(DATA);
-            CHK = GetLRC(chkData);
-            string chk = Convert.ToString(CHK, 16).PadLeft(2, '0').ToUpper();
-            SendData.AddRange(Encoding.ASCII.GetBytes(chk));
-
-            SendData.Insert(0, STX);
-            SendData.AddRange(END);
-            return SendData.ToArray();
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+                return null;
+            }
         }
 
         private byte GetLRC(List<byte> data)

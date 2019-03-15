@@ -100,7 +100,6 @@ namespace ToolMgt.BLL.ICCard
 
         public string BackString()
         {
-
             return readstring;
         }
         public void setreturnstr(string str)
@@ -115,7 +114,6 @@ namespace ToolMgt.BLL.ICCard
                 return "";
             }
             return readstring;
-
         }
 
         public bool IsOpen()
@@ -125,7 +123,13 @@ namespace ToolMgt.BLL.ICCard
 
         public void Close()
         {
-            port.Close();
+            try
+            {
+                port.Close();
+            }
+            catch (Exception )
+            {
+            }
         }
     }
 }

@@ -144,7 +144,7 @@ namespace ToolMgt.UI.ViewModel
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(ex.Message);
+                LogUtil.WriteLog(ex.Message, ex);
                 MessageAlert.Error(ex.Message);
             }
         }

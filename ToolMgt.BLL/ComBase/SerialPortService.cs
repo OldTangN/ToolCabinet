@@ -30,11 +30,11 @@ namespace ToolMgt.BLL
             {
                 return null;
             }
-            port = new SerialPort(comParmater.PortName, comParmater.BaudRate, comParmater.Parity, comParmater.DataBits, comParmater.StopBits);
-            port.RtsEnable = false;
-            port.DataReceived += Port_DataReceived;
             try
             {
+                port = new SerialPort(comParmater.PortName, comParmater.BaudRate, comParmater.Parity, comParmater.DataBits, comParmater.StopBits);
+                port.RtsEnable = false;
+                port.DataReceived += Port_DataReceived;
                 port.Open();
             }
             catch (Exception e)
@@ -47,13 +47,20 @@ namespace ToolMgt.BLL
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort sp = (SerialPort)sender;
-            int len = sp.BytesToRead;
-            if (len > 0)
+            try
             {
-                byte[] receiveMsg = new byte[len];
-                sp.Read(receiveMsg, 0, len);
-                ReciveHandler?.Invoke(sender, new DataEventArgs(receiveMsg));
+                SerialPort sp = (SerialPort)sender;
+                int len = sp.BytesToRead;
+                if (len > 0)
+                {
+                    byte[] receiveMsg = new byte[len];
+                    sp.Read(receiveMsg, 0, len);
+                    ReciveHandler?.Invoke(sender, new DataEventArgs(receiveMsg));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
             }
         }
 
@@ -65,7 +72,7 @@ namespace ToolMgt.BLL
             }
             catch (Exception ex)
             {
-                LogUtil.WriteLog(string.Format("关闭串口失败!{0}", ex.ToString()));
+                LogUtil.WriteLog("关闭串口失败!{0}", ex);
             }
         }
         /// <summary>
@@ -74,24 +81,37 @@ namespace ToolMgt.BLL
         /// <returns></returns>
         public void SendData(string data, int ascii = 0)
         {
-
-            Encoding encoding;
-            if (ascii == 0)
+            try
             {
-                encoding = Encoding.ASCII;
-            }
-            else
-            {
-                encoding = Encoding.UTF8;
-            }
-            byte[] bdata = encoding.GetBytes(data);
+                Encoding encoding;
+                if (ascii == 0)
+                {
+                    encoding = Encoding.ASCII;
+                }
+                else
+                {
+                    encoding = Encoding.UTF8;
+                }
+                byte[] bdata = encoding.GetBytes(data);
 
-            SendData(bdata);
+                SendData(bdata);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }           
         }
 
         public void SendData(byte[] data)
         {
-            port.Write(data, 0, data.Length);
+            try
+            {
+                port.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
         }
 
         ///// <summary>
