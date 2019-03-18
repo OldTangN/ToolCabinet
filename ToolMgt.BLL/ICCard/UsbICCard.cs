@@ -10,43 +10,41 @@ namespace ToolMgt.BLL.ICCard
 {
     public class UsbICCard : ICardHelper
     {
-        #region dcrf32.dll
+        #region
         [DllImport("dcrf32.dll")]
         public static extern int dc_init(Int16 port, Int32 baud);  //初试化
-
         [DllImport("dcrf32.dll")]
         public static extern short dc_exit(int icdev);
-
         [DllImport("dcrf32.dll")]
         public static extern short dc_beep(int icdev, uint _Msec);
-
         [DllImport("dcrf32.dll")]
         public static extern short dc_card_double_hex(int icdev, char _Mode, [MarshalAs(UnmanagedType.LPStr)] StringBuilder Snr);  //从卡中读数据(转换为16进制)
 
         [DllImport("dcrf32.dll")]
         public static extern short dc_read(int icdev, int adr, [Out] byte[] sdata);  //从卡中读数据
-
         [DllImport("dcrf32.dll")]
         public static extern short dc_read(int icdev, int adr, [MarshalAs(UnmanagedType.LPStr)] StringBuilder sdata);  //从卡中读数据
 
         [DllImport("dcrf32.dll")]
         public static extern int dc_reset(int icdev, uint sec);
-
         [DllImport("dcrf32.dll")]
-        public static extern short dc_config_card(int icdev, byte cardtype);
+        public static extern short dc_config_card(int icdev, char cardtype);
 
         [DllImport("dcrf32.dll")]
         public static extern short dc_card(int icdev, char _Mode, ref ulong Snr);
 
         [DllImport("dcrf32.dll")]
-        public static extern short dc_read_hex(int icdev, int adr, ref byte sdata);  //从卡中读数据(转换为16进制)
+        public static extern short dc_card_n(int icdev, byte _Mode, ref uint SnrLen, [Out]byte[] _Snr);
+        [DllImport("dcrf32.dll")]
+        public static extern short hex_a([In] byte[] hex, [Out] byte[] a, short length);  //普通字符转换成十六进制字符
 
+        [DllImport("dcrf32.dll")]
+        public static extern short dc_read_hex(int icdev, int adr, ref byte sdata);  //从卡中读数据(转换为16进制)
         [DllImport("dcrf32.dll")]
         public static extern short dc_read_hex(int icdev, int adr, [MarshalAs(UnmanagedType.LPStr)] StringBuilder sdata);  //从卡中读数
 
         [DllImport("dcrf32.dll")]
         public static extern short dc_write(int icdev, int adr, [In] string sdata);  //向卡中写入数据
-
         [DllImport("dcrf32.dll")]
         public static extern short dc_write_hex(int icdev, int adr, [In] string sdata);  //向卡中写入数据(转换为16进制)
         #endregion
@@ -88,20 +86,35 @@ namespace ToolMgt.BLL.ICCard
                 LogUtil.WriteLog("读卡器端口" + _port + "打开失败！" + ex.Message);
             }
         }
-
+       
         public void Read()
         {
             try
             {
                 while (_keepreading)
                 {
-                    ulong icCardNo = 0;
+                    uint SnrLen = 0;
+                    string icCardNo = "";
+                    byte[] _Snr = new byte[4];
+                    byte[] szSnr = new byte[4];
                     int st = dc_reset(Icdev, 0);
-                    dc_config_card(Icdev, 65);
-                    dc_card(Icdev, '0', ref icCardNo);
-                    if (icCardNo != 0)
+                    dc_config_card(Icdev, 'A');
+
+                    st = dc_card_n(Icdev, 0x00, ref SnrLen, _Snr);
+
+                    //  dc_card(icdev, '0', ref icCardNo);
+                    if (st == 0)
                     {
                         dc_beep(Icdev, 10);
+                        for (int i = 0; i < 4; i++)
+                        {
+                            szSnr[i] = _Snr[3 - i];
+                        }
+
+                        icCardNo = BitConverter.ToUInt32(szSnr, 0).ToString();
+                    }
+                    if (!string.IsNullOrEmpty(icCardNo))
+                    {
                         HandDataBack?.Invoke(this, new CardEventArgs(icCardNo.ToString()));
                     }
                     Thread.Sleep(2000);

@@ -54,6 +54,7 @@
     <Compile Include="ICCard\CardEventArgs.cs" />
     <Compile Include="ICCard\ComICCard.cs" />
     <Compile Include="ICCard\ICardHelper.cs" />
+    <Compile Include="ICCard\ICHelper.cs" />
     <Compile Include="ICCard\UsbICCard.cs" />
     <Compile Include="PLCControl.cs" />
     <Compile Include="LogInDao.cs" />
