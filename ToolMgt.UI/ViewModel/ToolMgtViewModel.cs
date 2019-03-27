@@ -109,7 +109,7 @@ namespace ToolMgt.UI.ViewModel
                 return deleteCmd;
             }
         }
-
+                
         private void OnDelete(object obj)
         {
             try
@@ -134,6 +134,42 @@ namespace ToolMgt.UI.ViewModel
             ShowTools();
         }
 
+        public RelayCommand ResetCmd
+        {
+            get
+            {
+                if (resetCmd == null)
+                {
+                    resetCmd = new RelayCommand(Reset);
+                }
+                return resetCmd;
+            }
+        }
+
+        void Reset(object obj)
+        {
+            if (!MessageAlert.Confirm("确定重置扳手的状态为【未领用】？"))
+            {
+                return;
+            }
+            if (SelectTool == null || SelectTool.id == 0)
+            {
+                MessageAlert.Alert("请选择扳手！");
+                return;
+            }
+            try
+            {
+                ToolDao dao = new ToolDao();
+                dao.ResetToolState(SelectTool.id);
+                MessageAlert.Alert("重置完毕，请重新登录！");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog("重置失败！", ex);
+                MessageAlert.Alert(ex.Message);
+            }
+        }
+
         private void ShowTools()
         {
             try
@@ -152,5 +188,6 @@ namespace ToolMgt.UI.ViewModel
         private RelayCommand deleteCmd;
         private RelayCommand cancelCmd;
         private RelayCommand commitCmd;
+        private RelayCommand resetCmd;
     }
 }

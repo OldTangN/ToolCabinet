@@ -99,6 +99,9 @@
                 <StackPanel>
                     <Label Content="注：*是必填项；所有扭矩单位为N.m" HorizontalAlignment="Center" />
                 </StackPanel>
+                <StackPanel>
+                    <Button Name="btnReset" Visibility="Hidden" Margin="20 0 0 0" Height=" 30" Width="120" Content="重置领用状态" Command="{Binding Path=ResetCmd}" />
+                </StackPanel>
             </StackPanel>
         </Border>
 

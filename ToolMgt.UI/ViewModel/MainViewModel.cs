@@ -194,7 +194,7 @@ namespace ToolMgt.UI.ViewModel
 
         private void RaiseToolStatusChanged(int pos, bool status)
         {
-            if (status)//Tools[pos - 1].Status && status
+            if (status)
             {
                 plcControl.OpenToolLamp(pos);
             }

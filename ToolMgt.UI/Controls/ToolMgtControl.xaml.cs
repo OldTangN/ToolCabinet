@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.Common;
 using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
@@ -46,6 +47,10 @@ namespace ToolMgt.UI.Controls
         {
             ViewModel = new ToolMgtViewModel();
             this.DataContext = ViewModel;
+            if (GlobalData.CurrUser.LoginName == "admin")
+            {
+                btnReset.Visibility = Visibility.Visible;
+            }
         }
 
         private void editButtonClick(object sender, RoutedEventArgs e)
