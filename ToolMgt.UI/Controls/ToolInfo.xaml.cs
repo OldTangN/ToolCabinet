@@ -63,6 +63,18 @@ namespace ToolMgt.UI.Controls
         {
             Text2 = newval?.ToString();
         }
+
+
+        public static readonly DependencyProperty Text3Property = DependencyProperty.Register("Text3", typeof(string), typeof(ToolInfo), new PropertyMetadata("", new PropertyChangedCallback(Test3PropertyChangeCallback)));
+        private static void Test3PropertyChangeCallback(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ToolInfo uc = sender as ToolInfo;
+            uc?.OnText3PropertyChange(e.OldValue, e.NewValue);
+        }
+        protected void OnText3PropertyChange(object oldval, object newval)
+        {
+            Text3 = newval?.ToString();
+        }
         #endregion
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -127,6 +139,24 @@ namespace ToolMgt.UI.Controls
         }
 
         private string text2;
+
+
+        public string Text3
+        {
+            get => text3;
+            set
+            {
+                if (!string.Equals(text3, value))
+                {
+                    text3 = value;
+                    tb3.Text = text3;
+                    this.SetValue(Text3Property, value);
+                }
+            }
+        }
+
+        private string text3;
+
 
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
         {

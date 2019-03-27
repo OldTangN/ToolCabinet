@@ -53,6 +53,8 @@ namespace ToolMgt.BLL
                         tool.CanSelected = false;
                         tool.Text2 = "备用";
                     }
+
+                    tool.Text3 = tool.RangeMin + "~" + tool.RangeMax + "N*m";
                 }
             }
             return tools;

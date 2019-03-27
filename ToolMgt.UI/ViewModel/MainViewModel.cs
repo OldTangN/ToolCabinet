@@ -111,6 +111,10 @@ namespace ToolMgt.UI.ViewModel
             PLCThread.IsBackground = true;
             PLCThread.Start(status);
         }
+
+        /// <summary>
+        /// 持续读取PLC状态
+        /// </summary>
         private bool keep = true;
         private bool[] OriToolStatus()
         {
@@ -214,7 +218,7 @@ namespace ToolMgt.UI.ViewModel
                     plcControl.CloseAlarm();
                 }
                 GlobalData.SelectToolCorrect = false;
-            } 
+            }
             else
             {
                 //错拿、错放报警
@@ -243,6 +247,15 @@ namespace ToolMgt.UI.ViewModel
             keep = false;
 
             //正常取、放，则关灯
+            SaveRecord();
+            //TODO:异常取、放，则报警
+            //关
+            plcControl.CloseAll();
+            OnDoorClose?.Invoke();
+        }
+
+        public void SaveRecord()
+        {
             if (GlobalData.SelectToolCorrect)
             {
                 bool rlt;
@@ -261,10 +274,6 @@ namespace ToolMgt.UI.ViewModel
                 }
             }
             GlobalData.CurrTool = null;
-            //TODO:异常取、放，则报警
-            //关
-            plcControl.CloseAll();
-            OnDoorClose?.Invoke();
         }
 
         private string pLCStatus;
@@ -276,6 +285,6 @@ namespace ToolMgt.UI.ViewModel
             plcControl.DisConnect();
             try { PLCThread.Abort(); } catch { }
             base.Dispose();
-        }       
+        }
     }
 }

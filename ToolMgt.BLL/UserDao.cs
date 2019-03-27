@@ -22,6 +22,11 @@ namespace ToolMgt.BLL
             try
             {
                 DbSrv = new ToolCabinetEntities("ToolCabinetEntitiesSrv");
+                if (!DbSrv.Database.Exists())
+                {
+                    LogUtil.WriteLog("服务器数据库不存在！");
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -30,13 +35,13 @@ namespace ToolMgt.BLL
             }
             try
             {
-                if (DbSrv.Users.Count() == 0)
+                if (DbSrv.Users.Count() == 0 || DbSrv.UserRoles.Count() == 0)
                 {
                     return true;
                 }
-
                 //用户数量不会很多，直接采用删除旧数据后全部重新导入的方法
                 Db.Users.RemoveRange(Db.Users);
+                Db.UserRoles.RemoveRange(Db.UserRoles);
                 Db.SaveChanges();
 
                 foreach (User srvu in DbSrv.Users)
@@ -59,7 +64,18 @@ namespace ToolMgt.BLL
                     };
                     Db.Users.Add(u);
                 }
-
+                foreach (UserRole srvur in DbSrv.UserRoles)
+                {
+                    UserRole ur = new UserRole()
+                    {
+                        Id = srvur.Id,
+                        UserId = srvur.UserId,
+                        RoleId = srvur.RoleId,
+                        CreateDateTime = srvur.CreateDateTime,
+                        IsDeleted = srvur.IsDeleted
+                    };
+                    Db.UserRoles.Add(ur);
+                }
                 Db.SaveChanges();
             }
             catch (Exception ex)

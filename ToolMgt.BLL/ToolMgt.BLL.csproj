@@ -63,6 +63,7 @@
     <Compile Include="PLCHelper.cs" />
     <Compile Include="ToolDao.cs" />
     <Compile Include="ToolRecordDao.cs" />
+    <Compile Include="UserRoleDao.cs" />
     <Compile Include="ToolTypeDao.cs" />
     <Compile Include="UserDao.cs" />
   </ItemGroup>

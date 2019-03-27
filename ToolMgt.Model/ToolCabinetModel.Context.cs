@@ -35,5 +35,6 @@ namespace ToolMgt.Model
         public virtual DbSet<ToolRecord> ToolRecords { get; set; }
         public virtual DbSet<ToolType> ToolTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
     }
 }

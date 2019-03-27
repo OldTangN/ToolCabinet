@@ -47,7 +47,7 @@ namespace ToolMgt.UI.Controls
         {
             ViewModel = new ToolMgtViewModel();
             this.DataContext = ViewModel;
-            if (GlobalData.CurrUser.LoginName == "admin")
+            if (GlobalData.CurrUserRole.RoleId == 1)
             {
                 btnReset.Visibility = Visibility.Visible;
             }

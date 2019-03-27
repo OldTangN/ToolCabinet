@@ -84,6 +84,9 @@
       <DependentUpon>ToolCabinetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UserExtend.cs" />
+    <Compile Include="UserRole.cs">
+      <DependentUpon>ToolCabinetModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

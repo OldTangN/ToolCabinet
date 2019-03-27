@@ -36,7 +36,7 @@ namespace ToolMgt.UI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (GlobalData.CurrUser.LoginName == "admin")
+            if (GlobalData.CurrUserRole.RoleId == 1)
             {
                 btnUserSearch.Visibility = Visibility.Visible;
                 btnToolSearch.Visibility = Visibility.Visible;
@@ -127,6 +127,7 @@ namespace ToolMgt.UI
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
+            viewModel.SaveRecord();
             this.Close();
         }
     }

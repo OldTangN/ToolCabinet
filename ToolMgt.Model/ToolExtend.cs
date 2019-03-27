@@ -9,9 +9,14 @@ namespace ToolMgt.Model
     public partial class Tool
     {
         /// <summary>
-        /// 显示文本
+        /// 显示文本--空闲或领用人姓名
         /// </summary>
         public string Text2 { get => text2; set => Set(ref text2, value); }
+
+        /// <summary>
+        /// 显示文本--量程
+        /// </summary>
+        public string Text3 { get => text3; set => Set(ref text3, value); }
 
         /// <summary>
         /// 被选中
@@ -26,6 +31,7 @@ namespace ToolMgt.Model
         public bool CanSelected { get => canSelected; set => Set(ref canSelected, value); }
 
         private string text2 = "";
+        private string text3 = "";
         private bool canSelected = true;
         private bool isSelected = false;
     }

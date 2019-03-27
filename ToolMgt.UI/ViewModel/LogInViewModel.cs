@@ -18,7 +18,7 @@ namespace ToolMgt.UI.ViewModel
     public class LogInViewModel : ViewModelBase
     {
         private Thread ThreadICReader;
-        ICardHelper card;
+        private ICardHelper card;
         public LogInViewModel()
         {
             CurrLogIn = new LogInModel();
@@ -40,7 +40,7 @@ namespace ToolMgt.UI.ViewModel
                 return;
             }
 
-            
+
             if (readerType == "USB")
             {
                 card = new UsbICCard(readerPort, readerBaud);
@@ -121,6 +121,9 @@ namespace ToolMgt.UI.ViewModel
             else
             {
                 GlobalData.CurrUser = u;
+                //获取角色
+                UserRoleDao dao = new UserRoleDao();
+                GlobalData.CurrUserRole = dao.GetUserRole(u.Id);
                 OnLogIn?.Invoke();
             }
         }

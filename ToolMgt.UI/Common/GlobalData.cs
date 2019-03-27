@@ -15,6 +15,11 @@ namespace ToolMgt.UI.Common
         public static User CurrUser = null;
 
         /// <summary>
+        /// 当前用户角色 roleid=1是管理员
+        /// </summary>
+        public static UserRole CurrUserRole = null;
+
+        /// <summary>
         /// 当前选择扳手
         /// </summary>
         public static Tool CurrTool = null;

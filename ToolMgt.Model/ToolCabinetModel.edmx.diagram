@@ -12,6 +12,7 @@
         <AssociationConnector Association="ToolCabinetModel.ToolToolRecord" />
         <AssociationConnector Association="ToolCabinetModel.UserToolRecord" />
         <AssociationConnector Association="ToolCabinetModel.ToolTypeTool" />
+        <EntityTypeShape EntityType="ToolCabinetModel.UserRole" Width="1.5" PointX="8.5" PointY="2.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
