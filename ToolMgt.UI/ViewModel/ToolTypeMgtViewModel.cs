@@ -97,7 +97,7 @@ namespace ToolMgt.UI.ViewModel
             {
                 return;
             }
-            if (GlobalData.CurrUserRole.RoleId == 1)
+            if (GlobalData.CurrUserRole?.RoleId == 1)
             {
                 MessageAlert.Alert("只有系统管理员可以进行此操作！");
                 return;

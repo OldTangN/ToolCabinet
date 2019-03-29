@@ -16,16 +16,18 @@ namespace ToolMgt.BLL
             Db = new ToolCabinetEntities("ToolCabinetEntities");
         }
 
+
         public List<Tool> GetTools(int userId)
         {
-            List<Tool> tools = Db.Tools?.OrderBy(p => p.Position).ToList();
-            int currUserTool = -1;//当前用户未借出工具
+            List<Tool> tools = Db.Tools.OrderBy(p => p.Position).ToList();
             ToolRecord currRecord = Db.ToolRecords.FirstOrDefault(p => !p.IsReturn && p.UserId == userId);
+            int currUserTool = -1;//当前用户未借出工具
             if (tools != null && tools.Count > 0)
             {
                 foreach (var tool in tools)//获取借用信息
                 {
                     tool.CanSelected = tool.Status;
+                    tool.OriStatus = tool.Status;
                     ToolRecord record = tool.ToolRecords.FirstOrDefault(p => !p.IsReturn);
                     if (record != null)
                     {

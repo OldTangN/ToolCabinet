@@ -70,20 +70,20 @@ namespace ToolMgt.BLL.Tests
         {
             PLCControl ctl = new PLCControl("COM12");
 
-            ctl.GetStatus(new bool[] { false, false });
+            ctl.GetStatus();
 
 
             ctl.OpenAlarm();
 
             ctl.CloseAlarm();
 
-            ctl.OpenToolLamp(2);
-            ctl.CloseToolLamp(2);
+            ctl.SetToolLamp(2, true);
+            ctl.SetToolLamp(2, false);
 
 
             for (int i = 1; i <= 16; i++)
             {
-                ctl.CloseToolLamp(i);
+                ctl.SetToolLamp(i, false);
                 Thread.Sleep(2000);
             }
         }

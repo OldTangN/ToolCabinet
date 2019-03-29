@@ -26,6 +26,7 @@ namespace ToolMgt.BLL
                 {
                     return Db.ToolRecords.Include("Tool").Include("User").Where(
                            p => p.Tool.ToolBarCode.Contains(barcode)
+                           && (string.IsNullOrEmpty(nameOrCard) || p.User.UserID == nameOrCard || p.User.LoginName == nameOrCard)
                            && p.Tool.ToolRFIDCode.Contains(barcode)
                            && DateTime.Compare(p.BorrowDate, borrowEnd) <= 0
                            && DateTime.Compare(p.BorrowDate, borrowStart) >= 0
@@ -36,6 +37,7 @@ namespace ToolMgt.BLL
                     return Db.ToolRecords.Include("Tool").Include("User").Where(
                            p => p.Tool.ToolBarCode.Contains(barcode)
                            && p.Tool.ToolRFIDCode.Contains(barcode)
+                           && (string.IsNullOrEmpty(nameOrCard) || p.User.UserID == nameOrCard || p.User.LoginName == nameOrCard)
                            && DateTime.Compare(p.BorrowDate, borrowEnd) <= 0
                            && DateTime.Compare(p.BorrowDate, borrowStart) >= 0
                            && !p.Tool.Status
@@ -46,6 +48,7 @@ namespace ToolMgt.BLL
                     return Db.ToolRecords.Include("Tool").Include("User").Where(
                            p => p.Tool.ToolBarCode.Contains(barcode)
                            && p.Tool.ToolRFIDCode.Contains(barcode)
+                           && (string.IsNullOrEmpty(nameOrCard) || p.User.UserID == nameOrCard || p.User.LoginName == nameOrCard)
                            && DateTime.Compare(p.BorrowDate, borrowEnd) <= 0
                            && DateTime.Compare(p.BorrowDate, borrowStart) >= 0
                            && p.Tool.Status

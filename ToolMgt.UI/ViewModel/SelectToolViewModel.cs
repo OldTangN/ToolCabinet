@@ -23,37 +23,7 @@ namespace ToolMgt.UI.ViewModel
         }
       
         public List<Tool> Tools { get; set; }
-
-        private RelayCommand commitCmd;
-        public RelayCommand CommitCmd
-        {
-            get
-            {
-                if (commitCmd == null)
-                {
-                    commitCmd = new RelayCommand(OnCommit);
-                }
-                return commitCmd;
-            }
-        }
-
-        private void OnCommit(object obj)
-        {
-            Tools[0].IsSelected = !Tools[0].IsSelected;
-            return;
-            if (GlobalData.CurrTool == null)
-            {
-                MessageAlert.Alert("请选择工具！");
-                return;
-            }
-
-            if (GlobalData.CurrUser == null || GlobalData.CurrUser.Id == 0)
-            {
-                MessageAlert.Alert("请登录！");
-                return;
-            }
-        }
-
+               
         public override void Dispose()
         {
             base.Dispose();

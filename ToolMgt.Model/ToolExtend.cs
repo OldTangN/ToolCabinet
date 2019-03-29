@@ -25,6 +25,13 @@ namespace ToolMgt.Model
         /// </summary>
         public bool IsSelected { get => isSelected; set => Set(ref isSelected, value); }
 
+
+        private bool _OriStatus;
+        /// <summary>
+        /// 初始工具状态
+        /// </summary>
+        public bool OriStatus { get => _OriStatus; set => Set(ref _OriStatus, value); }
+
         /// <summary>
         /// 能否被选择
         /// </summary>

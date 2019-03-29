@@ -53,8 +53,9 @@
                     <Label Content="条码" Margin="20 0 0 0"></Label>
                     <TextBox Text="{Binding Path=Barcode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>
 
-                    <Label Content="账号/卡号" Margin="20 0 0 0"></Label>
-                    <TextBox Text="{Binding Path=NameOrCard,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>
+                    <!--<Label Content="账号/卡号" Margin="20 0 0 0"></Label>
+                    <TextBox Text="{Binding Path=NameOrCard,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="150"></TextBox>-->
+                    
                     <Label Content="领用时间" Margin="20 0 0 0"></Label>
                     <DatePicker Width="100" SelectedDateFormat="Short" VerticalContentAlignment="Center"  SelectedDate="{Binding Path=BorrowStart,Mode=TwoWay,StringFormat='yyyy-MM-dd HH:mm:ss'}" DisplayDate="2015-07-03"></DatePicker>
                     <Label Content="~" Margin="0 0 0 0"></Label>

@@ -18,15 +18,5 @@ namespace ToolMgt.UI.Common
         /// 当前用户角色 roleid=1是管理员
         /// </summary>
         public static UserRole CurrUserRole = null;
-
-        /// <summary>
-        /// 当前选择扳手
-        /// </summary>
-        public static Tool CurrTool = null;
-
-        /// <summary>
-        /// 被选工具是否取出/放入
-        /// </summary>
-        public static bool SelectToolCorrect = false;
     }
 }
