@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
 using ToolMgt.BLL;
 using ToolMgt.Common;
+using ToolMgt.UI.Common;
 using ToolMgt.UI.Controls;
 namespace ToolMgt.UI
 {
@@ -15,9 +17,12 @@ namespace ToolMgt.UI
     /// </summary>
     public partial class App : Application
     {
-        App()
+        public static ServiceHost host;
+        public static PLCControl PLC;
+        private App()
         {
             Application.Current.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            Application.Current.Exit += Current_Exit;
             bool rlt = false;
             try
             {
@@ -33,8 +38,30 @@ namespace ToolMgt.UI
             {
                 MessageBox.Show("从服务器同步用户信息失败，采用本地缓存数据登录！");
             }
-            View.LogInWindow win = new View.LogInWindow();
+            var PLC = new PLCControl(SysConfiguration.PLCCom);
+            host = new ServiceHost(typeof(Service1));//, new Uri("net.tcp://localhost/MyService")
+            try
+            {
+                host.Open();
+            }
+            catch (Exception ex)
+            {
+                MessageAlert.Alert("远程服务启动失败！");
+                LogUtil.WriteLog("WCF服务绑定失败！", ex);
+            }
+            View.LogInWindow win = new View.LogInWindow(PLC);
             win.Show();
+        }
+
+        private void Current_Exit(object sender, ExitEventArgs e)
+        {
+            try
+            {
+                host.Close();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

@@ -29,9 +29,10 @@ namespace ToolMgt.UI
         private MainViewModel viewModel;
         private PLCControl PLC;
 
-        public MainWindow()
+        public MainWindow(PLCControl plc)
         {
             InitializeComponent();
+            this.PLC = plc;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +44,6 @@ namespace ToolMgt.UI
                 btnToolType.Visibility = Visibility.Visible;
                 btnSysConfig.Visibility = Visibility.Visible;
             }
-            PLC = new PLCControl(SysConfiguration.PLCCom);
             viewModel = new MainViewModel(PLC);
             viewModel.OnDoorClose += DoorClose;
             viewModel.OnInitComplete += InitComplete;
@@ -115,7 +115,7 @@ namespace ToolMgt.UI
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             viewModel.Dispose();
-            LogInWindow win = new LogInWindow();
+            LogInWindow win = new LogInWindow(App.PLC);
             win.Show();
         }
 

@@ -64,14 +64,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ToolCabinet.Web\ToolCabinet.Web.csproj">
-      <Project>{CF10182E-7389-4DAE-A3DE-8C3F776C0C25}</Project>
-      <Name>ToolCabinet.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ToolMgt.BLL\ToolMgt.BLL.csproj">
       <Project>{4ABAC067-4E5A-4566-992E-72BDDDD558F5}</Project>
       <Name>ToolMgt.BLL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

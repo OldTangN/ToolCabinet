@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using ToolMgt.BLL;
 using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.View
@@ -22,9 +23,11 @@ namespace ToolMgt.UI.View
     public partial class LogInWindow : MetroWindow, IDisposable
     {
         private LogInViewModel viewModel;
-        public LogInWindow()
+        private PLCControl PLC;
+        public LogInWindow(PLCControl plc)
         {
             InitializeComponent();
+            this.PLC = plc;
             this.Closing += LogInWindow_Closing;
         }
 
@@ -44,7 +47,7 @@ namespace ToolMgt.UI.View
         {
             this.Dispatcher.Invoke(() =>
             {
-                MainWindow mainWindow = new MainWindow();
+                MainWindow mainWindow = new MainWindow(PLC);
                 mainWindow.Show();
                 this.Close();
             });
