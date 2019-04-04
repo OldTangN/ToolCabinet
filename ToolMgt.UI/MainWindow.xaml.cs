@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using ToolMgt.BLL;
+using ToolMgt.Common;
 using ToolMgt.UI.Common;
 using ToolMgt.UI.Controls;
 using ToolMgt.UI.View;
@@ -129,6 +130,23 @@ namespace ToolMgt.UI
         {
             viewModel.SaveRecord();
             this.Close();
+        }
+
+        private void BtnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                PDFControl pdfCtl = new PDFControl(@"软件使用说明书.pdf");
+                System.Windows.Forms.Integration.WindowsFormsHost WindowsFormsHost = new System.Windows.Forms.Integration.WindowsFormsHost();
+                WindowsFormsHost.Child = pdfCtl;
+                gridContainer.Children.Clear();
+                gridContainer.Children.Add(WindowsFormsHost);
+            }
+            catch
+            {
+                MessageAlert.Alert("帮助文档打开失败！");
+                LogUtil.WriteLog("帮助文档打开失败！");
+            }
         }
     }
 }

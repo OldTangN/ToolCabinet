@@ -31,7 +31,7 @@ namespace ToolMgt.BLL
                     ToolRecord record = tool.ToolRecords.FirstOrDefault(p => !p.IsReturn);
                     if (record != null)
                     {
-                        tool.Text2 = "已领用：" + record.User.RealName;
+                        tool.Text2 = "已领用：" + record.User?.RealName;
                         if (userId == record.UserId)
                         {
                             currUserTool = tool.id;

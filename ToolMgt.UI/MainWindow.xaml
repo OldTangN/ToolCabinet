@@ -7,7 +7,7 @@
         xmlns:controls ="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" Topmost="False"
         WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize"
-        Title="智能工具柜管理系统" Height="576" Width="1024" Loaded="Window_Loaded"
+        Title="智能工具柜管理系统" Height="576" Width="1300" Loaded="Window_Loaded"
         Closing="MetroWindow_Closing" Closed="MetroWindow_Closed" IgnoreTaskbarOnMaximize="True" UseNoneWindowStyle="True">
     <Grid>
         <Grid.RowDefinitions>
@@ -43,6 +43,9 @@
             </Button>
             <Button Name="btnExit" Click="BtnExit_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
                 <TextBlock Width="40" Text="退出系统" TextWrapping="Wrap"></TextBlock>
+            </Button> 
+            <Button Name="btnHelp" Click="BtnHelp_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+                <TextBlock Width="40" Text="使用说明" TextWrapping="Wrap"></TextBlock>
             </Button>
             <!--<Button Name="btnReturn" Click="btnReturn_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
                 <TextBlock Width="40" Text="工具归还" TextWrapping="Wrap"></TextBlock>
