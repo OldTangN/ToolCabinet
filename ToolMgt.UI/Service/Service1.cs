@@ -25,18 +25,18 @@ namespace ToolMgt.UI
                 {
                     ToolRecordInfo info = new ToolRecordInfo()
                     {
-                        BorrowDate = rcd.BorrowDate,
-                        CreateDateTime = rcd.CreateDateTime,
+                        BorrowDate = rcd.BorrowDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        CreateDateTime = rcd.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
                         Id = rcd.Id,
                         IsReturn = rcd.IsReturn,
-                        ReturnDate = rcd.ReturnDate,
+                        ReturnDate = rcd.ReturnDate?.ToString("yyyy-MM-dd HH:mm:ss"),
                         ToolBarCode = rcd.Tool.ToolBarCode,
                         ToolId = rcd.ToolId,
                         //ToolName = rcd.Tool.ToolName,
                         //ToolRFIDCode = rcd.Tool.ToolRFIDCode,
-                        ToolType = rcd.Tool.ToolType.TypeName,
+                        ToolType = rcd.Tool.ToolType?.TypeName,
                         UserId = rcd.UserId,
-                        UserName = rcd.User.RealName
+                        UserName = rcd.User?.RealName
                     };
                     infos.Add(info);
                 }
@@ -49,15 +49,16 @@ namespace ToolMgt.UI
             ToolDao dao = new ToolDao();
             List<ToolInfo> infos = new List<ToolInfo>();
             var rlt = dao.GetTools();
+            ToolRecordDao rcddao = new ToolRecordDao();
             if (rlt != null && rlt.Count > 0)
             {
                 foreach (var t in rlt)
                 {
-                    var rcd = t.ToolRecords.FirstOrDefault(p => p.ToolId == t.id && p.IsReturn == false);
+                    var rcd = rcddao.GetNotReturnRecord(t.id);
                     ToolInfo info = new ToolInfo()
                     {
                         id = t.id,
-                        BorrowerName = rcd == null ? "" : rcd.User.RealName,
+                        BorrowerName = rcd == null ? "" : rcd.User?.RealName,
                         Factory = t.Factory,
                         Note = t.Note,
                         Position = t.Position,
@@ -77,7 +78,11 @@ namespace ToolMgt.UI
         {
             OpenDoorResut rlt = new OpenDoorResut();
             PLCControl plcCtl = App.PLC;
-
+            if (plcCtl == null)
+            {
+                rlt.Msg = "PLC通信失败！";
+                return rlt;
+            }
             if (!plcCtl.Connected)
             {
                 rlt.Msg = "PLC通信失败！";

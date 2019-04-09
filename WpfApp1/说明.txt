@@ -1,0 +1,5 @@
+﻿Http访问方式：
+http://localhost:8733/IService1/GetData/abc
+
+接口属性需要：
+[WebGet(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]

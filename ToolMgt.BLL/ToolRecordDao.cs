@@ -16,6 +16,12 @@ namespace ToolMgt.BLL
             Db = new ToolCabinetEntities("ToolCabinetEntities");
         }
 
+        public ToolRecord GetNotReturnRecord(int toolid)
+        {
+            var dd = Db.ToolRecords.Include("User").FirstOrDefault(p => p.IsReturn == false);
+            return dd;
+        }
+
         public List<ToolRecord> GetRecords(string selectStatus, string barcode, string nameOrCard, DateTime borrowStart, DateTime borrowEnd)
         {
             var dd = Db.ToolRecords.Include("Tool").Include("User").Where(p => false); ;

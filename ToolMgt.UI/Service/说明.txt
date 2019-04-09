@@ -1,0 +1,6 @@
+﻿HTTP访问方式：
+http://localhost:8733/Service1/OpenDoor
+http://localhost:8733/Service1/GetTools
+http://localhost:8733/Service1/GetToolRecords?barcode=1&startTime=2019-01-01&endTime=2019-04-01
+
+返回值：Json格式
