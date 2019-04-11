@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using ToolMgt.BLL;
+using ToolMgt.UI.Common;
+using ToolMgt.UI.Controls;
 using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.View
@@ -20,7 +22,7 @@ namespace ToolMgt.UI.View
     /// <summary>
     /// LogInWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class LogInWindow : MetroWindow, IDisposable
+    public partial class LogInWindow : MetroWindow, IClose
     {
         private LogInViewModel viewModel;
         private PLCControl PLC;
@@ -33,7 +35,14 @@ namespace ToolMgt.UI.View
 
         private void LogInWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            viewModel.Dispose();
+            try
+            {
+                viewModel.Dispose();
+                this.viewModel = null;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -47,7 +56,7 @@ namespace ToolMgt.UI.View
         {
             this.Dispatcher.Invoke(() =>
             {
-                MainWindow mainWindow = new MainWindow(PLC);
+                MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
                 this.Close();
             });

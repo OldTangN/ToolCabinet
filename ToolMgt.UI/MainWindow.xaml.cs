@@ -25,15 +25,13 @@ namespace ToolMgt.UI
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : MetroWindow, IDisposable
+    public partial class MainWindow : MetroWindow, IClose
     {
         private MainViewModel viewModel;
-        private PLCControl PLC;
 
-        public MainWindow(PLCControl plc)
+        public MainWindow()
         {
             InitializeComponent();
-            this.PLC = plc;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -45,7 +43,7 @@ namespace ToolMgt.UI
                 btnToolType.Visibility = Visibility.Visible;
                 btnSysConfig.Visibility = Visibility.Visible;
             }
-            viewModel = new MainViewModel(PLC);
+            viewModel = new MainViewModel(App.PLC);
             viewModel.OnDoorClose += DoorClose;
             viewModel.OnInitComplete += InitComplete;
             this.DataContext = viewModel;
@@ -60,14 +58,14 @@ namespace ToolMgt.UI
 
         private void DoorClose()
         {
-            this.Dispatcher.Invoke(() => { this.Close(); });
+            try { this.Dispatcher.Invoke(() => { this.Close(); }); } catch { }
         }
 
         private void ChangeView(UserControl control)
         {
-            foreach (IDisposable item in gridContainer.Children)
+            foreach (IClose item in gridContainer.Children)
             {
-                item?.Dispose();
+                try { item?.Dispose(); } catch { }
             }
             gridContainer.Children.Clear();
             gridContainer.Children.Add(control);
@@ -105,7 +103,16 @@ namespace ToolMgt.UI
 
         public void Dispose()
         {
-            this.viewModel.Dispose();
+            try
+            {
+                viewModel.OnDoorClose -= DoorClose;
+                viewModel.OnInitComplete -= InitComplete;
+                this.viewModel.Dispose();
+                this.viewModel = null;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void MetroWindow_Closed(object sender, EventArgs e)
@@ -115,9 +122,16 @@ namespace ToolMgt.UI
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            viewModel.Dispose();
-            LogInWindow win = new LogInWindow(App.PLC);
-            win.Show();
+            try
+            {
+                viewModel.Dispose();
+                this.viewModel = null;
+                LogInWindow win = new LogInWindow(App.PLC);
+                win.Show();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void btnRecord_Click(object sender, RoutedEventArgs e)

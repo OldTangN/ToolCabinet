@@ -21,7 +21,7 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// ToolRecordControl.xaml 的交互逻辑
     /// </summary>
-    public partial class ToolRecordControl : UserControl, IDisposable
+    public partial class ToolRecordControl : UserControl, IClose
     {
         private ToolRecordViewModel viewModel;
         public ToolRecordControl()
@@ -31,7 +31,14 @@ namespace ToolMgt.UI.Controls
 
         public void Dispose()
         {
-            this.viewModel.Dispose();
+            try
+            {
+                this.viewModel.Dispose();
+                this.viewModel = null;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

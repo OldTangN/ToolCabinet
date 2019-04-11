@@ -23,37 +23,40 @@
         </Grid.Resources>
         <StackPanel Name="spNavigateBar" Grid.Row="1" Orientation="Horizontal"
                    VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Button Name="btnUserSearch" Visibility="Hidden" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnUserSearch" Visibility="Visible" Click="btnUserSearch_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="用户信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolSearch" Visibility="Hidden" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnToolSearch" Visibility="Hidden" Click="btnToolSearch_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="工具信息" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnToolType" Visibility="Hidden" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnToolType" Visibility="Hidden" Click="btnToolType_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="工具类型" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnSysConfig" Visibility="Hidden" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnSysConfig" Visibility="Hidden" Click="btnSysConfig_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="系统设置" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnRecord" Click="btnRecord_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="记录查询" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnBorrow" Click="btnBorrow_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="领用归还" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button Name="btnExit" Click="BtnExit_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            <Button Name="btnExit" Click="BtnExit_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="退出系统" TextWrapping="Wrap"></TextBlock>
-            </Button> 
-            <Button Name="btnHelp" Click="BtnHelp_Click" Margin="20 0 20 0" FontSize="18" Width="100" Height="60">
+            </Button>
+            <Button Name="btnHelp" Click="BtnHelp_Click" Margin="20 0 20 0" FontSize="18" Width="80" Height="60">
                 <TextBlock Width="40" Text="使用说明" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <!--<Button Name="btnReturn" Click="btnReturn_Click" Margin="20 0 20 0" FontSize="20" Width="100" Height="80">
+            <!--<Button Name="btnReturn" Click="btnReturn_Click" Margin="20 0 20 0" FontSize="20" Width="80" Height="80">
                 <TextBlock Width="40" Text="工具归还" TextWrapping="Wrap"></TextBlock>
             </Button>-->
         </StackPanel>
-        <StackPanel Name="spLoginInfo" Grid.Row="1" Margin="20 0 0 0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <TextBlock Text="当前用户：" FontSize="16"></TextBlock>
+        <StackPanel Name="spLoginInfo" Grid.Row="1" Margin="20 0 0 0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="当前：" FontSize="16"></TextBlock>
             <TextBlock Text="{Binding Path=CurrUser.RealName}" FontSize="16"></TextBlock>
+        </StackPanel>
+        <StackPanel Name="spMsg" Panel.ZIndex="999" VerticalAlignment="Bottom" Grid.Row="1" Margin="20 0 0 0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Path=ErrorMsg}" Foreground="Red" FontSize="16"></TextBlock>
         </StackPanel>
         <StackPanel Name="spPLCStatus" Grid.Row="1" Margin="0 0 20 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
             <TextBlock Text="{Binding Path=PLCStatus}" FontSize="20" Foreground="Red"></TextBlock>

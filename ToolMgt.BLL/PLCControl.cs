@@ -16,6 +16,9 @@ namespace ToolMgt.BLL
             Tool = new bool[16];
         }
 
+        /// <summary>
+        /// true=开锁
+        /// </summary>
         public bool[] Lock { get; set; }
         public bool[] Tool { get; set; }
     }
@@ -52,14 +55,14 @@ namespace ToolMgt.BLL
                     strval = (status[i] ? "1" : "0") + strval;
                 }
             }
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     int val = Convert.ToInt32(strval, 2);
                     PLCHelper.PlcAdd startAddr = GetToolAddr(1, false);
                     plcHelper.SetStart(startAddr, 16, val);
-                    //Thread.Sleep(300);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -76,13 +79,13 @@ namespace ToolMgt.BLL
         /// <param name="open"></param>
         public void SetToolLamp(int no, bool open)
         {
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     PLCHelper.PlcAdd addr = GetToolAddr(no, false);
                     plcHelper.SetStart(addr, 1, open ? 0x01 : 0x00);
-                    //Thread.Sleep(300);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -122,13 +125,14 @@ namespace ToolMgt.BLL
         /// <param name="waitTime">开门等待时间 单位：秒(s)</param>
         public void OpenDoor(int no, int waitTime)
         {
+            //LogUtil.WriteLog("开门：" + no);
             PLCHelper.PlcAdd addr = GetLockAddr(no, false);
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     plcHelper.SetStart(addr, 1, 0x01);
-                    //Thread.Sleep(300);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -136,20 +140,24 @@ namespace ToolMgt.BLL
                     LogUtil.WriteLog("开门失败！", ex);
                 }
             }
-            Thread.Sleep(waitTime * 1000);
-            lock (lockobj)
+            Thread lockThread = new Thread(() =>
             {
-                try
+                Thread.Sleep(waitTime * 1000);
+                //lock (lockobj)
                 {
-                    plcHelper.SetStart(addr, 1, 0x00);
-                    //Thread.Sleep(300);
-                    //plcHelper.GetRecive();
+                    try
+                    {
+                        plcHelper.SetStart(addr, 1, 0x00);
+                        Thread.Sleep(50);
+                        //plcHelper.GetRecive();
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.WriteLog("锁门失败！", ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    LogUtil.WriteLog("开门失败！", ex);
-                }
-            }
+            });
+            lockThread.Start();
         }
         #endregion
 
@@ -177,21 +185,20 @@ namespace ToolMgt.BLL
         private void SetAlarm(bool open)
         {
             short val = open ? (short)0xFF : (short)0x00;
-            lock (lockobj)
+            //lock (lockobj)
             {
-                LogUtil.WriteLog(open.ToString());
                 try
                 {
                     plcHelper.ItemStart(AddrLightR1, val);
-                    //Thread.Sleep(200);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
 
                     plcHelper.ItemStart(AddrLightR2, val);
-                    //Thread.Sleep(200);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
 
                     plcHelper.ItemStart(AddrBuzzer, val);
-                    //Thread.Sleep(200);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -206,12 +213,12 @@ namespace ToolMgt.BLL
         #region 开关日光灯
         public void OpenLight()
         {
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     plcHelper.ItemStart(AddrLight, 0xFF);
-                    //Thread.Sleep(300);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -223,12 +230,12 @@ namespace ToolMgt.BLL
 
         public void CloseLight()
         {
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     plcHelper.ItemStart(AddrLight, 0x00);
-                    //Thread.Sleep(300);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)
@@ -242,37 +249,39 @@ namespace ToolMgt.BLL
         public void CloseAll()
         {
             plcHelper.SetStart(PLCHelper.PlcAdd.Y0, 8, 0);
+            Thread.Sleep(50);
             plcHelper.SetStart(PLCHelper.PlcAdd.Y20, 8, 0);
+            Thread.Sleep(50);
             plcHelper.SetStart(PLCHelper.PlcAdd.Y30, 8, 0);
+            Thread.Sleep(50);
             plcHelper.SetStart(PLCHelper.PlcAdd.Y40, 8, 0);
+            Thread.Sleep(50);
         }
 
-        public Status GetStatus()
+        public void GetStatus()
         {
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
-                {
-                    Thread.Sleep(100);
+                {                    
                     plcHelper.GetStart(PLCHelper.PlcAdd.X0, 40);
-                    Thread.Sleep(300);
-                    DeltaData data = plcHelper.GetRecive();
+                    Thread.Sleep(200);
+                    DeltaData data = plcHelper.GetRecive0x02();
                     if (data == null)
                     {
                         Thread.Sleep(300);
-                        data = plcHelper.GetRecive();
-                        return null;
+                        data = plcHelper.GetRecive0x02();
+                        return;
                     }
 
                     if (data.CMD != 0x02)
                     {
-                        return null;
+                        return;
                     }
                     Status status = new Status();
-
                     byte bytLock = data.DATA[1];//锁状态
                     char[] arrLock = Convert.ToString(bytLock, 2).PadLeft(8, '0').Reverse().ToArray();
-                    status.Lock[0] = arrLock[1] == '0';//关锁状态？
+                    status.Lock[0] = arrLock[1] == '0';
                     status.Lock[1] = arrLock[3] == '0';
 
                     byte bytTools_1 = data.DATA[3];//第一组扩展，扳手1-8
@@ -291,24 +300,27 @@ namespace ToolMgt.BLL
                     StatusReceived?.Invoke(status);
                     if (flashno.Count > 0)
                     {
-                        #region 方案一：同时设置16个扳手，减少重复通信
-                        string strval = "";
-                        for (int i = 0; i < 16; i++)
-                        {
-                            strval += (flashno.Contains(i) && flashstatus) ? "0" : "1";
-                        }
-                        int val = Convert.ToInt32(strval, 2);
-                        plcHelper.SetStart(GetToolAddr(1, false), 16, val);
-                        #endregion
-
-                        #region 方案二：循环单独控制
-                        //foreach (int no in flashno)
+                        #region 方案一：同时设置16个扳手，减少重复通信 TODO:数据拼接错误
+                        //string strval = "";
+                        //for (int i = 0; i < 16; i++)
                         //{
-                        //    plcHelper.ItemStart(GetToolAddr(no, false), (short)(flashstatus ? 0xFF : 0x00));
+                        //    strval += (flashno.Contains(i) && flashstatus) ? "0" : "1";
                         //}
+                        //int val = Convert.ToInt32(strval, 2);
+                        //plcHelper.SetStart(GetToolAddr(1, false), 16, val);
+                        #endregion
+                        string strNo = "";
+                        #region 方案二：循环单独控制
+                        foreach (int no in flashno)
+                        {
+                            strNo += no + ",";
+                            plcHelper.ItemStart(GetToolAddr(no, false), (short)(flashstatus ? 0xFF : 0x00));
+                            Thread.Sleep(50);
+                        }
                         #endregion
                         //Thread.Sleep(300);
                         //plcHelper.GetRecive();
+                        LogUtil.WriteLog("闪烁：" + strNo + flashstatus);
                         flashstatus = !flashstatus;
                     }
 
@@ -316,13 +328,12 @@ namespace ToolMgt.BLL
                     AlarmStatus = !AlarmStatus;
                     //byte bytTools_3 = data.DATA[5];//备用扩展
                     //char[] arrTools_3 = Convert.ToString(bytTools_3, 2).PadLeft(8,'0').Reverse().ToArray();                   
-                    return status;
+
                 }
                 catch (Exception ex)
                 {
                     LogUtil.WriteLog("获取PLC接入点状态失败！", ex);
                 }
-                return null;
             }
         }
 
@@ -384,12 +395,12 @@ namespace ToolMgt.BLL
 
         private void SetLightBelt(PLCHelper.PlcAdd addr, short val)
         {
-            lock (lockobj)
+            //lock (lockobj)
             {
                 try
                 {
                     plcHelper.ItemStart(addr, val);
-                    //Thread.Sleep(200);
+                    Thread.Sleep(50);
                     //plcHelper.GetRecive();
                 }
                 catch (Exception ex)

@@ -101,10 +101,11 @@ namespace ToolMgt.BLL
             try
             {
                 List<byte> cmmByte = new List<byte>();
+                //LogUtil.WriteLog("接收：" + FrameHelper.bytetostr(ibyte.ToArray()));
                 for (int i = 1; i < ibyte.Count - 2; i += 2)//从第1位开始（不要0x3a）取数据到倒数第三位（不要0x0d,0x0a）
                 {
                     byte[] byteAscii = new byte[] { ibyte[i], ibyte[i + 1] };
-                    string s = Encoding.ASCII.GetString(byteAscii).ToUpper();
+                    string s = Encoding.ASCII.GetString(byteAscii).ToUpper().Replace("\0","");
                     byte b = Convert.ToByte(s, 16);
                     cmmByte.Add(b);
                 }
@@ -155,6 +156,31 @@ namespace ToolMgt.BLL
                 if (queueData.Count > 0)
                 {
                     return queueData.Dequeue();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.WriteLog(ex.Message, ex);
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// 获取0x02应答
+        /// </summary>
+        /// <returns></returns>
+        public DeltaData GetRecive0x02()
+        {
+            try
+            {
+                while (queueData.Count > 0)
+                {
+                    var data = queueData.Dequeue();
+                    if (data.CMD == 0x02)
+                    {
+                        return data;
+                    }
                 }
             }
             catch (Exception ex)

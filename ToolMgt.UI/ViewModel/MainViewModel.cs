@@ -35,19 +35,24 @@ namespace ToolMgt.UI.ViewModel
             plcControl.StatusReceived += OnStatusReceived;
         }
 
+        private string _ErrorMsg = "";
+        public string ErrorMsg { get => _ErrorMsg; set => Set(ref _ErrorMsg, value); }
+
         private Status CurrStatus;
 
         private void OnStatusReceived(Status status)
         {
             CurrStatus = status;
             bool errorOperate = false;//是否有非法操作
+            string errPos = "";
             //判断工具状态变化
             for (int i = 0; i < Tools.Count; i++)
             {
                 var tool = Tools[i];
+                tool.Status = CurrStatus.Tool[i];
                 if (tool.IsSelected)//选中状态
                 {
-                    if (tool.OriStatus == CurrStatus.Tool[i])//状态未发生变化
+                    if (tool.OriStatus == tool.Status)//状态未发生变化
                     {
                         //设置闪烁
                         plcControl.FlashToolLamp(i + 1, true);
@@ -57,37 +62,62 @@ namespace ToolMgt.UI.ViewModel
                         //关闭闪烁
                         plcControl.FlashToolLamp(i + 1, false);
                         //根据状态设置长亮或长灭
-                        plcControl.SetToolLamp(i + 1, CurrStatus.Tool[i]);
+                        plcControl.SetToolLamp(i + 1, tool.Status);
                     }
                 }
                 else//非选中状态
                 {
-                    if (tool.OriStatus != CurrStatus.Tool[i])//非法操作
+                    if (tool.OriStatus != tool.Status)//非法操作
                     {
+                        LogUtil.WriteLog(string.Format("工具{0}：数据{1}，实际{2}", i + 1, tool.OriStatus, tool.Status));
                         errorOperate = true;
+                        errPos += (i + 1) + ",";
                     }
+                    //关闭闪烁
+                    plcControl.FlashToolLamp(i + 1, false);
+                    //根据状态设置长亮或长灭
+                    plcControl.SetToolLamp(i + 1, tool.Status);
                 }
             }
             if (errorOperate)
             {
                 NoError = false;
-                plcControl.OpenAlarm();
-                plcControl.CloseGreen();
+                if (!isAlarming)
+                {
+                    plcControl.OpenAlarm();
+                    plcControl.CloseGreen();
+                    isAlarming = true;
+                }
             }
             else
             {
                 NoError = true;
                 plcControl.CloseAlarm();
                 plcControl.OpenGreen();
+                isAlarming = false;
+            }
+            if (!string.IsNullOrEmpty(errPos))
+            {
+                ErrorMsg = errPos + "工具状态异常！";
+            }
+            else
+            {
+                ErrorMsg = "";
             }
             //判断柜门关闭状态
-            if (CurrStatus.Lock[0] && CurrStatus.Lock[1])
+            if (!CurrStatus.Lock[0] && !CurrStatus.Lock[1])
             {
+                if (DateTime.Now.Subtract(LoginTime).Seconds < 20)
+                {
+                    return;
+                }
                 SaveRecord();
                 plcControl.CloseAll();
                 OnDoorClose?.Invoke();
             }
         }
+
+        private bool isAlarming = false;
 
         /// <summary>
         /// 初始化完成回调
@@ -103,8 +133,14 @@ namespace ToolMgt.UI.ViewModel
 
         public List<Tool> Tools { get; set; }
 
+        /// <summary>
+        /// 登录时间，用于初次登录未开门时，延时判断关门状态，不判断会导致立即退出
+        /// </summary>
+        private DateTime LoginTime;
+
         public void Init()
         {
+            LoginTime = DateTime.Now;
             IsBusy = true;
             BackgroundWorker initWorker = new BackgroundWorker();
             initWorker.DoWork += InitWorker_DoWork;
@@ -151,14 +187,9 @@ namespace ToolMgt.UI.ViewModel
             plcControl.SetToolLamp(status);
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
-
                 while (keep)
                 {
-                    Status currStatus = plcControl.GetStatus();
-                    //if (currStatus != null)
-                    {
-                        CurrStatus = currStatus;
-                    }
+                    plcControl.GetStatus();
                     Thread.Sleep(200);
                 }
             }));
@@ -185,7 +216,6 @@ namespace ToolMgt.UI.ViewModel
         {
             if (e.PropertyName == "IsSelected")
             {
-                
                 Tool tool = sender as Tool;
                 if (tool.IsSelected)
                 {
@@ -225,7 +255,7 @@ namespace ToolMgt.UI.ViewModel
         private void OpenDoor_DoWork(object sender, DoWorkEventArgs e)
         {
             Tool tool = e.Argument as Tool;
-            if (CurrStatus == null || CurrStatus.Lock[tool.Position / 8] == false)
+            if (CurrStatus == null || CurrStatus.Lock[(tool.Position - 1) / 8] == false)
             {
                 OpenDoor(tool.Position);
             }
@@ -235,7 +265,7 @@ namespace ToolMgt.UI.ViewModel
         {
             IsBusy = false;
         }
-        
+
         private void RaiseDoorClosed()
         {
             keep = false;
@@ -248,13 +278,17 @@ namespace ToolMgt.UI.ViewModel
         {
             if (!NoError)
             {
-                MessageAlert.Alert("操作错误 或 未检测到工具状态，请重新领用！");
+                MessageAlert.Alert("工具状态异常！");
             }
             if (NoError && SelectedTools.Count > 0)
             {
                 bool rlt = true;
                 foreach (var tool in SelectedTools)
                 {
+                    if (tool.OriStatus == tool.Status)//已选择但实际未动作工具
+                    {
+                        continue;
+                    }
                     //保存记录
                     if (tool.OriStatus)//空闲工具添加使用记录
                     {
@@ -278,10 +312,9 @@ namespace ToolMgt.UI.ViewModel
 
         public override void Dispose()
         {
-            plcControl.CloseAll();
-            plcControl.DisConnect();
+            try { plcControl.StatusReceived -= OnStatusReceived; } catch { }
+            try { plcControl.CloseAll(); } catch { }
             try { PLCThread.Abort(); } catch { }
-            base.Dispose();
         }
 
         private bool NoError = false;

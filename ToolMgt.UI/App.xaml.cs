@@ -38,7 +38,7 @@ namespace ToolMgt.UI
             {
                 MessageBox.Show("从服务器同步用户信息失败，采用本地缓存数据登录！");
             }
-            var PLC = new PLCControl(SysConfiguration.PLCCom);
+            PLC = new PLCControl(SysConfiguration.PLCCom);
             host = new ServiceHost(typeof(Service1));//, new Uri("net.tcp://localhost/MyService")
             try
             {
@@ -67,6 +67,7 @@ namespace ToolMgt.UI
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
+            LogUtil.WriteLog("未处理异常！", e.Exception);
             MessageAlert.Alert(e.Exception.Message);
         }
     }

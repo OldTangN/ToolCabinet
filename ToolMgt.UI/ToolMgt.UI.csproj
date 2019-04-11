@@ -91,6 +91,7 @@
     <Compile Include="Common\OppositeConverter.cs" />
     <Compile Include="Common\SysConfiguration.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
+    <Compile Include="Common\IClose.cs" />
     <Compile Include="Controls\Message.cs" />
     <Compile Include="Controls\PDFControl.cs">
       <SubType>UserControl</SubType>

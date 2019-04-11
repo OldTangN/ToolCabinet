@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using ToolMgt.BLL;
 using ToolMgt.Common;
 using ToolMgt.Model;
+using ToolMgt.UI.Common;
 
 namespace ToolMgt.UI.ViewModel
 {
-    public class ViewModelBase : ObservableObject, IDisposable
+    public class ViewModelBase : ObservableObject, IClose
     {
         public ViewModelBase()
         {

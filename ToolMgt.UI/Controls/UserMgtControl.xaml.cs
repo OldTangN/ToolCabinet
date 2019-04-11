@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToolMgt.UI.Common;
 using ToolMgt.UI.ViewModel;
 
 namespace ToolMgt.UI.Controls
@@ -19,7 +20,7 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// UserMgtControl.xaml 的交互逻辑
     /// </summary>
-    public partial class UserMgtControl : UserControl, IDisposable
+    public partial class UserMgtControl : UserControl, IClose
     {
         public UserMgtControl()
         {
@@ -44,6 +45,14 @@ namespace ToolMgt.UI.Controls
 
         public void Dispose()
         {
+            try
+            {
+                ViewModel.Dispose();
+                ViewModel = null;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         UserMgtViewModel ViewModel;

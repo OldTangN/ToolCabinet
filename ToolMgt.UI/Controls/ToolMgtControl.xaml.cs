@@ -20,7 +20,7 @@ namespace ToolMgt.UI.Controls
     /// <summary>
     /// ToolMgtControl.xaml 的交互逻辑
     /// </summary>
-    public partial class ToolMgtControl : UserControl, IDisposable
+    public partial class ToolMgtControl : UserControl, IClose
     {
         private ToolMgtViewModel ViewModel;
         public ToolMgtControl()
@@ -66,6 +66,14 @@ namespace ToolMgt.UI.Controls
 
         public void Dispose()
         {
+            try
+            {
+                ViewModel.Dispose();
+                ViewModel = null;
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

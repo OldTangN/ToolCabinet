@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="ConfigurationUtil.cs" />
+    <Compile Include="FrameHelper.cs" />
     <Compile Include="LogUtil.cs" />
     <Compile Include="MD5Encrypt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
