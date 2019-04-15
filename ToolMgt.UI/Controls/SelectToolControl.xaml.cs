@@ -39,11 +39,11 @@ namespace ToolMgt.UI.Controls
             this.DataContext = viewModel;
         }
 
-        public void Dispose()
+        public void CDispose()
         {
             try
             {
-                this.viewModel.Dispose();
+                this.viewModel.CDispose();
                 this.viewModel = null;
             }
             catch (Exception)

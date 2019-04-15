@@ -37,7 +37,7 @@ namespace ToolMgt.UI.View
         {
             try
             {
-                viewModel.Dispose();
+                viewModel.CDispose();
                 this.viewModel = null;
             }
             catch (Exception)
@@ -96,7 +96,7 @@ namespace ToolMgt.UI.View
             txtPwd.SelectAll();
         }
 
-        public void Dispose()
+        public void CDispose()
         {
         }
 

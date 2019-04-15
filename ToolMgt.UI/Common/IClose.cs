@@ -8,6 +8,6 @@ namespace ToolMgt.UI.Common
 {
     interface IClose
     {
-        void Dispose();
+        void CDispose();
     }
 }

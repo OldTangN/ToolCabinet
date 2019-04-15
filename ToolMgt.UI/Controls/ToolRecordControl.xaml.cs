@@ -29,11 +29,11 @@ namespace ToolMgt.UI.Controls
             InitializeComponent();
         }
 
-        public void Dispose()
+        public void CDispose()
         {
             try
             {
-                this.viewModel.Dispose();
+                this.viewModel.CDispose();
                 this.viewModel = null;
             }
             catch (Exception)

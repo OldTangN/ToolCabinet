@@ -79,8 +79,8 @@
                                         <ColumnDefinition Width="100"></ColumnDefinition>
                                         <ColumnDefinition Width="100"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Click="editButtonClick"  Content="编  辑" Background="#f0e68c"></Button>
-                                    <Button Grid.Column="1" Click="delButtonClick" Content="删  除" Background="#f0e68c"></Button>
+                                    <Button Grid.Column="0" Click="editButtonClick"  Content="编  辑"></Button>
+                                    <Button Grid.Column="1" Click="delButtonClick" Content="删  除"></Button>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

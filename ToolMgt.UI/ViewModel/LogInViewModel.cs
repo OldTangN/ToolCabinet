@@ -138,10 +138,10 @@ namespace ToolMgt.UI.ViewModel
             return !string.IsNullOrEmpty(CurrLogIn.NameOrCard);
         }
 
-        public override void Dispose()
+        public override void CDispose()
         {
             card?.Close();
-            base.Dispose();
+            base.CDispose();
         }
         #endregion
     }

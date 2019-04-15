@@ -64,11 +64,11 @@ namespace ToolMgt.UI.Controls
             ViewModel.DeleteCmd.Execute(null);
         }
 
-        public void Dispose()
+        public void CDispose()
         {
             try
             {
-                ViewModel.Dispose();
+                ViewModel.CDispose();
                 ViewModel = null;
             }
             catch (Exception)

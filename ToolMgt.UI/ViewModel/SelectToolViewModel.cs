@@ -24,9 +24,9 @@ namespace ToolMgt.UI.ViewModel
       
         public List<Tool> Tools { get; set; }
                
-        public override void Dispose()
+        public override void CDispose()
         {
-            base.Dispose();
+            base.CDispose();
         }
     }
 }

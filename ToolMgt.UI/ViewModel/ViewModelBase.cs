@@ -24,7 +24,7 @@ namespace ToolMgt.UI.ViewModel
         /// </summary>
         public bool IsBusy { get => _isBusy; set => Set(ref _isBusy, value); }
 
-        public virtual void Dispose()
+        public virtual void CDispose()
         {
 
         }

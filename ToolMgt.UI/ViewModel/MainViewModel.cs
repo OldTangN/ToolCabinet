@@ -17,7 +17,7 @@ namespace ToolMgt.UI.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private PLCControl plcControl;
-        private Thread PLCThread;
+       
 
         private ToolDao toolDao;
         private ToolRecordDao recordDao;
@@ -107,7 +107,7 @@ namespace ToolMgt.UI.ViewModel
             //判断柜门关闭状态
             if (!CurrStatus.Lock[0] && !CurrStatus.Lock[1])
             {
-                if (DateTime.Now.Subtract(LoginTime).Seconds < 20)
+                if (DateTime.Now.Subtract(LoginTime).Seconds < SysConfiguration.DoorWaitTime)
                 {
                     return;
                 }
@@ -158,6 +158,12 @@ namespace ToolMgt.UI.ViewModel
             OnInitComplete?.Invoke();
         }
 
+#if USETASK
+        private Task PLCTask;
+        private CancellationTokenSource PLCTaskCancel;
+#else
+         private Thread PLCThread;
+#endif
         private void InitWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             plcControl.OpenLight();
@@ -177,14 +183,39 @@ namespace ToolMgt.UI.ViewModel
                     tool.PropertyChanged += Tool_PropertyChanged;
                 }
             }
-
-            if (PLCThread != null && PLCThread.IsAlive)
+#if USETASK
+            if (PLCTaskCancel != null)
+            {
+                PLCTaskCancel.Cancel();
+                PLCTaskCancel = null;
+            }
+#else
+             if (PLCThread != null && PLCThread.IsAlive)
             {
                 try { PLCThread.Abort(); } catch { }
             }
+#endif
+
 
             bool[] status = OriToolStatus();
             plcControl.SetToolLamp(status);
+
+#if USETASK
+            PLCTaskCancel = new CancellationTokenSource();
+            PLCTask = new Task(() =>
+            {
+                while (keep)
+                {
+                    if (PLCTaskCancel.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    plcControl.GetStatus();
+                    Thread.Sleep(200);
+                }
+            }, PLCTaskCancel.Token);
+            PLCTask.Start();
+#else
             PLCThread = new Thread(new ParameterizedThreadStart((p) =>
             {
                 while (keep)
@@ -195,6 +226,7 @@ namespace ToolMgt.UI.ViewModel
             }));
             PLCThread.IsBackground = true;
             PLCThread.Start(status);
+#endif
         }
 
         /// <summary>
@@ -310,11 +342,16 @@ namespace ToolMgt.UI.ViewModel
         private string pLCStatus;
         public string PLCStatus { get => pLCStatus; set => Set(ref pLCStatus, value); }
 
-        public override void Dispose()
+        public override void CDispose()
         {
             try { plcControl.StatusReceived -= OnStatusReceived; } catch { }
             try { plcControl.CloseAll(); } catch { }
-            try { PLCThread.Abort(); } catch { }
+#if USETASK
+            try { PLCTaskCancel.Cancel(); } catch { }
+#else
+             try { PLCThread.Abort(); } catch { }
+#endif
+
         }
 
         private bool NoError = false;

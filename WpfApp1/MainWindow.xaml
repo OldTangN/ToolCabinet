@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Button x:Name="btnGet" Content="获取" HorizontalAlignment="Left" Margin="16,73,0,0" VerticalAlignment="Top" Width="75" Click="BtnGet_Click"/>
+        <TextBox x:Name="txtUrl" HorizontalAlignment="Left" Height="23" Margin="16,32,0,0" TextWrapping="Wrap" Text="http://192.168.4.100:8733/Service1/GetTools/" VerticalAlignment="Top" Width="715"/>
+        <TextBox x:Name="txtRlt" HorizontalAlignment="Left" Height="87" Margin="16,115,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="453"/>
+
     </Grid>
 </Window>

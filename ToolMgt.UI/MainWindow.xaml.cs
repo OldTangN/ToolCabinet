@@ -63,9 +63,15 @@ namespace ToolMgt.UI
 
         private void ChangeView(UserControl control)
         {
-            foreach (IClose item in gridContainer.Children)
+            try
             {
-                try { item?.Dispose(); } catch { }
+                foreach (IClose item in gridContainer.Children)
+                {
+                    try { item?.CDispose(); } catch { }
+                }
+            }
+            catch (Exception)
+            {
             }
             gridContainer.Children.Clear();
             gridContainer.Children.Add(control);
@@ -101,13 +107,13 @@ namespace ToolMgt.UI
             ChangeView(control);
         }
 
-        public void Dispose()
+        public void CDispose()
         {
             try
             {
                 viewModel.OnDoorClose -= DoorClose;
                 viewModel.OnInitComplete -= InitComplete;
-                this.viewModel.Dispose();
+                this.viewModel.CDispose();
                 this.viewModel = null;
             }
             catch (Exception)
@@ -124,7 +130,7 @@ namespace ToolMgt.UI
         {
             try
             {
-                viewModel.Dispose();
+                viewModel.CDispose();
                 this.viewModel = null;
                 LogInWindow win = new LogInWindow(App.PLC);
                 win.Show();
