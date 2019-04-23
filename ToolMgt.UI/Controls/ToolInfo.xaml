@@ -26,14 +26,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="180"></ColumnDefinition>
+                <ColumnDefinition Width="240"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Name="tb1" Grid.Column="0" Text="工位01：" HorizontalAlignment="Center" VerticalAlignment="Center">
             </TextBlock>
             
             <TextBlock Name="tb2" Grid.Column="1" Text="空闲" HorizontalAlignment="Center" VerticalAlignment="Center">
             </TextBlock>
-            <TextBlock Name="tb3" Grid.Column="2" Text="80~1000N*m" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <TextBlock Name="tb3" Grid.Column="2" Text="20.00~200.00N*m" HorizontalAlignment="Right" VerticalAlignment="Center">
             </TextBlock>
         </Grid>
     </Border>

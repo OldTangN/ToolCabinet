@@ -17,7 +17,7 @@ namespace ToolMgt.UI.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private PLCControl plcControl;
-       
+
 
         private ToolDao toolDao;
         private ToolRecordDao recordDao;
@@ -39,12 +39,12 @@ namespace ToolMgt.UI.ViewModel
         public string ErrorMsg { get => _ErrorMsg; set => Set(ref _ErrorMsg, value); }
 
         private Status CurrStatus;
-
+        private string errPos = "";
         private void OnStatusReceived(Status status)
         {
             CurrStatus = status;
             bool errorOperate = false;//是否有非法操作
-            string errPos = "";
+            errPos = "";
             //判断工具状态变化
             for (int i = 0; i < Tools.Count; i++)
             {
@@ -308,9 +308,9 @@ namespace ToolMgt.UI.ViewModel
 
         public void SaveRecord()
         {
-            if (!NoError)
+            if (!NoError && !string.IsNullOrEmpty(errPos))
             {
-                MessageAlert.Alert("工具状态异常！");
+                MessageAlert.Alert(errPos + "工具状态异常！");
             }
             if (NoError && SelectedTools.Count > 0)
             {

@@ -23,7 +23,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom">三板扭力</Label>
-        <Label Grid.Row="0" Grid.Column="1" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom">轮轴间扭力</Label>
+        <Label Grid.Row="0" Grid.Column="1" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom">轴端扭力</Label>
         <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="9" HorizontalAlignment="Right" BorderThickness="1" BorderBrush="Silver" Margin="0 10"></Border>        
         <local:ToolInfo x:Name="tool_01" Margin="10" Text1="工位01：" Grid.Row="1" Grid.Column="0" Text2="{Binding Path=Tools[0].Text2}" Text3="{Binding Path=Tools[0].Text3}" Selected="{Binding Tools[0].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[0].CanSelected}"></local:ToolInfo>
         <local:ToolInfo x:Name="tool_02" Margin="10" Text1="工位02：" Grid.Row="2" Grid.Column="0" Text2="{Binding Path=Tools[1].Text2}" Text3="{Binding Path=Tools[1].Text3}" Selected="{Binding Tools[1].IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Tools[1].CanSelected}"></local:ToolInfo>
