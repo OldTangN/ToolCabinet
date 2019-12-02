@@ -50,11 +50,11 @@ namespace ToolMgt.BLL
                             tool.CanSelected = false;
                         }
                     }
-                    if (tool.Position == 8 || tool.Position == 16)
-                    {
-                        tool.CanSelected = false;
-                        tool.Text2 = "备用";
-                    }
+                    //if (tool.Position == 8 || tool.Position == 16)
+                    //{
+                    //    tool.CanSelected = false;
+                    //    tool.Text2 = "备用";
+                    //}
 
                     tool.Text3 = tool.RangeMin + "~" + tool.RangeMax + "N*m";
                 }
